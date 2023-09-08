@@ -65,3 +65,21 @@ export const patchUser = async (id: string, changes: UserPatch) => {
     return {"error": error}
   }
 }
+
+export const sendPasswordReset = async (email: string) => {
+  try {
+    await pb.collection("users").requestPasswordReset(email)
+    return {"status": 200}
+  } catch (error) {
+    return {"error": error, "status": 400}
+  }
+}
+
+export const resetPassword = async (token: string, password: string, passwordConfirm: string) => {
+  try {
+    await pb.collection("users").confirmPasswordReset(token, password, passwordConfirm)
+    return {"status": 200}
+  } catch (error) {
+    return {"error": error, "status": 400}
+  }
+}
