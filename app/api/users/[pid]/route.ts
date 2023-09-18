@@ -10,7 +10,6 @@ interface UserPatchRequest extends NextApiRequest{
 export async function GET(req: Request, { params }: { params: { pid: string } }){
     console.log(params)
     return new Response(JSON.stringify(await getUser(params.pid)))
-    // return new Response(JSON.stringify(getUser("dsfgdsfs")))
 }
 
 export async function DELETE(req: Request, {params}: {params: {pid: string}}){

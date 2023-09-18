@@ -1,4 +1,3 @@
-import { test } from "@/controllers/newsController"
 import { login } from "@/controllers/userController"
 import { User } from "@/types/user"
 import { NextApiRequest } from "next"
