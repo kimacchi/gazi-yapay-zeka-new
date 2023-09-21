@@ -19,6 +19,6 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
     // TODO: delete all users but check if the request has the validation
-    
-    return new Response(JSON.stringify({}))
+    const user = await deleteAllUsers();
+    return new Response(JSON.stringify(user))
 }
