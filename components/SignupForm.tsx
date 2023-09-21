@@ -138,6 +138,9 @@ const SignupForm = ({
         className="bg-fuchsia-900"
       >
         <input
+          onKeyDown={async (e) => {
+            if(e.key === "Enter") await handleSubmit()
+          }}
           className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
           onChange={(e) => setName(e.target.value)}
           type="text"
@@ -145,6 +148,9 @@ const SignupForm = ({
         />
       </Tooltip>
       <input
+        onKeyDown={async (e) => {
+          if(e.key === "Enter") await handleSubmit()
+        }}
         className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
         onChange={(e) => setEmail(e.target.value)}
         type="email"
@@ -156,6 +162,9 @@ const SignupForm = ({
         className="bg-fuchsia-900"
       >
         <input
+          onKeyDown={async (e) => {
+            if(e.key === "Enter") await handleSubmit()
+          }}
           className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
           onChange={(e) => setUsername(e.target.value)}
           type="text"
@@ -168,6 +177,9 @@ const SignupForm = ({
         className="bg-fuchsia-900"
       >
         <input
+          onKeyDown={async (e) => {
+            if(e.key === "Enter") await handleSubmit()
+          }}
           className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
           onChange={(e) => setPassword(e.target.value)}
           type="password"
@@ -175,11 +187,14 @@ const SignupForm = ({
         />
       </Tooltip>
       <Tooltip
-        content="En az sekiz, en fazla 16 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
+        content="En az sekiz, en fazla 72 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
         placement="top"
         className="bg-fuchsia-900"
       >
         <input
+          onKeyDown={async (e) => {
+            if(e.key === "Enter") await handleSubmit()
+          }}
           className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
           onChange={(e) => setPasswordConfirm(e.target.value)}
           type="password"

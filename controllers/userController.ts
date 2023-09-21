@@ -32,6 +32,15 @@ export const logoff = () => {
   pb.authStore.clear()
 }
 
+export const getAllUsers = async () => {
+  try {
+    const record = await pb.collection("users").getFullList();
+    return record
+  } catch (error) {
+    return {"error": error}
+  }
+}
+
 export const getList = async (page: number = 1, perPage: number = 20) => {
   try {
     const resultList = await pb.collection("users").getList(page, perPage)
@@ -88,13 +97,14 @@ export const resetPassword = async (token: string, password: string, passwordCon
 
 export const deleteAllUsers = async () => {
   try {
-    const record = await getList();
+    const record = await getAllUsers();
     if (Array.isArray(record)) {
+      console.log("this run")
       record.forEach(async (event) => {
         await deleteUser(event.id);
       });
     }
-    return await getList();
+    return await getAllUsers();
   } catch (error) {
     return {"error": error, "status": 400}
   }
