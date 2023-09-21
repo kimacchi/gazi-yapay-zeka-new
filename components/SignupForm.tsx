@@ -21,14 +21,8 @@ const SignupForm = ({
   const [name, setName] = useState("");
 
   const handleSubmit = async () => {
-    const res = await signUpAction(
-      email,
-      username,
-      password,
-      passwordConfirm,
-      name
-    );
-    console.log(res.data);
+    const res = await axios.post('api/users/signup', { email, username, password, passwordConfirm, name })
+    console.log(res.data)
   };
 
   return (
