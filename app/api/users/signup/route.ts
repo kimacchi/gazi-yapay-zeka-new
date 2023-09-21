@@ -7,7 +7,7 @@ interface UserRequest extends NextApiRequest{
     body: User
 }
 
-export async function POST(request: UserRequest) {
+export async function POST(request: Request) {
     const body = await request.json()
     console.log(body, "this is inside route")
     const user = await createUser(body)
