@@ -42,6 +42,8 @@ const SignupForm = ({
     messages: [],
   });
 
+  const [criticalError, setCriticalError] = useState(false);
+
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async () => {
@@ -49,53 +51,51 @@ const SignupForm = ({
 
     setInProgress(true);
 
-    const res = await axios.post("api/users/signup", {
-      email,
-      username,
-      password,
-      passwordConfirm,
-      name,
-    });
-
-    setInProgress(false);
-
-    if (!res.data.error) {
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-        route.push("/");
-      }, 7000);
-    } else {
-      console.log(res.data);
-      // ! for password res.data.error.originalError.data.data.password.message
-      // ! for passwordConfirm res.data.error.originalError.data.data.password.message
-      // ! for email res.data.error.originalError.data.data.email.message
-      // ! for username res.data.error.originalError.data.data.username.message | "Must be in a valid format"
-      const messages: string[] = [];
-
-      if (res.data.error.originalError.data.data.password)
-        messages.push(res.data.error.originalError.data.data.password.message);
-      if (res.data.error.originalError.data.data.email)
-        messages.push(res.data.error.originalError.data.data.email.message);
-      if (res.data.error.originalError.data.data.username)
-        messages.push(
-          "Username " + res.data.error.originalError.data.data.username.message
-        );
-      if (res.data.error.originalError.data.data.passwordConfirm)
-        messages.push(
-          "Confirmation password " +
-            res.data.error.originalError.data.data.passwordConfirm.message
-        );
-      
-      setError({
-        error: true,
-        messages: messages,
+    try {
+      const res = await axios.post("api/users/signup", {
+        email,
+        username,
+        password,
+        passwordConfirm,
+        name,
       });
-      console.log({
-        error: true,
-        messages: messages,
-      }, res.data.error.originalError.data)
+  
+      setInProgress(false);
+  
+      if (!res.data.error) {
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+          route.push("/");
+        }, 7000);
+      } else {
+        console.log(res.data);
+        const messages: string[] = [];
+  
+        if (res.data.error.originalError.data.data.password)
+          messages.push(res.data.error.originalError.data.data.password.message);
+        if (res.data.error.originalError.data.data.email)
+          messages.push(res.data.error.originalError.data.data.email.message);
+        if (res.data.error.originalError.data.data.username)
+          messages.push(
+            "Username " + res.data.error.originalError.data.data.username.message
+          );
+        if (res.data.error.originalError.data.data.passwordConfirm)
+          messages.push(
+            "Confirmation password " +
+              res.data.error.originalError.data.data.passwordConfirm.message
+          );
+        
+        setError({
+          error: true,
+          messages: messages,
+        });
+      }
+    } catch (error) {
+      
     }
+
+    
   };
 
   return (
@@ -112,6 +112,22 @@ const SignupForm = ({
             <p>
               Başarıyla kayıt oldunuz! Sitemiz şu an yapım aşamasındadır,
               yakında ayrılacıklara ulaşmak için tekrar görüşeceğiz!
+            </p>
+          </ModalBody>
+          <ModalFooter></ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={criticalError}
+        onOpenChange={(e) => {
+          setCriticalError(e);
+        }}
+      >
+        <ModalContent className="bg-rose-800">
+          <ModalHeader>Kayıt olma başarısız!</ModalHeader>
+          <ModalBody>
+            <p>
+              Beklenmedik bir problem oluştu. Lütfen daha sonra tekrar deneyin, problem devam ederse bize ulaşın.
             </p>
           </ModalBody>
           <ModalFooter></ModalFooter>
