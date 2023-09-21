@@ -7,7 +7,7 @@ interface UserRequest extends NextApiRequest{
     body: User
 }
 
-export async function POST(request: UserRequest) {
+export async function POST(request: Request) {
     const body = await request.json()
     const authData = await login(body.email, body.password)
     return new Response(JSON.stringify(authData))

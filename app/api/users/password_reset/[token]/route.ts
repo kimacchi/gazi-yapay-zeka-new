@@ -13,7 +13,7 @@ interface PasswordResetRequest extends NextApiRequest {
     }
 }
 
-export async function POST(req: PasswordResetRequest, {params}: {params: {token: string}}) {
+export async function POST(req: Request, {params}: {params: {token: string}}) {
     const {password, passwordConfirm} = await req.json();
     const result = await resetPassword(params.token, password, passwordConfirm)
     return new Response(JSON.stringify(result));
