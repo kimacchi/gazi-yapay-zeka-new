@@ -2,6 +2,8 @@ import PocketBase from "pocketbase";
 import { User , UserPatch} from "@/types/user";
 import pb from "./pocketbase";
 
+// TODO: Change models to use FormData in order to add pictures
+
 export const createUser = async (
   data: User
 ) => {
@@ -79,6 +81,20 @@ export const resetPassword = async (token: string, password: string, passwordCon
   try {
     await pb.collection("users").confirmPasswordReset(token, password, passwordConfirm)
     return {"status": 200}
+  } catch (error) {
+    return {"error": error, "status": 400}
+  }
+}
+
+export const deleteAllUsers = async () => {
+  try {
+    const record = await getList();
+    if (Array.isArray(record)) {
+      record.forEach(async (event) => {
+        await deleteUser(event.id);
+      });
+    }
+    return await getList();
   } catch (error) {
     return {"error": error, "status": 400}
   }
