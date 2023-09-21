@@ -1,4 +1,4 @@
-import { getList } from "@/controllers/userController"
+import { getList, deleteAllUsers } from "@/controllers/userController"
 import { User } from "@/types/user"
 import { NextApiRequest } from "next"
 
@@ -15,4 +15,10 @@ export async function GET(req: Request) {
 
     const list = await getList(page, perPage)
     return new Response(JSON.stringify(list))
+}
+
+export async function POST(req: Request) {
+    // TODO: delete all users but check if the request has the validation
+    
+    return new Response(JSON.stringify({}))
 }
