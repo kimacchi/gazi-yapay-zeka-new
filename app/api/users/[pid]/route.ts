@@ -17,7 +17,7 @@ export async function DELETE(req: Request, {params}: {params: {pid: string}}){
     return new Response(JSON.stringify(status));
 }
 
-export async function PATCH(req: UserPatchRequest, {params}: {params: {pid: string}}){
+export async function PATCH(req: Request, {params}: {params: {pid: string}}){
     const body = await req.json();
     const patchedUser = await patchUser(params.pid, body)
     return new Response(JSON.stringify(patchedUser))
