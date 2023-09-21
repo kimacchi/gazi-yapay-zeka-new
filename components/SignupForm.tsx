@@ -124,8 +124,8 @@ const SignupForm = ({
           <hr></hr>
           <ul>
             {
-              error.messages.map((message) => {
-                return <li className="text-xs p-1">{message}</li>;
+              error.messages.map((message, idx) => {
+                return <li className="text-xs p-1" key={idx}>{message}</li>;
               })
             }
           </ul>
