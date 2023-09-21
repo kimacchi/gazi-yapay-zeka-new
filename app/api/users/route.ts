@@ -17,7 +17,7 @@ export async function GET(req: Request) {
     return new Response(JSON.stringify(list))
 }
 
-export async function POST(req: UserRequest) {
+export async function POST(req: Request) {
     // TODO: delete all users but check if the request has the validation
     
     return new Response(JSON.stringify({}))
