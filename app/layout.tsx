@@ -1,6 +1,9 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Analytics } from '@vercel/analytics/react';
+import { Suspense } from "react";
+import Loading from "./loading";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,10 +19,15 @@ export default function RootLayout({
 }) {
   return (
       <html lang="en">
+        <head>
+          <link rel="icon" href="/favicon.ico" />
+        </head>
         <body
           className={`${inter.className} bg-neutral-900 min-h-screen font-Roboto text-neutral-200`}
         >
-          {children}
+          <Suspense fallback={<Loading />}>
+            {children}
+          </Suspense>
           <Analytics />
         </body>
       </html>
