@@ -4,6 +4,7 @@ import { Test } from "@/components/test";
 import pb from "@/controllers/pocketbase";
 import axios from "axios";
 import SocialsCard from "@/components/SocialsCard";
+import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -112,6 +113,14 @@ const links: {
     ),
   },
 ];
+
+export const metadata: Metadata = {
+  title: "Gazi Yapay Zeka",
+  description: "Gazi Üniversitesi Yapay Zeka Topluluğu'nun Websitesi",
+  keywords:
+    "gazi üniversitesi,gazi üniversitesi mühendislik fakültesi,gazi üniversitesi topluluk,yapay zeka,yapay zeka topluluğu,gazi üniversitesi yapay zeka,gazi üniversitesi yapay zeka topluluğu,gazi yapay zeka,gazi yapay zeka topluluğu,gazi ai,gazi ai topluluğu,gazi artificial intelligence,gazi artificial intelligence topluluğu,gazi artificial intelligence society,yapay zekâ,gazi üniversitesi,gazi,gazi üni,topluluk,makine öğrenmesi,yapay zeka ve makine öğrenmesi,gazi yapay zeka yönetim sistemi,gazi yapay zeka login,yapay zeka login,yapay zeka haberleri,yapay zeka yönetim sistemi",
+  robots: "index, follow",
+};
 
 export default function Home() {
   // TODO: add autoRefresh to every page on initial load to revalidate user data

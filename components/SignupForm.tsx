@@ -59,9 +59,9 @@ const SignupForm = ({
         passwordConfirm,
         name,
       });
-  
+
       setInProgress(false);
-  
+
       if (!res.data.error) {
         setSuccess(true);
         setTimeout(() => {
@@ -71,31 +71,30 @@ const SignupForm = ({
       } else {
         console.log(res.data);
         const messages: string[] = [];
-  
+
         if (res.data.error.originalError.data.data.password)
-          messages.push(res.data.error.originalError.data.data.password.message);
+          messages.push(
+            res.data.error.originalError.data.data.password.message
+          );
         if (res.data.error.originalError.data.data.email)
           messages.push(res.data.error.originalError.data.data.email.message);
         if (res.data.error.originalError.data.data.username)
           messages.push(
-            "Username " + res.data.error.originalError.data.data.username.message
+            "Username " +
+              res.data.error.originalError.data.data.username.message
           );
         if (res.data.error.originalError.data.data.passwordConfirm)
           messages.push(
             "Confirmation password " +
               res.data.error.originalError.data.data.passwordConfirm.message
           );
-        
+
         setError({
           error: true,
           messages: messages,
         });
       }
-    } catch (error) {
-      
-    }
-
-    
+    } catch (error) {}
   };
 
   return (
@@ -127,7 +126,8 @@ const SignupForm = ({
           <ModalHeader>Kayıt olma başarısız!</ModalHeader>
           <ModalBody>
             <p>
-              Beklenmedik bir problem oluştu. Lütfen daha sonra tekrar deneyin, problem devam ederse bize ulaşın.
+              Beklenmedik bir problem oluştu. Lütfen daha sonra tekrar deneyin,
+              problem devam ederse bize ulaşın.
             </p>
           </ModalBody>
           <ModalFooter></ModalFooter>
@@ -139,91 +139,94 @@ const SignupForm = ({
           <p>Hata!!</p>
           <hr></hr>
           <ul>
-            {
-              error.messages.map((message, idx) => {
-                return <li className="text-xs p-1" key={idx}>{message}</li>;
-              })
-            }
+            {error.messages.map((message, idx) => {
+              return (
+                <li className="text-xs p-1" key={idx}>
+                  {message}
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}
-
-      <Tooltip
-        content="Aralarında boşluk olacak şekilde isim soyisim giriniz."
-        placement="top"
-        className="bg-fuchsia-900"
-      >
+      <form className="flex flex-col gap-6">
+        <Tooltip
+          content="Aralarında boşluk olacak şekilde isim soyisim giriniz."
+          placement="top"
+          className="bg-fuchsia-900"
+        >
+          <input
+            onKeyDown={async (e) => {
+              if (e.key === "Enter") await handleSubmit();
+            }}
+            className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            placeholder="İsminiz..."
+          />
+        </Tooltip>
         <input
           onKeyDown={async (e) => {
-            if(e.key === "Enter") await handleSubmit()
+            if (e.key === "Enter") await handleSubmit();
           }}
           className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          placeholder="İsminiz..."
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          placeholder="E-posta adresiniz..."
         />
-      </Tooltip>
-      <input
-        onKeyDown={async (e) => {
-          if(e.key === "Enter") await handleSubmit()
-        }}
-        className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
-        onChange={(e) => setEmail(e.target.value)}
-        type="email"
-        placeholder="E-posta adresiniz..."
-      />
-      <Tooltip
-        content="Özel karakter, boşluk vb. karakter içermeyen bir kullanıcı adı giriniz."
-        placement="top"
-        className="bg-fuchsia-900"
-      >
-        <input
-          onKeyDown={async (e) => {
-            if(e.key === "Enter") await handleSubmit()
-          }}
-          className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
-          onChange={(e) => setUsername(e.target.value)}
-          type="text"
-          placeholder="Kullanıcı adınız..."
-        />
-      </Tooltip>
-      <Tooltip
-        content="En az sekiz, en fazla 16 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
-        placement="top"
-        className="bg-fuchsia-900"
-      >
-        <input
-          onKeyDown={async (e) => {
-            if(e.key === "Enter") await handleSubmit()
-          }}
-          className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Şifreniz"
-        />
-      </Tooltip>
-      <Tooltip
-        content="En az sekiz, en fazla 72 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
-        placement="top"
-        className="bg-fuchsia-900"
-      >
-        <input
-          onKeyDown={async (e) => {
-            if(e.key === "Enter") await handleSubmit()
-          }}
-          className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
-          onChange={(e) => setPasswordConfirm(e.target.value)}
-          type="password"
-          placeholder="Şifrenizi onaylayın..."
-        />
-      </Tooltip>
-      <button
-        className="text-xl sm:w-96 mt-2 w-72 border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
-        onClick={handleSubmit}
-        disabled={inProgress}
-      >
-        {inProgress ? <Spinner /> : "KAYIT OL"}
-      </button>
+        <Tooltip
+          content="Özel karakter, boşluk vb. karakter içermeyen bir kullanıcı adı giriniz."
+          placement="top"
+          className="bg-fuchsia-900"
+        >
+          <input
+            onKeyDown={async (e) => {
+              if (e.key === "Enter") await handleSubmit();
+            }}
+            className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
+            onChange={(e) => setUsername(e.target.value)}
+            type="text"
+            placeholder="Kullanıcı adınız..."
+          />
+        </Tooltip>
+        <Tooltip
+          content="En az sekiz, en fazla 16 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
+          placement="top"
+          className="bg-fuchsia-900"
+        >
+          <input
+            onKeyDown={async (e) => {
+              if (e.key === "Enter") await handleSubmit();
+            }}
+            className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            placeholder="Şifreniz"
+          />
+        </Tooltip>
+        <Tooltip
+          content="En az sekiz, en fazla 72 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
+          placement="top"
+          className="bg-fuchsia-900"
+        >
+          <input
+            onKeyDown={async (e) => {
+              if (e.key === "Enter") await handleSubmit();
+            }}
+            className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
+            onChange={(e) => setPasswordConfirm(e.target.value)}
+            type="password"
+            placeholder="Şifrenizi onaylayın..."
+          />
+        </Tooltip>
+        <button
+          className="text-xl sm:w-96 mt-2 w-72 border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
+          onClick={handleSubmit}
+          disabled={inProgress}
+        >
+          {inProgress ? <Spinner /> : "KAYIT OL"}
+        </button>
+      </form>
     </div>
   );
 };
