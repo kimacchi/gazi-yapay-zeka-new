@@ -162,7 +162,7 @@ const SignupForm = ({
             className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
             onChange={(e) => setName(e.target.value)}
             type="text"
-            placeholder="İsminiz Soyisminiz..."
+            placeholder="İsminiz ve Soyisminiz..."
           />
         </Tooltip>
         <input
