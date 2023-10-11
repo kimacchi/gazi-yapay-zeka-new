@@ -13,17 +13,7 @@ import {
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
-const SignupForm = ({
-  signUpAction,
-}: {
-  signUpAction: (
-    email: string,
-    username: string,
-    password: string,
-    passwordConfirm: string,
-    name: string
-  ) => Promise<AxiosResponse<any, any>>;
-}) => {
+const SignupForm = () => {
   const route = useRouter();
 
   const [email, setEmail] = useState("");
@@ -31,6 +21,11 @@ const SignupForm = ({
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [name, setName] = useState("");
+
+  const [nameTooltip, setNameTooltip] = useState(false);
+  const [usernameTooltip, setUsernameTooltip] = useState(false);
+  const [passwordTooltip, setPasswordTooltip] = useState(false);
+  const [passwordConfirmTooltip, setPasswordConfirmTooltip] = useState(false);
 
   const [inProgress, setInProgress] = useState(false);
 
@@ -153,6 +148,8 @@ const SignupForm = ({
         <Tooltip
           content="Aralarında boşluk olacak şekilde isim soyisim giriniz."
           placement="top"
+          isOpen={nameTooltip}
+          onOpenChange={(e) => setNameTooltip(e)}
           className="bg-fuchsia-900"
         >
           <input
@@ -163,6 +160,7 @@ const SignupForm = ({
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder="İsminiz ve Soyisminiz..."
+            onFocus={() => setNameTooltip(true)}
           />
         </Tooltip>
         <input
@@ -178,6 +176,8 @@ const SignupForm = ({
           content="Özel karakter, boşluk vb. karakter içermeyen bir kullanıcı adı giriniz."
           placement="top"
           className="bg-fuchsia-900"
+          isOpen={usernameTooltip}
+          onOpenChange={(e) => setUsernameTooltip(e)}
         >
           <input
             onKeyDown={async (e) => {
@@ -186,13 +186,16 @@ const SignupForm = ({
             className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
             onChange={(e) => setUsername(e.target.value)}
             type="text"
+            onFocus={() => setUsernameTooltip(true)}
             placeholder="Kullanıcı adınız..."
           />
         </Tooltip>
         <Tooltip
-          content="En az sekiz, en fazla 16 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
+          content="En az 8, en fazla 72 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
           placement="top"
           className="bg-fuchsia-900"
+          isOpen={passwordTooltip}
+          onOpenChange={(e) => setPasswordTooltip(e)}
         >
           <input
             onKeyDown={async (e) => {
@@ -201,13 +204,16 @@ const SignupForm = ({
             className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
             onChange={(e) => setPassword(e.target.value)}
             type="password"
+            onFocus={() => setPasswordTooltip(true)}
             placeholder="Şifreniz"
           />
         </Tooltip>
         <Tooltip
-          content="En az sekiz, en fazla 72 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
+          content="En az 8, en fazla 72 karakterden oluşacak ve özel karakter olmayacak şekilde bir şifre giriniz."
           placement="top"
           className="bg-fuchsia-900"
+          isOpen={passwordConfirmTooltip}
+          onOpenChange={(e) => setPasswordConfirmTooltip(e)}
         >
           <input
             onKeyDown={async (e) => {
@@ -216,6 +222,7 @@ const SignupForm = ({
             className="sm:w-96 w-72 h-10 px-2 rounded-md bg-transparent border-2 border-white"
             onChange={(e) => setPasswordConfirm(e.target.value)}
             type="password"
+            onFocus={() => setPasswordConfirmTooltip(true)}
             placeholder="Şifrenizi onaylayın..."
           />
         </Tooltip>
