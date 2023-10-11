@@ -115,6 +115,7 @@ const links: {
 ];
 
 export const metadata: Metadata = {
+  icons: "favicon.ico",
   title: "Gazi Yapay Zeka",
   description: "Gazi Üniversitesi Yapay Zeka Topluluğu'nun Websitesi",
   keywords:
@@ -141,6 +142,18 @@ export default function Home() {
         className="p-4 bg-fuchsia-800 rounded-md transition-all hover:scale-105"
       >
         Kayıt Ol
+      </a>
+      <hr className="w-1/12" />
+      <a
+        href={"https://forms.gle/tmz8CbwEp6D9f3x67"}
+        target="_blank"
+        rel="noreferrer"
+        className="flex flex-col items-start justify-center gap-2 sm:w-1/3 w-4/5 border-cyan-600 border-4 rounded-xl p-4 transition-all hover:bg-cyan-600 hover:rounded-3xl"
+      >
+        <div className="flex items-center gap-2 w-full">
+          <h2 className="text-lg font-medium">🎉 Tanışma Toplantısı</h2>
+        </div>
+        <p className="text-xs text-neutral-400 text-left">Tanışma toplantımıza katılarak bizleri yakından tanıyın!</p>
       </a>
       <hr className="w-1/12" />
       <SocialsCard links={links} />
