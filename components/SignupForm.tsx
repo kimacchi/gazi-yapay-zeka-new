@@ -53,11 +53,11 @@ const SignupForm = ({
 
     try {
       const res = await axios.post("api/users/signup", {
-        email,
-        username,
-        password,
-        passwordConfirm,
-        name,
+        email: email.trim(),
+        username: username.trim(),
+        password: password.trim(),
+        passwordConfirm: passwordConfirm.trim(),
+        name: name.trim(),
       });
 
       setInProgress(false);
