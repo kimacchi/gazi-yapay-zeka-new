@@ -17,7 +17,7 @@ const links: {
   {
     title: "Whatsapp",
     subtitle: "Whatsapp grubumuza katılarak hiçbir duyuruyu kaçırmayın!",
-    url: "https://chat.whatsapp.com/LMWg9VOpk3n2Gi46rYMSH1",
+    url: "https://chat.whatsapp.com/EfwMxug2AkEIXGQrNpC1m7",
     svg: (
       <>
         <svg
