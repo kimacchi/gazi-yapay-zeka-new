@@ -1,7 +1,9 @@
-import SignupForm from '@/components/SignupForm'
-import React from 'react'
-import axios from 'axios'
-import { Metadata } from 'next';
+
+import SignupForm from "@/components/SignupForm";
+import React from "react";
+import axios from "axios";
+import { Metadata } from "next";
+import ReturnMainPage from "@/components/ReturnMainPage";
 
 export const metadata: Metadata = {
   title: "Kayıt Ol - Gazi Yapay Zeka",
@@ -12,19 +14,14 @@ export const metadata: Metadata = {
 };
 
 const Signup = () => {
-    const signUpAction = async (email: string, username: string, password: string, passwordConfirm: string, name: string) => {
-        "use server"
-        const res = await axios.post('api/users/signup', { email, username, password, passwordConfirm, name })
-        console.log(res.data)
-        return res;
-    }
 
   return (
-    <div className='min-h-screen flex flex-col justify-center items-center gap-4'>
-        <h1 className='text-3xl font-bold'>Gazi Yapay Zeka</h1>
-        <SignupForm signUpAction={signUpAction} />
+    <div className="min-h-screen flex flex-col justify-center items-center gap-4">
+      <ReturnMainPage />
+      <h1 className="text-3xl font-bold">Gazi Yapay Zeka</h1>
+      <SignupForm  />
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;
