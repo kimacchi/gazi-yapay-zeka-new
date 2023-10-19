@@ -221,6 +221,7 @@ export const Events = () => {
         isOpen={!isOpen}
         onOpenChange={onOpenChange}
         scrollBehavior="inside"
+        placement="center"
       >
         <ModalContent>
           <ModalHeader>{selectedEvent.name}</ModalHeader>
