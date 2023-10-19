@@ -1,15 +1,12 @@
-import "./globals.css";
+import Header from "@/components/system/Header";
 import { Inter } from "next/font/google";
-import { Analytics } from '@vercel/analytics/react';
-import { Suspense } from "react";
-import Loading from "./loading";
 
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Gazi Yapay Zeka",
-  description: "Gazi Üniversitesi Yapay Zeka Topluluğu",
+  title: "Dashboard | Gazi Yapay Zeka",
+  description: "Gazi Yapay Zeka Kullanıcı Paneli",
 };
 
 export default function RootLayout({
@@ -18,17 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    // ! Check the docs for nested root layouts because right now it couses problems.
       <html lang="en" className="dark">
-        <head>
-          <link rel="icon" href="/favicon.ico" />
-        </head>
         <body
           className={`${inter.className} bg-neutral-900 min-h-screen font-Roboto text-neutral-200`}
         >
-          <Suspense fallback={<Loading />}>
+            <Header />
             {children}
-          </Suspense>
-          <Analytics />
         </body>
       </html>
   );
