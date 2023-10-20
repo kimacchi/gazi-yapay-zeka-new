@@ -1,3 +1,4 @@
+import pb from "@/controllers/pocketbase"
 import { login } from "@/controllers/userController"
 import { User } from "@/types/user"
 import { NextApiRequest } from "next"
@@ -10,5 +11,6 @@ interface UserRequest extends NextApiRequest{
 export async function POST(request: Request) {
     const body = await request.json()
     const authData = await login(body.email, body.password)
+    console.log(pb.authStore.token)
     return new Response(JSON.stringify(authData))
 }
