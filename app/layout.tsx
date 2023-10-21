@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Analytics } from '@vercel/analytics/react';
 import { Suspense } from "react";
 import Loading from "./loading";
+import UserProvider from "./UserContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -26,7 +27,9 @@ export default function RootLayout({
           className={`${inter.className} bg-neutral-900 min-h-screen font-Roboto text-neutral-200`}
         >
           <Suspense fallback={<Loading />}>
-            {children}
+            <UserProvider>
+              {children}
+            </UserProvider>
           </Suspense>
           <Analytics />
         </body>

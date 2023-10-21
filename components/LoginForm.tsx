@@ -5,20 +5,45 @@ import { Spinner } from "@nextui-org/react";
 import axios from "axios";
 import Link from "next/link";
 import React, { useState } from "react";
+import { UserContext, useUserContext } from "@/app/UserContext";
+import { useContext } from "react";
+import { UserContext_ } from "@/types/user";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
+  const route = useRouter();
+
+  const {user, setUser} = useUserContext();
+
+  const [loading, setLoading] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`Email: ${email}, Password: ${password}`);
-    const user = await axios.post("/api/users/login", {
-      email: email.trim(),
-      password: password.trim(),
-    });
-    console.log(user);
-  };
+
+    setLoading(true);
+    try {
+      // TODO: Add validation for email and password if they are empty,
+      // TODO: Display error message returning from the backend upon failure
+      const loginResponse = await axios.post<{
+        record: UserContext_,
+        token: string
+      }>("/api/users/login", {
+        email: email.trim(),
+        password: password.trim(),
+      });
+      setUser({...(loginResponse.data.record), token: loginResponse.data.token});
+      setLoading(false);
+
+      if(user){
+        route.push("/dashboard")
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -44,9 +69,10 @@ const LoginForm = () => {
       </div>
       <button
         type="submit"
+        disabled={loading}
         className="text-xl sm:w-96 mt-2 w-72 border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
       >
-        Giriş Yap
+        {loading ? <Spinner /> : "Giriş yap"}
       </button>
     </form>
   );

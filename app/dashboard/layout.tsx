@@ -1,3 +1,4 @@
+import CheckUser from "@/components/system/CheckUser";
 import Header from "@/components/system/Header";
 import { Inter } from "next/font/google";
 
@@ -20,6 +21,7 @@ export default function RootLayout({
         <body
           className={`${inter.className} bg-neutral-900 min-h-screen font-Roboto text-neutral-200`}
         >
+          <CheckUser/>
             <Header />
             {children}
         </body>
