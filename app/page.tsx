@@ -145,15 +145,15 @@ export default function Home() {
       </a>
       <hr className="w-1/12" />
       <a
-        href={"https://forms.gle/F8BPyhgwy43JgDQh7"}
+        href={"https://forms.gle/2Ax8TfduuqaVGy8p6"}
         target="_blank"
         rel="noreferrer"
         className="flex flex-col items-start justify-center gap-2 sm:w-1/3 w-4/5 border-cyan-600 border-4 rounded-xl p-4 transition-all hover:bg-cyan-600 hover:rounded-3xl"
       >
         <div className="flex items-center gap-2 w-full">
-          <h2 className="text-lg font-medium">🥐🍳🥖 Kahvaltı Zamanı! 🥞☕</h2>
+          <h2 className="text-lg font-medium">A'dan Z'ye Yapay Zeka</h2>
         </div>
-        <p className="text-xs text-neutral-400 text-left">🙌 Kahvaltımıza gelmeyi unutmayın! Hepinizi bekliyoruz! Formu doldurabilirsiniz!</p>
+        <p className="text-xs text-neutral-400 text-left">{'print("Eğitimimize katılma fırsatını kaçırmayın! Yarının dünyasını kodluyoruz!")'}</p>
       </a>
       <hr className="w-1/12" />
       <SocialsCard links={links} />
