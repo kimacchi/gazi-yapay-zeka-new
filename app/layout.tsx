@@ -24,13 +24,11 @@ export default function RootLayout({
           <link rel="icon" href="/favicon.ico" />
         </head>
         <body
-          className={`${inter.className} bg-neutral-900 min-h-screen font-Roboto text-neutral-200`}
+          className={` bg-neutral-900 min-h-screen font-Roboto text-neutral-200`}
         >
-          <Suspense fallback={<Loading />}>
             <UserProvider>
               {children}
             </UserProvider>
-          </Suspense>
           <Analytics />
         </body>
       </html>

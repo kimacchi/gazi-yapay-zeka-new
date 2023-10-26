@@ -1,6 +1,5 @@
 "use client";
 
-import pb from "@/controllers/pocketbase";
 import { Spinner } from "@nextui-org/react";
 import axios from "axios";
 import Link from "next/link";
@@ -37,7 +36,7 @@ const LoginForm = () => {
       setUser({...(loginResponse.data.record), token: loginResponse.data.token});
       setLoading(false);
 
-      if(user){
+      if(loginResponse.data.token){
         route.push("/dashboard")
       }
     } catch (error) {

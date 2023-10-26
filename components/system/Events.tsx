@@ -17,179 +17,180 @@ import {
 } from "@nextui-org/react";
 import React, { use, useEffect, useState } from "react";
 
-const events = [
-  {
-    id: "1",
-    name: "Etkinlik 1",
-    description: "Etkinlik 1 açıklaması",
-    maxParticipant: 100,
-    isOnline: true,
-    location: "Online",
-    eventTime: new Date(2021, 10, 10, 10, 10, 10, 10),
-    participants: ["sdfsf", "asdfasdfasdf"],
-    exclusiveForActiveMembers: false,
-    releaseTime: new Date(2021, 10, 10, 10, 10, 10, 10),
-    closeTime: new Date(2025, 10, 10, 10, 10, 10, 10),
-  },
-  {
-    id: "2",
-    name: "Etkinlik 2",
-    description: "Etkinlik 2 açıklaması",
-    maxParticipant: 50,
-    isOnline: false,
-    location: "Ankara",
-    eventTime: new Date(2022, 5, 15, 14, 30, 0, 0),
-    participants: ["john.doe", "jane.doe"],
-    exclusiveForActiveMembers: true,
-    releaseTime: new Date(2022, 5, 1, 0, 0, 0, 0),
-    closeTime: new Date(2022, 5, 14, 23, 59, 59, 999),
-  },
-  {
-    id: "3",
-    name: "Etkinlik 3",
-    description: "Etkinlik 3 açıklaması",
-    maxParticipant: 200,
-    isOnline: true,
-    location: "Online",
-    eventTime: new Date(2022, 8, 1, 18, 0, 0, 0),
-    participants: [],
-    exclusiveForActiveMembers: false,
-    releaseTime: new Date(2022, 7, 1, 0, 0, 0, 0),
-    closeTime: new Date(2022, 7, 31, 23, 59, 59, 999),
-  },
-  {
-    id: "4",
-    name: "Etkinlik 4",
-    description: "Etkinlik 4 açıklaması",
-    maxParticipant: 75,
-    isOnline: false,
-    location: "İstanbul",
-    eventTime: new Date(2022, 11, 15, 10, 0, 0, 0),
-    participants: ["jane.doe", "joe.bloggs"],
-    exclusiveForActiveMembers: true,
-    releaseTime: new Date(2022, 11, 1, 0, 0, 0, 0),
-    closeTime: new Date(2022, 11, 14, 23, 59, 59, 999),
-  },
-  {
-    id: "5",
-    name: "Etkinlik 5",
-    description: "Etkinlik 5 açıklaması",
-    maxParticipant: 150,
-    isOnline: true,
-    location: "Online",
-    eventTime: new Date(2023, 2, 1, 14, 30, 0, 0),
-    participants: ["john.doe", "joe.bloggs", "jane.doe"],
-    exclusiveForActiveMembers: false,
-    releaseTime: new Date(2023, 1, 1, 0, 0, 0, 0),
-    closeTime: new Date(2023, 1, 28, 23, 59, 59, 999),
-  },
-  {
-    id: "6",
-    name: "Etkinlik 6",
-    description: "Etkinlik 6 açıklaması",
-    maxParticipant: 50,
-    isOnline: false,
-    location: "Ankara",
-    eventTime: new Date(2023, 5, 15, 14, 30, 0, 0),
-    participants: ["joe.bloggs"],
-    exclusiveForActiveMembers: true,
-    releaseTime: new Date(2023, 5, 1, 0, 0, 0, 0),
-    closeTime: new Date(2023, 5, 14, 23, 59, 59, 999),
-  },
-  {
-    id: "7",
-    name: "Etkinlik 7",
-    description: "Etkinlik 7 açıklaması",
-    maxParticipant: 100,
-    isOnline: true,
-    location: "Online",
-    eventTime: new Date(2023, 8, 1, 18, 0, 0, 0),
-    participants: [],
-    exclusiveForActiveMembers: false,
-    releaseTime: new Date(2023, 7, 1, 0, 0, 0, 0),
-    closeTime: new Date(2023, 7, 31, 23, 59, 59, 999),
-  },
-  {
-    id: "8",
-    name: "Etkinlik 8",
-    description: "Etkinlik 8 açıklaması",
-    maxParticipant: 200,
-    isOnline: true,
-    location: "Online",
-    eventTime: new Date(2024, 2, 1, 14, 30, 0, 0),
-    participants: ["jane.doe", "joe.bloggs"],
-    exclusiveForActiveMembers: false,
-    releaseTime: new Date(2024, 1, 1, 0, 0, 0, 0),
-    closeTime: new Date(2024, 1, 28, 23, 59, 59, 999),
-  },
-  {
-    id: "9",
-    name: "Etkinlik 9",
-    description: "Etkinlik 9 açıklaması",
-    maxParticipant: 50,
-    isOnline: false,
-    location: "İzmir",
-    eventTime: new Date(2024, 5, 15, 14, 30, 0, 0),
-    participants: ["john.doe"],
-    exclusiveForActiveMembers: true,
-    releaseTime: new Date(2024, 5, 1, 0, 0, 0, 0),
-    closeTime: new Date(2024, 5, 14, 23, 59, 59, 999),
-  },
-  {
-    id: "10",
-    name: "Etkinlik 10",
-    description: "Etkinlik 10 açıklaması",
-    maxParticipant: 150,
-    isOnline: true,
-    location: "Online",
-    eventTime: new Date(2024, 8, 1, 18, 0, 0, 0),
-    participants: ["jane.doe", "joe.bloggs"],
-    exclusiveForActiveMembers: false,
-    releaseTime: new Date(2024, 7, 1, 0, 0, 0, 0),
-    closeTime: new Date(2024, 7, 31, 23, 59, 59, 999),
-  },
-  {
-    id: "11",
-    name: "Etkinlik 11",
-    description: "Etkinlik 11 açıklaması",
-    maxParticipant: 75,
-    isOnline: false,
-    location: "Ankara",
-    eventTime: new Date(2025, 2, 1, 14, 30, 0, 0),
-    participants: ["john.doe", "jane.doe"],
-    exclusiveForActiveMembers: true,
-    releaseTime: new Date(2025, 1, 1, 0, 0, 0, 0),
-    closeTime: new Date(2025, 1, 28, 23, 59, 59, 999),
-  },
-  {
-    id: "12",
-    name: "Etkinlik 12",
-    description: "Etkinlik 12 açıklaması",
-    maxParticipant: 100,
-    isOnline: true,
-    location: "Online",
-    eventTime: new Date(2025, 5, 15, 14, 30, 0, 0),
-    participants: ["joe.bloggs"],
-    exclusiveForActiveMembers: false,
-    releaseTime: new Date(2025, 5, 1, 0, 0, 0, 0),
-    closeTime: new Date(2025, 5, 14, 23, 59, 59, 999),
-  },
-  {
-    id: "13",
-    name: "Etkinlik 13",
-    description: "Etkinlik 13 açıklaması",
-    maxParticipant: 200,
-    isOnline: true,
-    location: "Online",
-    eventTime: new Date(2025, 8, 1, 18, 0, 0, 0),
-    participants: ["john.doe", "jane.doe", "joe.bloggs"],
-    exclusiveForActiveMembers: false,
-    releaseTime: new Date(2025, 7, 1, 0, 0, 0, 0),
-    closeTime: new Date(2025, 7, 31, 23, 59, 59, 999),
-  },
-];
+
 
 export const Events = () => {
+  const events = [
+    {
+      id: "1",
+      name: "Etkinlik 1 sdfgsdfg",
+      description: "Etkinlik 1 açıklaması",
+      maxParticipant: 100,
+      isOnline: false,
+      location: "sdafg sdfgsdfg sdfg sdfgsdf gsdfg sdfg sdfg sdfg sdfgsd fgsfd sdfg sdfg ",
+      eventTime: new Date(2021, 10, 10, 10, 10, 10, 10),
+      participants: ["sdfsf", "asdfasdfasdf"],
+      exclusiveForActiveMembers: false,
+      releaseTime: new Date(2021, 10, 10, 10, 10, 10, 10),
+      closeTime: new Date(2025, 10, 10, 10, 10, 10, 10),
+    },
+    {
+      id: "2",
+      name: "Etkinlik 2",
+      description: "Etkinlik 2 açıklaması",
+      maxParticipant: 50,
+      isOnline: false,
+      location: "Ankara",
+      eventTime: new Date(2022, 5, 15, 14, 30, 0, 0),
+      participants: ["john.doe", "jane.doe"],
+      exclusiveForActiveMembers: true,
+      releaseTime: new Date(2022, 5, 1, 0, 0, 0, 0),
+      closeTime: new Date(2022, 5, 14, 23, 59, 59, 999),
+    },
+    {
+      id: "3",
+      name: "Etkinlik 3",
+      description: "Etkinlik 3 açıklaması",
+      maxParticipant: 200,
+      isOnline: true,
+      location: "Online",
+      eventTime: new Date(2022, 8, 1, 18, 0, 0, 0),
+      participants: [],
+      exclusiveForActiveMembers: false,
+      releaseTime: new Date(2022, 7, 1, 0, 0, 0, 0),
+      closeTime: new Date(2022, 7, 31, 23, 59, 59, 999),
+    },
+    {
+      id: "4",
+      name: "Etkinlik 4",
+      description: "Etkinlik 4 açıklaması",
+      maxParticipant: 75,
+      isOnline: false,
+      location: "İstanbul",
+      eventTime: new Date(2022, 11, 15, 10, 0, 0, 0),
+      participants: ["jane.doe", "joe.bloggs"],
+      exclusiveForActiveMembers: true,
+      releaseTime: new Date(2022, 11, 1, 0, 0, 0, 0),
+      closeTime: new Date(2022, 11, 14, 23, 59, 59, 999),
+    },
+    {
+      id: "5",
+      name: "Etkinlik 5",
+      description: "Etkinlik 5 açıklaması",
+      maxParticipant: 150,
+      isOnline: true,
+      location: "Online",
+      eventTime: new Date(2023, 2, 1, 14, 30, 0, 0),
+      participants: ["john.doe", "joe.bloggs", "jane.doe"],
+      exclusiveForActiveMembers: false,
+      releaseTime: new Date(2023, 1, 1, 0, 0, 0, 0),
+      closeTime: new Date(2023, 1, 28, 23, 59, 59, 999),
+    },
+    {
+      id: "6",
+      name: "Etkinlik 6",
+      description: "Etkinlik 6 açıklaması",
+      maxParticipant: 50,
+      isOnline: false,
+      location: "Ankara",
+      eventTime: new Date(2023, 5, 15, 14, 30, 0, 0),
+      participants: ["joe.bloggs"],
+      exclusiveForActiveMembers: true,
+      releaseTime: new Date(2023, 5, 1, 0, 0, 0, 0),
+      closeTime: new Date(2023, 5, 14, 23, 59, 59, 999),
+    },
+    {
+      id: "7",
+      name: "Etkinlik 7",
+      description: "Etkinlik 7 açıklaması",
+      maxParticipant: 100,
+      isOnline: true,
+      location: "Online",
+      eventTime: new Date(2023, 8, 1, 18, 0, 0, 0),
+      participants: [],
+      exclusiveForActiveMembers: false,
+      releaseTime: new Date(2023, 7, 1, 0, 0, 0, 0),
+      closeTime: new Date(2023, 7, 31, 23, 59, 59, 999),
+    },
+    {
+      id: "8",
+      name: "Etkinlik 8",
+      description: "Etkinlik 8 açıklaması",
+      maxParticipant: 200,
+      isOnline: true,
+      location: "Online",
+      eventTime: new Date(2024, 2, 1, 14, 30, 0, 0),
+      participants: ["jane.doe", "joe.bloggs"],
+      exclusiveForActiveMembers: false,
+      releaseTime: new Date(2024, 1, 1, 0, 0, 0, 0),
+      closeTime: new Date(2024, 1, 28, 23, 59, 59, 999),
+    },
+    {
+      id: "9",
+      name: "Etkinlik 9",
+      description: "Etkinlik 9 açıklaması",
+      maxParticipant: 50,
+      isOnline: false,
+      location: "İzmir",
+      eventTime: new Date(2024, 5, 15, 14, 30, 0, 0),
+      participants: ["john.doe"],
+      exclusiveForActiveMembers: true,
+      releaseTime: new Date(2024, 5, 1, 0, 0, 0, 0),
+      closeTime: new Date(2024, 5, 14, 23, 59, 59, 999),
+    },
+    {
+      id: "10",
+      name: "Etkinlik 10",
+      description: "Etkinlik 10 açıklaması",
+      maxParticipant: 150,
+      isOnline: true,
+      location: "Online",
+      eventTime: new Date(2024, 8, 1, 18, 0, 0, 0),
+      participants: ["jane.doe", "joe.bloggs"],
+      exclusiveForActiveMembers: false,
+      releaseTime: new Date(2024, 7, 1, 0, 0, 0, 0),
+      closeTime: new Date(2024, 7, 31, 23, 59, 59, 999),
+    },
+    {
+      id: "11",
+      name: "Etkinlik 11",
+      description: "Etkinlik 11 açıklaması",
+      maxParticipant: 75,
+      isOnline: false,
+      location: "Ankara",
+      eventTime: new Date(2025, 2, 1, 14, 30, 0, 0),
+      participants: ["john.doe", "jane.doe"],
+      exclusiveForActiveMembers: true,
+      releaseTime: new Date(2025, 1, 1, 0, 0, 0, 0),
+      closeTime: new Date(2025, 1, 28, 23, 59, 59, 999),
+    },
+    {
+      id: "12",
+      name: "Etkinlik 12",
+      description: "Etkinlik 12 açıklaması",
+      maxParticipant: 100,
+      isOnline: true,
+      location: "Online",
+      eventTime: new Date(2025, 5, 15, 14, 30, 0, 0),
+      participants: ["joe.bloggs"],
+      exclusiveForActiveMembers: false,
+      releaseTime: new Date(2025, 5, 1, 0, 0, 0, 0),
+      closeTime: new Date(2025, 5, 14, 23, 59, 59, 999),
+    },
+    {
+      id: "13",
+      name: "Etkinlik 13",
+      description: "Etkinlik 13 açıklaması",
+      maxParticipant: 200,
+      isOnline: true,
+      location: "Online",
+      eventTime: new Date(2025, 8, 1, 18, 0, 0, 0),
+      participants: ["john.doe", "jane.doe", "joe.bloggs"],
+      exclusiveForActiveMembers: false,
+      releaseTime: new Date(2025, 7, 1, 0, 0, 0, 0),
+      closeTime: new Date(2025, 7, 31, 23, 59, 59, 999),
+    },
+  ];
   const [page, setPage] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState<{
     id: string;
@@ -218,7 +219,7 @@ export const Events = () => {
   return (
     <div className="sm:w-10/12 w-full mb-4 flex sm:flex-col flex-col-reverse items-center border-2 border-neutral-200 p-2 rounded-xl">
       <Modal
-        isOpen={!isOpen}
+        isOpen={isOpen}
         onOpenChange={onOpenChange}
         scrollBehavior="inside"
         placement="center"
@@ -246,9 +247,9 @@ export const Events = () => {
             <TableHeader>
               <TableColumn>Etkinlik</TableColumn>
               <TableColumn>Tarih</TableColumn>
-              <TableColumn>Saat</TableColumn>
+              <TableColumn className="sm:table-cell hidden">Saat</TableColumn>
               <TableColumn>Konum</TableColumn>
-              <TableColumn>Katılım</TableColumn>
+              <TableColumn className="sm:table-cell hidden">Katılım</TableColumn>
             </TableHeader>
             <TableBody emptyContent={"Yaklaşan etkinlik bulunmuyor."}>
               {events.map((event) => (
@@ -256,10 +257,10 @@ export const Events = () => {
                   key={event.id}
                   className="hover:bg-slate-700 cursor-pointer select-none"
                 >
-                  <TableCell>{event.name}</TableCell>
-                  <TableCell>{event.eventTime.toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    {event.eventTime.toLocaleTimeString([], {
+                  <TableCell>{event.name.length > 20 ? event.name.slice(0, 5) + "... " : event.name}</TableCell>
+                  <TableCell>{event.eventTime.toLocaleDateString("tr-TR")}</TableCell>
+                  <TableCell className="sm:table-cell hidden">
+                    {event.eventTime.toLocaleTimeString("tr-TR", {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
@@ -268,9 +269,9 @@ export const Events = () => {
                     // ! We probably wont ever have locations as short as these, could prove a problem in reality.
                   }
                   <TableCell>
-                    {event.isOnline ? "Online" : event.location}
+                    {event.isOnline ? "Online" : (event.location.length > 20 ? event.location.slice(0, 5) + "..." : event.location)}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="sm:table-cell hidden">
                     {event.participants.length}/{event.maxParticipant}
                   </TableCell>
                 </TableRow>

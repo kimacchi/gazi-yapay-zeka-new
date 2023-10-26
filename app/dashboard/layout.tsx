@@ -2,7 +2,6 @@ import CheckUser from "@/components/system/CheckUser";
 import Header from "@/components/system/Header";
 import { Inter } from "next/font/google";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -17,14 +16,10 @@ export default function RootLayout({
 }) {
   return (
     // ! Check the docs for nested root layouts because right now it couses problems.
-      <html lang="en" className="dark">
-        <body
-          className={`${inter.className} bg-neutral-900 min-h-screen font-Roboto text-neutral-200`}
-        >
-          <CheckUser/>
-            <Header />
-            {children}
-        </body>
-      </html>
+    <>
+        {/* <CheckUser /> */}
+        <Header />
+        {children}
+    </>
   );
 }
