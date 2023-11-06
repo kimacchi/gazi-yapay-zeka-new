@@ -1,11 +1,12 @@
 import { AuthModel, RecordModel } from "pocketbase";
 import pb from "./pocketbase";
 
-export const createEvent = async (data: FormData) => {
+export const createEvent = async (data: any) => {
   try {
     const record = await pb.collection("events").create(data);
     return record;
   } catch (error) {
+    console.log(error);
     return { error: error };
   }
 };
