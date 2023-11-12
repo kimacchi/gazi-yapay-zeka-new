@@ -1,7 +1,7 @@
 "use client";
 
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { Checkbox, Input } from "@nextui-org/react";
+import { Checkbox, Input, Spinner } from "@nextui-org/react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import MDEditor from "@uiw/react-md-editor";
 import React from "react";
@@ -22,7 +22,7 @@ _Çeşitli stiller deneyebilirsiniz._`
   const [location, setLocation] = React.useState("");
   const [exclusiveForActiveMembers, setExclusiveForActiveMembers] =
     React.useState(false);
-  const [notExclusiveForActiveMembers, setNotExclusiveForActiveMembers] =
+  const [activeMembersGetFirst, setActiveMembersGetFirst] =
     React.useState(false);
   const [isOnline, setIsOnline] = React.useState(false);
   const [maxParticipant, setMaxParticipant] = React.useState(100);
@@ -34,7 +34,6 @@ _Çeşitli stiller deneyebilirsiniz._`
   const [reqGrade, setReqGrade] = React.useState(false);
 
   const [loading, setLoading] = React.useState(false);
-
 
   const createEvent = async () => {
     const data = new FormData();
@@ -52,7 +51,7 @@ _Çeşitli stiller deneyebilirsiniz._`
       reqGrade,
       isOnline,
       exclusiveForActiveMembers,
-      notExclusiveForActiveMembers,
+      activeMembersGetFirst,
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
@@ -156,29 +155,54 @@ _Çeşitli stiller deneyebilirsiniz._`
             placeholder="Katılımcı sayısını giriniz."
           />
         </div>
-        <Checkbox>Online etkinlik</Checkbox>
+        <Checkbox isSelected={isOnline} onValueChange={setIsOnline}>
+          Online etkinlik
+        </Checkbox>
         <div className="flex flex-wrap gap-4">
-          <Checkbox>Aktif üyelere özel</Checkbox>
-          <Checkbox>Aktif üyelere erken erişim</Checkbox>
+          <Checkbox
+            isSelected={exclusiveForActiveMembers}
+            onValueChange={setExclusiveForActiveMembers}
+          >
+            Aktif üyelere özel
+          </Checkbox>
+          <Checkbox
+            isSelected={activeMembersGetFirst}
+            onValueChange={setActiveMembersGetFirst}
+          >
+            Aktif üyelere erken erişim
+          </Checkbox>
         </div>
         <div className="flex flex-wrap gap-4">
-          <Checkbox>Telefon no gerekli</Checkbox>
-          <Checkbox>Okul no gerekli</Checkbox>
-          <Checkbox>Fakülte gerekli</Checkbox>
-          <Checkbox>Sınıf gerekli</Checkbox>
+          <Checkbox isSelected={reqPhoneNo} onValueChange={setReqPhoneNo}>
+            Telefon no gerekli
+          </Checkbox>
+          <Checkbox isSelected={reqSchoolNo} onValueChange={setReqSchoolNo}>
+            Okul no gerekli
+          </Checkbox>
+          <Checkbox isSelected={reqFaculty} onValueChange={setReqFaculty}>
+            Fakülte gerekli
+          </Checkbox>
+          <Checkbox isSelected={reqGrade} onValueChange={setReqGrade}>
+            Sınıf gerekli
+          </Checkbox>
         </div>
         <button
           type="submit"
-          // disabled={loading}
+          disabled={loading}
           onClick={async (e) => {
             e.preventDefault();
-            setLoading(true);
-            await createEvent();
-            setLoading(false);
+            try {
+              setLoading(true);
+              await createEvent();
+              setLoading(false);
+            } catch (error) {
+              console.log(error);
+              setLoading(false);
+            }
           }}
-          className="text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
+          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
         >
-          Etkinlik Oluştur
+          {loading ? <Spinner /> : "Etkinlik Oluştur"}
         </button>
       </form>
     </div>
