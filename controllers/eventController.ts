@@ -87,6 +87,7 @@ export const getList = async (page: number = 1, perPage: number = 20) => {
       }else{
         const events = await pb.collection("events").getList(page, perPage, {
           filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (exclusiveForActiveMembers = false)`,
+          sort: "-created"
         });
         console.log(events);
         return events;

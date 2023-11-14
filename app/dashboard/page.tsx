@@ -20,11 +20,9 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 
-  const res = await axios.get("http://localhost:3000/api/events?page=1&per_page=20");
-  console.log(res.data);
   return (
     <main className="text-neutral-200 w-full flex flex-col items-center mt-16">
-        <Events events={res.data.items}/>
+        <Events />
     </main>
   );
 }
