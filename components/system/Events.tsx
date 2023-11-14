@@ -18,6 +18,7 @@ import {
 import React, { use, useEffect, useState } from "react";
 import { Event } from "@/types/event";
 import axios, { AxiosResponse } from "axios";
+import { useRouter } from "next/navigation";
 
 
 // const events = [
@@ -192,6 +193,9 @@ import axios, { AxiosResponse } from "axios";
 //   },
 // ];
 export const Events = () => {
+  const router = useRouter();
+
+
   const [events, setEvents] = useState<Event[]>([]);
   const [totalPages, setTotalPages] = useState(1)
 
@@ -203,6 +207,7 @@ export const Events = () => {
   useEffect(() => {
     const getData = async () => {
       const res = await axios.get<any, AxiosResponse<{items: Event[], page: number, perPage: number, totalItems: number, totalPages: number}>>(`http://localhost:3000/api/events?page=${page}&per_page=10`);
+      console.log(res.data)
       setEvents(res.data.items);
       setTotalPages(totalPages);
     }
@@ -243,46 +248,55 @@ export const Events = () => {
         <h1 className="text-3xl font-bold">Yaklaşan Etkinlikler</h1>
         <hr className="my-4 w-2/3" />
         <div className="w-fit">
-          <Table className="w-fit">
-            <TableHeader>
-              <TableColumn>Etkinlik</TableColumn>
-              <TableColumn>Tarih</TableColumn>
-              <TableColumn className="sm:table-cell hidden">Saat</TableColumn>
-              <TableColumn>Konum</TableColumn>
-              <TableColumn className="sm:table-cell hidden">Katılım</TableColumn>
-            </TableHeader>
-            <TableBody emptyContent={"Yaklaşan etkinlik bulunmuyor."}>
-              {events.map((event) => (
-                <TableRow
-                  key={event.id}
-                  className="hover:bg-slate-700 cursor-pointer select-none"
-                >
-                  <TableCell>{event.name.length > 20 ? event.name.slice(0, 20) + "... " : event.name}</TableCell>
-                  <TableCell>{new Date(event.eventTime).toLocaleDateString("tr-TR")}</TableCell>
-                  <TableCell className="sm:table-cell hidden">
-                    {new Date(event.eventTime).toLocaleTimeString("tr-TR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </TableCell>
-                  {
-                    // ! We probably wont ever have locations as short as these, could prove a problem in reality.
-                  }
-                  <TableCell>
-                    {event.isOnline ? "Online" : (event.location.length > 20 ? event.location.slice(0, 5) + "..." : event.location)}
-                  </TableCell>
-                  <TableCell className="sm:table-cell hidden">
-                    {event.participants.length}/{event.maxParticipant}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          {
+            events ? 
+
+            <Table className="w-fit">
+              <TableHeader>
+                <TableColumn>Etkinlik</TableColumn>
+                <TableColumn>Tarih</TableColumn>
+                <TableColumn className="sm:table-cell hidden">Saat</TableColumn>
+                <TableColumn>Konum</TableColumn>
+                <TableColumn className="sm:table-cell hidden">Katılım</TableColumn>
+              </TableHeader>
+              <TableBody emptyContent={"Yaklaşan etkinlik bulunmuyor."}>
+                {events.map((event) => (
+                  <TableRow
+                    key={event.id}
+                    className="hover:bg-slate-700 cursor-pointer select-none"
+                    onClick={() => {
+                      router.push(`/dashboard/event/${event.id}`);
+                    }}
+                  >
+                    <TableCell>{event.name.length > 20 ? event.name.slice(0, 20) + "... " : event.name}</TableCell>
+                    <TableCell>{new Date(event.eventTime).toLocaleDateString("tr-TR")}</TableCell>
+                    <TableCell className="sm:table-cell hidden">
+                      {new Date(event.eventTime).toLocaleTimeString("tr-TR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </TableCell>
+                    {
+                      // ! We probably wont ever have locations as short as these, could prove a problem in reality.
+                    }
+                    <TableCell>
+                      {event.isOnline ? "Online" : (event.location.length > 20 ? event.location.slice(0, 5) + "..." : event.location)}
+                    </TableCell>
+                    <TableCell className="sm:table-cell hidden">
+                      {event.participants.length}/{event.maxParticipant}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            :
+            undefined
+          }
         </div>
       </div>
       <Pagination
-        total={10}
-        initialPage={1}
+        total={totalPages}
+        initialPage={page}
         page={page}
         onChange={setPage}
         className="w-fit"

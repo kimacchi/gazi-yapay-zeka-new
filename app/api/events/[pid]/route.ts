@@ -1,6 +1,8 @@
+import { getEvent } from "@/controllers/eventController";
+
 export async function GET(req: Request, { params }: { params: { pid: string } }) {
     // TODO: get one event
-    return new Response(JSON.stringify({}));
+    return new Response(JSON.stringify(await getEvent(params.pid)));
 }
 export async function PATCH(req: Request, { params }: { params: { pid: string } }) {
     // TODO: update one event
