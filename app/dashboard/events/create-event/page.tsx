@@ -34,6 +34,8 @@ _Çeşitli stiller deneyebilirsiniz._`
   const [loading, setLoading] = React.useState(false);
 
   const createEvent = async () => {
+    // TODO: Go back to admin events page after creation, keep while developing
+
     const data = new FormData();
     const event = {
       name,

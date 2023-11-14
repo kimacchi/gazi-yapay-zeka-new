@@ -14,12 +14,12 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Spinner,
 } from "@nextui-org/react";
 import React, { use, useEffect, useState } from "react";
 import { Event } from "@/types/event";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
-
 
 // const events = [
 //   {
@@ -195,24 +195,32 @@ import { useRouter } from "next/navigation";
 export const Events = () => {
   const router = useRouter();
 
-
-  const [events, setEvents] = useState<Event[]>([]);
-  const [totalPages, setTotalPages] = useState(1)
+  const [events, setEvents] = useState<Event[] | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [page, setPage] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState<Event>();
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
     const getData = async () => {
-      const res = await axios.get<any, AxiosResponse<{items: Event[], page: number, perPage: number, totalItems: number, totalPages: number}>>(`http://localhost:3000/api/events?page=${page}&per_page=10`);
-      console.log(res.data)
+      const res = await axios.get<
+        any,
+        AxiosResponse<{
+          items: Event[];
+          page: number;
+          perPage: number;
+          totalItems: number;
+          totalPages: number;
+        }>
+      >(`http://localhost:3000/api/events?page=${page}&per_page=10`);
+      console.log(res.data);
       setEvents(res.data.items);
       setTotalPages(totalPages);
-    }
+    };
     getData();
-  }, [page])
+  }, [page]);
 
   /**
    * TODO: The event data should be retrieved from the backend according to the user's authorization
@@ -248,16 +256,16 @@ export const Events = () => {
         <h1 className="text-3xl font-bold">Yaklaşan Etkinlikler</h1>
         <hr className="my-4 w-2/3" />
         <div className="w-fit">
-          {
-            events ? 
-
+          {events ? (
             <Table className="w-fit">
               <TableHeader>
                 <TableColumn>Etkinlik</TableColumn>
                 <TableColumn>Tarih</TableColumn>
                 <TableColumn className="sm:table-cell hidden">Saat</TableColumn>
                 <TableColumn>Konum</TableColumn>
-                <TableColumn className="sm:table-cell hidden">Katılım</TableColumn>
+                <TableColumn className="sm:table-cell hidden">
+                  Katılım
+                </TableColumn>
               </TableHeader>
               <TableBody emptyContent={"Yaklaşan etkinlik bulunmuyor."}>
                 {events.map((event) => (
@@ -268,19 +276,32 @@ export const Events = () => {
                       router.push(`/dashboard/event/${event.id}`);
                     }}
                   >
-                    <TableCell>{event.name.length > 20 ? event.name.slice(0, 20) + "... " : event.name}</TableCell>
-                    <TableCell>{new Date(event.eventTime).toLocaleDateString("tr-TR")}</TableCell>
+                    <TableCell>
+                      {event.name.length > 20
+                        ? event.name.slice(0, 20) + "... "
+                        : event.name}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(event.eventTime).toLocaleDateString("tr-TR", {
+                        timeZone: "GMT+0",
+                      })}
+                    </TableCell>
                     <TableCell className="sm:table-cell hidden">
                       {new Date(event.eventTime).toLocaleTimeString("tr-TR", {
                         hour: "2-digit",
                         minute: "2-digit",
+                        timeZone: "GMT+0",
                       })}
                     </TableCell>
                     {
                       // ! We probably wont ever have locations as short as these, could prove a problem in reality.
                     }
                     <TableCell>
-                      {event.isOnline ? "Online" : (event.location.length > 20 ? event.location.slice(0, 5) + "..." : event.location)}
+                      {event.isOnline
+                        ? "Online"
+                        : event.location.length > 20
+                        ? event.location.slice(0, 5) + "..."
+                        : event.location}
                     </TableCell>
                     <TableCell className="sm:table-cell hidden">
                       {event.participants.length}/{event.maxParticipant}
@@ -289,9 +310,9 @@ export const Events = () => {
                 ))}
               </TableBody>
             </Table>
-            :
-            undefined
-          }
+          ) : (
+            <Spinner />
+          )}
         </div>
       </div>
       <Pagination

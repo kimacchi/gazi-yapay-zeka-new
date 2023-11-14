@@ -43,7 +43,7 @@ const Header = () => {
 
   return (
     <div className="w-full flex items-center justify-between p-4">
-      <div className="w-8 h-8 bg-slate-300 rounded-full"></div>
+      <Link className="w-8 h-8 bg-slate-300 rounded-full" href="/dashboard"></Link>
       <div className="hidden sm:gap-6 sm:flex ">
         {getLinks().map((link) => (
           <Link href={link.url} key={link.url}>
