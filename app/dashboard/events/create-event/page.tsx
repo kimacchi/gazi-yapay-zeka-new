@@ -1,8 +1,6 @@
 "use client";
 
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { Checkbox, Input, Spinner } from "@nextui-org/react";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import MDEditor from "@uiw/react-md-editor";
 import React from "react";
 import axios from "axios";

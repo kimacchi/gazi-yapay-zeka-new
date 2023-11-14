@@ -1,5 +1,6 @@
 export interface Event{
     id: string;
+    name: string;
     description: string;
     maxParticipant: number;
     isOnline: boolean;
@@ -14,4 +15,9 @@ export interface Event{
     reqSchoolNo: boolean;
     reqFaculty: boolean;
     reqGrade: boolean;
+    collectionId: string;
+    collectionName: string;
+    created: Date;
+    updated: Date;
+    participants: string[]
 }

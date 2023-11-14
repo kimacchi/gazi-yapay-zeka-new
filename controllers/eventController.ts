@@ -72,14 +72,14 @@ export const getAdminList = async (page: number = 1, perPage: number = 20) => {
 
 export const getList = async (page: number = 1, perPage: number = 20) => {
   try {
-    if(pb.authStore.model){
+    if(pb.authStore.model || true){
       type userModel = AuthModel & { activeMember: boolean };
       let user = pb.authStore.model as userModel;
       console.log("outside of if statement", user);
       const now = new Date(Date.now());
       const stringNow = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${now.getSeconds()}`;
 
-      if (user.activeMember) {
+      if (false) {
         console.log("inside of if statement", user);
         return await pb.collection("events").getList(page, perPage, {
           filter: `((releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = false)) | ((closeTime >= "${stringNow}") && (activeMembersGetFirst = true))`,
@@ -104,6 +104,7 @@ export const getList = async (page: number = 1, perPage: number = 20) => {
       return {error: "Not logged in"}
     }
   } catch (error) {
+    console.log(error)
     return { error: error };
   }
   // try {
