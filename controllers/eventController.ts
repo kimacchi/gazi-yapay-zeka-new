@@ -84,6 +84,27 @@ export const addParticipant = async (id: string, data: {
   }
 }
 
+export const removeParticipant = async (id: string) => {
+  try {
+    if(pb.authStore.model){
+      // TODO: check if this works.
+
+      
+      const selectedEvent = await pb.collection("events").getOne(id);
+      const participant = await pb.collection("participant").getOne(selectedEvent.participants.find((participant: RecordModel) => participant.user === pb.authStore.model?.id).id);
+      const event = await pb.collection("events").update(participant.event, {
+        "participants-": participant.id,
+      });
+      return event;
+    }
+    else{
+      return {error: "Not logged in"}
+    }
+  } catch (error) {
+    return { error: error };
+  }
+}
+
 export const getAdminList = async (page: number = 1, perPage: number = 20) => {
   try {
     const resultList = await pb.collection("events").getList(page, perPage);

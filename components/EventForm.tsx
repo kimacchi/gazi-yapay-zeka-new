@@ -2,7 +2,7 @@
 
 import { Event } from "@/types/event";
 import { Input, Spinner } from "@nextui-org/react";
-import React from "react";
+import React, { useEffect } from "react";
 import Markdown from "react-markdown";
 import { Select, SelectItem } from "@nextui-org/react";
 import axios from "axios";
@@ -26,7 +26,7 @@ const EventForm = ({ event }: { event: Event }) => {
   // TODO: Make button disabled if required fields are not filled or event is full
   // TODO: Make button remove the participant if participant is already a part of the event
 
-
+  
   const [phoneNo, setPhoneNo] = React.useState("");
   const [faculty, setFaculty] = React.useState("");
   const [schoolNo, setSchoolNo] = React.useState("");
@@ -43,6 +43,21 @@ const EventForm = ({ event }: { event: Event }) => {
     | null
   >(null);
   const [loading, setLoading] = React.useState(false);
+  const [isDisabled, setDisabled] = React.useState(false);
+
+  const [join, setJoin] = React.useState(true);
+
+  useEffect(() => {
+    if (
+      event.participants.length >= event.maxParticipant ||
+      phoneNo === "" ||
+      faculty === "" ||
+      schoolNo === "" ||
+      grade === null
+    ) {
+      setDisabled(true);
+    }
+  });
 
   const joinEvent = async () => {
     try {
@@ -52,6 +67,15 @@ const EventForm = ({ event }: { event: Event }) => {
         schoolNo: schoolNo ? schoolNo : null,
         grade: grade ? grade : null,
       });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const leaveEvent = async () => {
+    try {
+      const res = await axios.delete("/api/events/add-participant/" + event.id);
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -233,12 +257,16 @@ const EventForm = ({ event }: { event: Event }) => {
         )}
         <button
           type="submit"
-          disabled={loading || false}
+          disabled={loading || isDisabled}
           onClick={async (e) => {
             e.preventDefault();
             try {
               setLoading(true);
-              await joinEvent();
+              if (join) {
+                await joinEvent();
+              } else {
+                await leaveEvent();
+              }
               setLoading(false);
             } catch (error) {
               console.log(error);
@@ -247,7 +275,11 @@ const EventForm = ({ event }: { event: Event }) => {
           }}
           className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
         >
-          {loading ? <Spinner /> : "Etkinliğe Katıl"}
+          {loading ? (
+            <Spinner />
+          ) : (
+            `${join ? "Etkinliğe Katıl" : "Etkinlikten Ayrıl"}`
+          )}
         </button>
       </div>
     </div>
