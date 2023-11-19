@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import Markdown from "react-markdown";
 import { Select, SelectItem } from "@nextui-org/react";
 import axios from "axios";
+import { useUserContext } from "@/app/UserContext";
 
 const faculties = [
   "Diş Hekimliği Fakültesi",
@@ -22,11 +23,17 @@ const faculties = [
   "Uygulamalı Bilimler Fakültesi",
 ];
 
-const EventForm = ({ event }: { event: Event }) => {
+type EventExpanded = Event & {
+  expand?: {
+    participants: { user: string }[];
+  };
+};
+
+const EventForm = ({ event }: { event: EventExpanded }) => {
   // TODO: Make button disabled if required fields are not filled or event is full
   // TODO: Make button remove the participant if participant is already a part of the event
+  const { user } = useUserContext();
 
-  
   const [phoneNo, setPhoneNo] = React.useState("");
   const [faculty, setFaculty] = React.useState("");
   const [schoolNo, setSchoolNo] = React.useState("");
@@ -43,19 +50,28 @@ const EventForm = ({ event }: { event: Event }) => {
     | null
   >(null);
   const [loading, setLoading] = React.useState(false);
-  const [isDisabled, setDisabled] = React.useState(false);
+  const [isDisabled, setDisabled] = React.useState(true);
 
   const [join, setJoin] = React.useState(true);
 
   useEffect(() => {
+    // TODO: if person wants to leave, they should be even if the event is full
+    if (event.reqFaculty && faculty == "") setDisabled(true);
+    else if (event.reqGrade && grade == null) setDisabled(true);
+    else if (event.reqPhoneNo && phoneNo == "") setDisabled(true);
+    else if (event.reqSchoolNo && schoolNo == "") setDisabled(true);
+    else setDisabled(false);
+
+
+    const temp = event.expand?.participants?.filter((e) => {
+      return e.user == user?.id;
+    })
     if (
-      event.participants.length >= event.maxParticipant ||
-      phoneNo === "" ||
-      faculty === "" ||
-      schoolNo === "" ||
-      grade === null
-    ) {
-      setDisabled(true);
+      temp
+    ){
+      if(temp.length > 0){
+        setJoin(false);
+      }
     }
   });
 
@@ -81,6 +97,10 @@ const EventForm = ({ event }: { event: Event }) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if(!join) setDisabled(false);
+  }, [join])
 
   return (
     <div className="dark w-full flex flex-col items-center sm:px-0 px-4">

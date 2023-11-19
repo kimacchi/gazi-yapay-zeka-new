@@ -1,5 +1,6 @@
 import { AuthModel, RecordModel } from "pocketbase";
 import pb from "./pocketbase";
+import { User, UserContextType, UserContext_ } from "@/types/user";
 
 export const createEvent = async (data: any) => {
   try {
@@ -22,7 +23,7 @@ export const deleteEvent = async (id: string) => {
 
 export const getEvent = async (id: string) => {
   try {
-    const record = await pb.collection("events").getOne(id);
+    const record = await pb.collection("events").getOne(id, {expand: 'participants'});
     return record;
   } catch (error) {
     return { error: error };
@@ -88,11 +89,13 @@ export const removeParticipant = async (id: string) => {
   try {
     if(pb.authStore.model){
       // TODO: check if this works.
-
       
-      const selectedEvent = await pb.collection("events").getOne(id);
-      const participant = await pb.collection("participant").getOne(selectedEvent.participants.find((participant: RecordModel) => participant.user === pb.authStore.model?.id).id);
-      const event = await pb.collection("events").update(participant.event, {
+      const selectedEvent = await pb.collection("events").getOne(id, {
+        expand: 'participants',
+      });
+      const participant = selectedEvent.expand?.participants.find((user: any) => user.user  === pb.authStore.model?.id)
+      // console.log(selectedEvent.participants)
+      const event = await pb.collection("events").update(id, {
         "participants-": participant.id,
       });
       return event;
