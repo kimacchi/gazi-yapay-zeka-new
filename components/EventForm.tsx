@@ -33,6 +33,8 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
   // TODO: Make button disabled if required fields are not filled or event is full
   // TODO: Make button remove the participant if participant is already a part of the event
   const { user } = useUserContext();
+  // ? Maybe send the user id with the request and check if the user is already a part of the event
+  // ? I could also use that to verify other sorts of things
 
   const [phoneNo, setPhoneNo] = React.useState("");
   const [faculty, setFaculty] = React.useState("");
