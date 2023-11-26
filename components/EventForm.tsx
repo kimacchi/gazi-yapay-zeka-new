@@ -36,11 +36,11 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
   // ? Maybe send the user id with the request and check if the user is already a part of the event
   // ? I could also use that to verify other sorts of things
 
-  const [phoneNo, setPhoneNo] = React.useState("");
-  const [faculty, setFaculty] = React.useState("");
-  const [schoolNo, setSchoolNo] = React.useState("");
+  const [phoneNo, setPhoneNo] = React.useState(user?.phoneNo || "");
+  const [faculty, setFaculty] = React.useState(user?.faculty || "");
+  const [schoolNo, setSchoolNo] = React.useState(user?.schoolNo || "");
   const [grade, setGrade] = React.useState<
-    | "Hazırlık"
+    "Hazırlık"
     | "1. Sınıf"
     | "2. Sınıf"
     | "3. Sınıf"
@@ -50,7 +50,7 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
     | "Yüksek Lisans"
     | "Doktora"
     | null
-  >(null);
+  >(user?.grade || null);
   const [loading, setLoading] = React.useState(false);
   const [isDisabled, setDisabled] = React.useState(true);
 
@@ -63,16 +63,14 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
     else if (event.reqPhoneNo && phoneNo == "") setDisabled(true);
     else if (event.reqSchoolNo && schoolNo == "") setDisabled(true);
     else setDisabled(false);
+    console.log(event)
 
 
-    const temp = event.expand?.participants?.filter((e) => {
-      return e.user == user?.id;
-    })
-    if (
-      temp
-    ){
-      if(temp.length > 0){
+    if(user){
+      if(event.participants.includes(user.id)){
         setJoin(false);
+      }else{
+        setJoin(true);
       }
     }
   });

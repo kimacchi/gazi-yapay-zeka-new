@@ -66,14 +66,19 @@ export const addParticipant = async (id: string, data: {
   phoneNo?: string,
   schoolNo?: string,
   faculty?: string,
-  grade?: number
+  grade?: string
 }) => {
   try {
     if(pb.authStore.model){
-      const participant = await pb.collection("participant").create({user: pb.authStore.model.id, ...data});
-      console.log(participant);
+      // const participant = await pb.collection("participant").create({user: pb.authStore.model.id, ...data});
+      // console.log(participant);
+      // const event = await pb.collection("events").update(id, {
+      //   "participants+": participant.id,
+      // });
+      // return event;
+      const updatedUser = await pb.collection("users").update(pb.authStore.model.id, data);
       const event = await pb.collection("events").update(id, {
-        "participants+": participant.id,
+        "participants+": updatedUser.id,
       });
       return event;
     }
@@ -90,13 +95,13 @@ export const removeParticipant = async (id: string) => {
     if(pb.authStore.model){
       // TODO: check if this works.
       
-      const selectedEvent = await pb.collection("events").getOne(id, {
-        expand: 'participants',
-      });
-      const participant = selectedEvent.expand?.participants.find((user: any) => user.user  === pb.authStore.model?.id)
-      // console.log(selectedEvent.participants)
+      // const selectedEvent = await pb.collection("events").getOne(id, {
+      //   expand: 'participants',
+      // });
+      // const participant = selectedEvent.expand?.participants.find((user: any) => user.user  === pb.authStore.model?.id)
+      // // console.log(selectedEvent.participants)
       const event = await pb.collection("events").update(id, {
-        "participants-": participant.id,
+        "participants-": pb.authStore.model.id,
       });
       return event;
     }
