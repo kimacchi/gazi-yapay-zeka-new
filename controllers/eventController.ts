@@ -1,8 +1,9 @@
 import { AuthModel, RecordModel } from "pocketbase";
-import pb from "./pocketbase";
+// import pb from "./pocketbase";
+import PocketBase from "pocketbase";
 import { User, UserContextType, UserContext_ } from "@/types/user";
 
-export const createEvent = async (data: any) => {
+export const createEvent = async (data: any, pb: PocketBase) => {
   try {
     const record = await pb.collection("events").create(data);
     return record;
@@ -12,7 +13,7 @@ export const createEvent = async (data: any) => {
   }
 };
 
-export const deleteEvent = async (id: string) => {
+export const deleteEvent = async (id: string, pb: PocketBase) => {
   try {
     const record = await pb.collection("events").delete(id);
     return record;
@@ -21,7 +22,7 @@ export const deleteEvent = async (id: string) => {
   }
 };
 
-export const getEvent = async (id: string) => {
+export const getEvent = async (id: string, pb: PocketBase) => {
   try {
     const record = await pb.collection("events").getOne(id, {expand: 'participants'});
     return record;
@@ -30,7 +31,7 @@ export const getEvent = async (id: string) => {
   }
 };
 
-export const getAllEvents = async () => {
+export const getAllEvents = async (pb: PocketBase) => {
   try {
     const record = await pb.collection("events").getFullList();
     return record;
@@ -39,7 +40,7 @@ export const getAllEvents = async () => {
   }
 };
 
-export const updateEvent = async (id: string, data: FormData) => {
+export const updateEvent = async (id: string, data: FormData, pb: PocketBase) => {
   try {
     const record = await pb.collection("events").update(id, data);
     return record;
@@ -48,15 +49,15 @@ export const updateEvent = async (id: string, data: FormData) => {
   }
 };
 
-export const deleteEvents = async () => {
+export const deleteEvents = async (pb: PocketBase) => {
   try {
-    const record = await getAllEvents();
+    const record = await getAllEvents(pb);
     if (Array.isArray(record)) {
       record.forEach(async (event) => {
-        await deleteEvent(event.id);
+        await deleteEvent(event.id, pb);
       });
     }
-    return await getAllEvents();
+    return await getAllEvents(pb);
   } catch (error) {
     return { error: error };
   }
@@ -67,7 +68,7 @@ export const addParticipant = async (id: string, data: {
   schoolNo?: string,
   faculty?: string,
   grade?: string
-}) => {
+}, pb: PocketBase) => {
   try {
     if(pb.authStore.model){
       // const participant = await pb.collection("participant").create({user: pb.authStore.model.id, ...data});
@@ -90,7 +91,7 @@ export const addParticipant = async (id: string, data: {
   }
 }
 
-export const removeParticipant = async (id: string) => {
+export const removeParticipant = async (id: string, pb: PocketBase) => {
   try {
     if(pb.authStore.model){
       // TODO: check if this works.
@@ -113,7 +114,7 @@ export const removeParticipant = async (id: string) => {
   }
 }
 
-export const getAdminList = async (page: number = 1, perPage: number = 20) => {
+export const getAdminList = async (page: number = 1, perPage: number = 20, pb: PocketBase) => {
   try {
     const resultList = await pb.collection("events").getList(page, perPage);
     return resultList;
@@ -122,7 +123,7 @@ export const getAdminList = async (page: number = 1, perPage: number = 20) => {
   }
 };
 
-export const getList = async (page: number = 1, perPage: number = 20) => {
+export const getList = async (page: number = 1, perPage: number = 20, pb: PocketBase) => {
   try {
     if(pb.authStore.model || true){
       type userModel = AuthModel & { activeMember: boolean };
