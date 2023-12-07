@@ -4,6 +4,7 @@ import { Checkbox, Input, Spinner } from "@nextui-org/react";
 import MDEditor from "@uiw/react-md-editor";
 import React from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const CreateEventPage = () => {
   const [description, setDescription] = React.useState<string | undefined>(
@@ -35,7 +36,7 @@ _Çeşitli stiller deneyebilirsiniz._`
 
   const createEvent = async () => {
     // TODO: Go back to admin events page after creation, keep while developing
-
+    const pb_auth = Cookies.get("pb_auth")
     const data = new FormData();
     const event = {
       name,
@@ -55,7 +56,11 @@ _Çeşitli stiller deneyebilirsiniz._`
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
-    const res = await axios.post("/api/events/", event);
+    const res = await axios.post("/api/events/", event, {
+      headers: {
+        cookie: `pb_auth=${pb_auth}`,
+      },
+    });
     console.log(res.data);
   };
 

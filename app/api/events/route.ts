@@ -1,10 +1,10 @@
 import { createEvent, getList } from "@/controllers/eventController"
 import {cookies} from "next/headers"
 import PocketBase from "pocketbase";
-import pb from "@/controllers/pocketbase"
+// import pb from "@/controllers/pocketbase"
 
 
-// const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
+const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 // const token = cookies().get("token")
 // pb.authStore.loadFromCookie(token?.value || "");
 
@@ -14,6 +14,8 @@ export async function GET(req: Request) {
     const {searchParams} = new URL(req.url);
     const page = searchParams.get("page");
     const perPage = searchParams.get("per_page");
+    const token = cookies().get("pb_auth")?.value
+    pb.authStore.loadFromCookie(token || "");
     return new Response(JSON.stringify(await getList(parseInt(page || "1"), parseInt(perPage || "20"), pb)))
 }
 

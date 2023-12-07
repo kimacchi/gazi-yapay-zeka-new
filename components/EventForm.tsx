@@ -7,6 +7,7 @@ import Markdown from "react-markdown";
 import { Select, SelectItem } from "@nextui-org/react";
 import axios from "axios";
 import { useUserContext } from "@/app/UserContext";
+import Cookies from "js-cookie";
 
 const faculties = [
   "Diş Hekimliği Fakültesi",
@@ -29,7 +30,7 @@ type EventExpanded = Event & {
   };
 };
 
-const EventForm = ({ event }: { event: EventExpanded }) => {
+const EventForm = ({ event, partOfEvent }: { event: EventExpanded, partOfEvent: boolean }) => {
   // TODO: Make button disabled if required fields are not filled or event is full
   // TODO: Make button remove the participant if participant is already a part of the event
   const { user } = useUserContext();
@@ -40,7 +41,7 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
   const [faculty, setFaculty] = React.useState(user?.faculty || "");
   const [schoolNo, setSchoolNo] = React.useState(user?.schoolNo || "");
   const [grade, setGrade] = React.useState<
-    "Hazırlık"
+    | "Hazırlık"
     | "1. Sınıf"
     | "2. Sınıf"
     | "3. Sınıf"
@@ -56,20 +57,23 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
 
   const [join, setJoin] = React.useState(true);
 
+  const pb_auth = Cookies.get("pb_auth");
+
   useEffect(() => {
     // TODO: if person wants to leave, they should be even if the event is full
+
+    // ! If part of event, leave should be available, currently not.
     if (event.reqFaculty && faculty == "") setDisabled(true);
     else if (event.reqGrade && grade == null) setDisabled(true);
     else if (event.reqPhoneNo && phoneNo == "") setDisabled(true);
     else if (event.reqSchoolNo && schoolNo == "") setDisabled(true);
     else setDisabled(false);
-    console.log(event)
+    // console.log(event)
 
-
-    if(user){
-      if(event.participants.includes(user.id)){
+    if (user) {
+      if (event.participants.includes(user.id)) {
         setJoin(false);
-      }else{
+      } else {
         setJoin(true);
       }
     }
@@ -77,12 +81,20 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
 
   const joinEvent = async () => {
     try {
-      const res = await axios.post("/api/events/add-participant/" + event.id, {
-        phoneNo: phoneNo ? phoneNo : null,
-        faculty: faculty ? faculty : null,
-        schoolNo: schoolNo ? schoolNo : null,
-        grade: grade ? grade : null,
-      });
+      const res = await axios.post(
+        "/api/events/add-participant/" + event.id,
+        {
+          phoneNo: phoneNo ? phoneNo : null,
+          faculty: faculty ? faculty : null,
+          schoolNo: schoolNo ? schoolNo : null,
+          grade: grade ? grade : null,
+        },
+        {
+          headers: {
+            cookie: `pb_auth=${pb_auth}`,
+          },
+        }
+      );
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -91,7 +103,14 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
 
   const leaveEvent = async () => {
     try {
-      const res = await axios.delete("/api/events/add-participant/" + event.id);
+      const res = await axios.delete(
+        "/api/events/add-participant/" + event.id,
+        {
+          headers: {
+            cookie: `pb_auth=${pb_auth}`,
+          },
+        }
+      );
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -99,8 +118,8 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
   };
 
   useEffect(() => {
-    if(!join) setDisabled(false);
-  }, [join])
+    if (!join) setDisabled(false);
+  }, [join]);
 
   return (
     <div className="dark w-full flex flex-col items-center sm:px-0 px-4">
@@ -282,7 +301,7 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
             e.preventDefault();
             try {
               setLoading(true);
-              if (join) {
+              if (!partOfEvent) {
                 await joinEvent();
               } else {
                 await leaveEvent();
@@ -298,7 +317,7 @@ const EventForm = ({ event }: { event: EventExpanded }) => {
           {loading ? (
             <Spinner />
           ) : (
-            `${join ? "Etkinliğe Katıl" : "Etkinlikten Ayrıl"}`
+            `${!partOfEvent ? "Etkinliğe Katıl" : "Etkinlikten Ayrıl"}`
           )}
         </button>
       </div>

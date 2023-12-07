@@ -37,7 +37,7 @@ const LoginForm = () => {
       setLoading(false);
 
       if(loginResponse.data.token){
-        route.push("/dashboard/event/wec8vwqqh3nc50p")
+        route.push("/dashboard")
       }
     } catch (error) {
       throw error;

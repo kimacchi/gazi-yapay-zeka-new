@@ -20,8 +20,9 @@ import React, { use, useEffect, useState } from "react";
 import { Event } from "@/types/event";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
-// const events = [
+
 //   {
 //     id: "1",
 //     name: "Etkinlik 1 sdfgsdfg",
@@ -204,6 +205,8 @@ export const Events = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
+    console.log("sdfdsfg")
+    const pb_auth = Cookies.get("pb_auth")
     const getData = async () => {
       const res = await axios.get<
         any,
@@ -214,8 +217,12 @@ export const Events = () => {
           totalItems: number;
           totalPages: number;
         }>
-      >(`http://localhost:3000/api/events?page=${page}&per_page=10`);
-      console.log(res.data);
+      >(`http://localhost:3000/api/events?page=${page}&per_page=10`, {
+        headers:{
+          cookie: `pb_auth=${pb_auth}`
+        }
+      });
+      // console.log(res.data);
       setEvents(res.data.items);
       setTotalPages(totalPages);
     };

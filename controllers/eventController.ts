@@ -2,6 +2,7 @@ import { AuthModel, RecordModel } from "pocketbase";
 // import pb from "./pocketbase";
 import PocketBase from "pocketbase";
 import { User, UserContextType, UserContext_ } from "@/types/user";
+import { cookies } from "next/headers";
 
 export const createEvent = async (data: any, pb: PocketBase) => {
   try {
@@ -124,25 +125,26 @@ export const getAdminList = async (page: number = 1, perPage: number = 20, pb: P
 };
 
 export const getList = async (page: number = 1, perPage: number = 20, pb: PocketBase) => {
+  console.log(pb.authStore.isValid, "is it valid ?")
   try {
-    if(pb.authStore.model || true){
+    if(pb.authStore.model){
       type userModel = AuthModel & { activeMember: boolean };
       let user = pb.authStore.model as userModel;
-      console.log("outside of if statement", user);
+      // console.log("outside of if statement", user);
       const now = new Date(Date.now());
       const stringNow = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${now.getSeconds()}`;
-
-      if (false) {
-        console.log("inside of if statement", user);
+      // console.log(user, "this is user")
+      if (user.activeMember) {
+        // console.log("inside of if statement", user);
         return await pb.collection("events").getList(page, perPage, {
-          filter: `((releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = false)) | ((closeTime >= "${stringNow}") && (activeMembersGetFirst = true))`,
+          filter: `((releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = false)) || ((closeTime >= "${stringNow}") && (activeMembersGetFirst = true))`,
         });
       }else{
         const events = await pb.collection("events").getList(page, perPage, {
           filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (exclusiveForActiveMembers = false)`,
           sort: "-created"
         });
-        console.log(events);
+        // console.log(events);
         return events;
 
         /**
