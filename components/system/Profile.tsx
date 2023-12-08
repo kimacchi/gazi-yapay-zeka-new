@@ -68,6 +68,11 @@ const Profile = ({ user }: { user: AuthModel_ | null }) => {
           </button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
+          <DropdownItem key="main_menu" className="" onClick={() => {
+            router.push("/");
+          }}>
+            Ana Sayfaya Dön
+          </DropdownItem>
           <DropdownItem key="logout" className="text-danger" color="danger" onClick={logout}>
             Çıkış Yap
           </DropdownItem>

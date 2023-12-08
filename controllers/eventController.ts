@@ -41,7 +41,7 @@ export const getAllEvents = async (pb: PocketBase) => {
   }
 };
 
-export const updateEvent = async (id: string, data: FormData, pb: PocketBase) => {
+export const updateEvent = async (id: string, data: any, pb: PocketBase) => {
   try {
     const record = await pb.collection("events").update(id, data);
     return record;
@@ -115,9 +115,27 @@ export const removeParticipant = async (id: string, pb: PocketBase) => {
   }
 }
 
-export const getAdminList = async (page: number = 1, perPage: number = 20, pb: PocketBase) => {
+export const removeAnyParticipant = async (id: string, userId: string, pb: PocketBase) => {
   try {
-    const resultList = await pb.collection("events").getList(page, perPage);
+    if(pb.authStore.model){
+      const event = await pb.collection("events").update(id, {
+        "participants-": userId,
+      });
+      return event;
+    }
+    else{
+      return {error: "Not logged in"}
+    }
+  } catch (error) {
+    return { error: error };
+  }
+}
+
+export const getAdminList = async (pb: PocketBase) => {
+  try {
+    const resultList = await pb.collection("events").getFullList({
+      sort: "-created",
+    });
     return resultList;
   } catch (error) {
     return { error: error };
@@ -138,11 +156,12 @@ export const getList = async (page: number = 1, perPage: number = 20, pb: Pocket
         // console.log("inside of if statement", user);
         return await pb.collection("events").getList(page, perPage, {
           filter: `((releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = false)) || ((closeTime >= "${stringNow}") && (activeMembersGetFirst = true))`,
+          sort: "+eventTime"
         });
       }else{
         const events = await pb.collection("events").getList(page, perPage, {
           filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (exclusiveForActiveMembers = false)`,
-          sort: "-created"
+          sort: "+eventTime"
         });
         // console.log(events);
         return events;

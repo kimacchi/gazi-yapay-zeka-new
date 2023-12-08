@@ -23,7 +23,7 @@ const page = async ({ params }: { params: { pid: string } }) => {
   const token = cookies().get("pb_auth")?.value;
   pb.authStore.loadFromCookie(token || "");
 
-  let partOfEvent = false;
+  
   let faculty = "";
   let grade:
     | "Hazırlık"
@@ -39,10 +39,16 @@ const page = async ({ params }: { params: { pid: string } }) => {
   let schoolNo = "";
   let phoneNo = "";
 
+  const part_of_event_res = await axios.get<any, AxiosResponse<{partOfEvent: boolean}>>("http://localhost:3000/api/events/part-of-event/" + params.pid + "?user_id=" + pb.authStore.model?.id, {
+    headers: {
+      cookie: `pb_auth=${pb_auth}`,
+    },
+  })
+  let partOfEvent = part_of_event_res.data.partOfEvent
+
   if (pb.authStore.model) {
-    if (res.data.participants?.includes(pb.authStore.model.id)) {
-      partOfEvent = true;
-    }
+    console.log(res.data.participants)
+    
     faculty = pb.authStore.model.faculty;
     schoolNo = pb.authStore.model.schoolNo;
     phoneNo = pb.authStore.model.phoneNo;
@@ -64,7 +70,7 @@ const page = async ({ params }: { params: { pid: string } }) => {
     <div className="w-full py-12">
       <EventForm
         event={res.data}
-        partOfEvent={partOfEvent}
+        partOfEvent_={partOfEvent}
         userFaculty={faculty}
         userGrade={grade}
         userPhoneNo={phoneNo}

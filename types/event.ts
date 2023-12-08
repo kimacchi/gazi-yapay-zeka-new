@@ -1,3 +1,5 @@
+import { UserContext_ } from "./user";
+
 export interface Event{
     id: string;
     name: string;
@@ -19,5 +21,8 @@ export interface Event{
     collectionName: string;
     created: Date;
     updated: Date;
-    participants: string[]
+    participants: string[];
+    expand?: {
+        participants: UserContext_[];
+    }
 }

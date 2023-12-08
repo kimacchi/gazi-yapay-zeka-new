@@ -5,11 +5,12 @@ import { Input, Spinner } from "@nextui-org/react";
 import React, { useEffect } from "react";
 import Markdown from "react-markdown";
 import { Select, SelectItem } from "@nextui-org/react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useUserContext } from "@/app/UserContext";
 import Cookies from "js-cookie";
 import PocketBase from "pocketbase";
 import { User, UserContext_ } from "@/types/user";
+import { useRouter } from "next/navigation";
 
 const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 
@@ -28,22 +29,18 @@ const faculties = [
   "Uygulamalı Bilimler Fakültesi",
 ];
 
-type EventExpanded = Event & {
-  expand?: {
-    participants: { user: string }[];
-  };
-};
+
 
 const EventForm = ({
   event,
-  partOfEvent,
+  partOfEvent_,
   userFaculty,
   userGrade,
   userSchoolNo,
   userPhoneNo,
 }: {
-  event: EventExpanded;
-  partOfEvent: boolean;
+  event: Event;
+  partOfEvent_: boolean;
   userPhoneNo: string;
   userFaculty: string;
   userSchoolNo: string;
@@ -65,6 +62,21 @@ const EventForm = ({
   // ? Maybe send the user id with the request and check if the user is already a part of the event
   // ? I could also use that to verify other sorts of things
   let pb_auth = Cookies.get("pb_auth");
+
+  const [partOfEvent, setPartOfEvent] = React.useState(false);
+
+  useEffect(() => {
+    const x = async () => {      
+      const part_of_event_res = await axios.get<any, AxiosResponse<{partOfEvent: boolean}>>("http://localhost:3000/api/events/part-of-event/" + event.id, {
+        headers: {
+          cookie: `pb_auth=${pb_auth}`,
+        },
+      })
+      setPartOfEvent(part_of_event_res.data.partOfEvent);
+    }
+    x();
+  }, []);
+
 
   const [phoneNo, setPhoneNo] = React.useState(userPhoneNo || "");
   const [faculty, setFaculty] = React.useState(userFaculty || "");
@@ -97,6 +109,8 @@ const EventForm = ({
     else setDisabled(false);
     // console.log(event)
   });
+  const router = useRouter();
+
   const joinEvent = async () => {
     try {
       const res = await axios.post(
@@ -113,7 +127,7 @@ const EventForm = ({
           },
         }
       );
-      console.log(res.data);
+      router.push("/dashboard/");
     } catch (error) {
       console.log(error);
     }
@@ -129,7 +143,7 @@ const EventForm = ({
           },
         }
       );
-      console.log(res.data);
+      router.push("/dashboard/");
     } catch (error) {
       console.log(error);
     }
