@@ -12,6 +12,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import HeaderLinks from "./HeaderLinks";
+import Profile from "./Profile";
 
 const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 
@@ -22,15 +23,32 @@ const Header = () => {
   const token = cookies().get("pb_auth")?.value;
   pb.authStore.loadFromCookie(token || "");
 
-  // console.log(pb.authStore.model, "sadfasdf");
-
+  interface AuthModel_ extends RecordModel {
+    id: string;
+    username: string;
+    email: string;
+    name: string;
+    admin: boolean;
+    picture: any;
+    activeMember: boolean;
+    token: string;
+    phoneNo: string;
+    schoolNo: string;
+    faculty: string;
+    grade:
+      | "Hazırlık"
+      | "1. Sınıf"
+      | "2. Sınıf"
+      | "3. Sınıf"
+      | "4. Sınıf"
+      | "5. Sınıf"
+      | "6. Sınıf"
+      | "Yüksek Lisans"
+      | "Doktora"
+      | "";
+  }
+  const model = pb.authStore.model as AuthModel_ | null;
   const getLinks = (): Array<{ url: string; title: string }> => {
-    interface AuthModel_ extends RecordModel {
-      admin: boolean;
-    }
-    const model = pb.authStore.model as AuthModel_ | null;
-
-    // console.log(model, pb.authStore.model)
     if (pb.authStore.model) {
       // ! NOT CHECKING IF THE USER IS ADMIN
       if (model?.admin) {
@@ -72,7 +90,8 @@ const Header = () => {
       <div className="md:hidden block">
         <HeaderLinks data={getLinks()} />
       </div>
-      <div className="w-8 h-8 rounded-full hover:cursor-pointer">
+      <Profile user={model} />
+      {/* <div className="w-8 h-8 rounded-full hover:cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="32"
@@ -87,7 +106,7 @@ const Header = () => {
             d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
           />
         </svg>
-      </div>
+      </div> */}
     </div>
   );
 };
