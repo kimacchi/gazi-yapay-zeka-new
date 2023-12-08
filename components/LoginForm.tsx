@@ -12,12 +12,14 @@ import { useRouter } from "next/navigation";
 const LoginForm = () => {
   const route = useRouter();
 
-  const {user, setUser} = useUserContext();
+  const { user, setUser } = useUserContext();
 
   const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [error, setError] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,25 +29,49 @@ const LoginForm = () => {
       // TODO: Add validation for email and password if they are empty,
       // TODO: Display error message returning from the backend upon failure
       const loginResponse = await axios.post<{
-        record: UserContext_,
-        token: string
+        record: UserContext_;
+        token: string;
+        error?: any;
+        status?: number;
       }>("/api/users/login", {
         email: email.trim(),
         password: password.trim(),
       });
-      setUser({...(loginResponse.data.record), token: loginResponse.data.token});
+      if (loginResponse.data.status) {
+        setPassword("");
+        console.log("authentication failed.");
+        setError(true);
+      } else {
+        setError(false);
+        console.log("authentication successful.");
+      }
+      setUser({
+        ...loginResponse.data.record,
+        token: loginResponse.data.token,
+      });
       setLoading(false);
 
-      if(loginResponse.data.token){
-        route.push("/dashboard")
+      if (loginResponse.data.token) {
+        route.push("/dashboard");
       }
     } catch (error) {
       throw error;
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      {
+        error && (
+          <h2 className="sm:w-96 w-72 text-base p-2 rounded-lg bg-rose-700/50">
+            Bilgiler geçersiz. Tekrar deneyiniz.
+            <br></br>
+            <span className="text-xs">
+            Aksi durumda idari kurul ile iletişime geçiniz.
+            </span>
+          </h2>
+        )
+      }
       <div className="flex flex-col gap-6">
         <input
           type="email"
@@ -63,8 +89,12 @@ const LoginForm = () => {
         />
       </div>
       <div className="flex w-full justify-between">
-        <Link href="/signup" className="hover:underline">Kayıt ol</Link>
-        <Link href="/" className="hover:underline">Şifremi unuttum</Link>
+        <Link href="/signup" className="hover:underline">
+          Kayıt ol
+        </Link>
+        <Link href="/" className="hover:underline">
+          Şifremi unuttum
+        </Link>
       </div>
       <button
         type="submit"

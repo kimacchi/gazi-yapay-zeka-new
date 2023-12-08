@@ -23,9 +23,14 @@ export const login = async (
 ) => {
   try {
     const authData = await pb.collection("users").authWithPassword(verifier, password);
+    console.log(authData)
     console.log(pb.authStore.model)
     return authData
   } catch (error) {
+    const err = error as any
+    if(err.response.message === "Failed to authenticate." || err.status === 400){
+      return {"error": error, "status": 400}
+    }
     return {"error": error}
   }
 }
