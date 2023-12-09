@@ -39,6 +39,9 @@ const CreateEventPage = ({ event }: { event: Event }) => {
   const [participants, setParticipants] = React.useState(
     event.expand?.participants || []
   );
+  const [exclusiveForBoard, setExclusiveForBoard] = React.useState(false);
+  const [activeMemberReleaseTime, setActiveMemberReleaseTime] =
+    React.useState<Date | null>(new Date());
 
   const [loading, setLoading] = React.useState(false);
 
@@ -58,6 +61,9 @@ const CreateEventPage = ({ event }: { event: Event }) => {
     setReqSchoolNo(event.reqSchoolNo);
     setReqGrade(event.reqGrade);
     setParticipants(event.expand?.participants || []);
+    setExclusiveForBoard(event.exclusiveForBoard);
+    setActiveMemberReleaseTime(new Date(event.activeMemberReleaseTime));
+    setReqMajoring(event.reqMajoring);
   };
 
   const updateEvent = async () => {
@@ -79,7 +85,9 @@ const CreateEventPage = ({ event }: { event: Event }) => {
       isOnline,
       exclusiveForActiveMembers,
       activeMembersGetFirst,
-      reqMajoring
+      reqMajoring,
+      activeMemberReleaseTime,
+      exclusiveForBoard,
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
@@ -168,6 +176,25 @@ const CreateEventPage = ({ event }: { event: Event }) => {
             placeholder="Kayıt zamanını giriniz."
             labelPlacement="outside"
           />
+          {activeMembersGetFirst && (
+            <>
+              <h2 className="text-rose-700">
+                Aşağıdaki alanı değiştirmeyi unutmayın.
+              </h2>
+              <Input
+                type="datetime-local"
+                label="Aktif Üyeler İçin Kayıt Açılış Zamanı"
+                value={activeMemberReleaseTime
+                  ?.toISOString()
+                  .slice(0, activeMemberReleaseTime?.toISOString().length - 8)}
+                onChange={(e) =>
+                  setActiveMemberReleaseTime(new Date(e.target.value))
+                }
+                placeholder="Kayıt zamanını giriniz."
+                labelPlacement="outside"
+              />
+            </>
+          )}
           <Input
             type="datetime-local"
             label="Kayıt Kapanış Zamanı"
@@ -205,6 +232,12 @@ const CreateEventPage = ({ event }: { event: Event }) => {
           Online etkinlik
         </Checkbox>
         <div className="flex flex-wrap gap-4">
+          <Checkbox
+            isSelected={exclusiveForBoard}
+            onValueChange={setExclusiveForBoard}
+          >
+            İdari kurula özel
+          </Checkbox>
           <Checkbox
             isSelected={exclusiveForActiveMembers}
             onValueChange={setExclusiveForActiveMembers}

@@ -141,21 +141,27 @@ export const getList = async (page: number = 1, perPage: number = 20, pb: Pocket
   console.log(pb.authStore.isValid, "is it valid ?")
   try {
     if(pb.authStore.model){
-      type userModel = AuthModel & { activeMember: boolean };
+      type userModel = AuthModel & { activeMember: boolean, admin: boolean };
       let user = pb.authStore.model as userModel;
       // console.log("outside of if statement", user);
       const now = new Date(Date.now());
       const stringNow = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${now.getSeconds()}`;
       // console.log(user, "this is user")
+      if(user.admin){
+        return await pb.collection("events").getList(page, perPage, {
+          filter: `(closeTime >= "${stringNow}")`,
+          sort: "+eventTime"
+        });
+      }
       if (user.activeMember) {
         // console.log("inside of if statement", user);
         return await pb.collection("events").getList(page, perPage, {
-          filter: `((releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = false)) || ((closeTime >= "${stringNow}") && (activeMembersGetFirst = true))`,
+          filter: `((releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = false) && (exclusiveForBoard = false)) || ((activeMemberReleaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = true) && exclusiveForBoard = false)`,
           sort: "+eventTime"
         });
       }else{
         const events = await pb.collection("events").getList(page, perPage, {
-          filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (exclusiveForActiveMembers = false)`,
+          filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (exclusiveForActiveMembers = false) && (exclusiveForBoard = false)`,
           sort: "+eventTime"
         });
         // console.log(events);
