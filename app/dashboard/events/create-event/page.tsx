@@ -31,6 +31,7 @@ _Çeşitli stiller deneyebilirsiniz._`
   const [reqFaculty, setReqFaculty] = React.useState(false);
   const [reqSchoolNo, setReqSchoolNo] = React.useState(false);
   const [reqGrade, setReqGrade] = React.useState(false);
+  const [reqMajoring, setReqMajoring] = React.useState(false);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -49,6 +50,7 @@ _Çeşitli stiller deneyebilirsiniz._`
       reqPhoneNo,
       reqFaculty,
       reqSchoolNo,
+      reqMajoring,
       reqGrade,
       isOnline,
       exclusiveForActiveMembers,
@@ -137,17 +139,6 @@ _Çeşitli stiller deneyebilirsiniz._`
             placeholder="Kayıt kapanış zamanını giriniz."
             labelPlacement="outside"
           />
-
-          {/* <DateTimePicker
-            label="Kayıt Açılış Zamanı"
-            value={releaseTime}
-            onChange={(e) => setReleaseTime(e)}
-          />
-          <DateTimePicker
-            label="Kayıt Kapanış Zamanı"
-            value={closeTime}
-            onChange={(e) => setCloseTime(e)}
-          /> */}
         </div>
         <div>
           <label>Katılımcı Sayısı</label>
@@ -187,9 +178,13 @@ _Çeşitli stiller deneyebilirsiniz._`
           <Checkbox isSelected={reqFaculty} onValueChange={setReqFaculty}>
             Fakülte gerekli
           </Checkbox>
+          <Checkbox isSelected={reqMajoring} onValueChange={setReqMajoring}>
+            Bölüm Gerekli
+          </Checkbox>
           <Checkbox isSelected={reqGrade} onValueChange={setReqGrade}>
             Sınıf gerekli
           </Checkbox>
+          
         </div>
         <button
           type="submit"
