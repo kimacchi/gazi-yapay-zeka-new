@@ -26,12 +26,14 @@ _Çeşitli stiller deneyebilirsiniz._`
   const [isOnline, setIsOnline] = React.useState(false);
   const [maxParticipant, setMaxParticipant] = React.useState(100);
   const [releaseTime, setReleaseTime] = React.useState<Date | null>(new Date());
+  const [activeMemberReleaseTime, setActiveMemberReleaseTime] = React.useState<Date | null>(new Date());
   const [closeTime, setCloseTime] = React.useState<Date | null>(new Date());
   const [reqPhoneNo, setReqPhoneNo] = React.useState(false);
   const [reqFaculty, setReqFaculty] = React.useState(false);
   const [reqSchoolNo, setReqSchoolNo] = React.useState(false);
   const [reqGrade, setReqGrade] = React.useState(false);
   const [reqMajoring, setReqMajoring] = React.useState(false);
+  const [exclusiveForBoard, setExclusiveForBoard] = React.useState(false);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -55,6 +57,8 @@ _Çeşitli stiller deneyebilirsiniz._`
       isOnline,
       exclusiveForActiveMembers,
       activeMembersGetFirst,
+      activeMemberReleaseTime,
+      exclusiveForBoard,
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
@@ -129,6 +133,22 @@ _Çeşitli stiller deneyebilirsiniz._`
             placeholder="Kayıt zamanını giriniz."
             labelPlacement="outside"
           />
+          {
+            activeMembersGetFirst &&
+            <>
+              <h2 className="text-rose-700">Aşağıdaki alanı değiştirmeyi unutmayın.</h2>
+              <Input
+                type="datetime-local"
+                label="Aktif Üyeler İçin Kayıt Açılış Zamanı"
+                value={activeMemberReleaseTime
+                  ?.toISOString()
+                  .slice(0, activeMemberReleaseTime?.toISOString().length - 8)}
+                onChange={(e) => setActiveMemberReleaseTime(new Date(e.target.value))}
+                placeholder="Kayıt zamanını giriniz."
+                labelPlacement="outside"
+              />
+            </>
+          }
           <Input
             type="datetime-local"
             label="Kayıt Kapanış Zamanı"
@@ -155,6 +175,12 @@ _Çeşitli stiller deneyebilirsiniz._`
           Online etkinlik
         </Checkbox>
         <div className="flex flex-wrap gap-4">
+          <Checkbox
+            isSelected={exclusiveForBoard}
+            onValueChange={setExclusiveForBoard}
+          >
+            İdari kurula özel
+          </Checkbox>
           <Checkbox
             isSelected={exclusiveForActiveMembers}
             onValueChange={setExclusiveForActiveMembers}

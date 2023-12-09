@@ -39,6 +39,9 @@ const CreateEventPage = ({ event }: { event: Event }) => {
   const [participants, setParticipants] = React.useState(
     event.expand?.participants || []
   );
+  const [exclusiveForBoard, setExclusiveForBoard] = React.useState(false);
+  const [activeMemberReleaseTime, setActiveMemberReleaseTime] =
+    React.useState<Date | null>(new Date());
 
   const [loading, setLoading] = React.useState(false);
 
@@ -58,10 +61,14 @@ const CreateEventPage = ({ event }: { event: Event }) => {
     setReqSchoolNo(event.reqSchoolNo);
     setReqGrade(event.reqGrade);
     setParticipants(event.expand?.participants || []);
+    setExclusiveForBoard(event.exclusiveForBoard);
+    setActiveMemberReleaseTime(new Date(event.activeMemberReleaseTime));
+    setReqMajoring(event.reqMajoring);
   };
 
-  const updateEvent = async () => {
+  const updateEvent = async (close = false) => {
     // TODO: Go back to admin events page after creation, keep while developing
+    console.log(closeTime)
     const pb_auth = Cookies.get("pb_auth");
     const data = new FormData();
     const patch_data = {
@@ -70,7 +77,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
       location,
       eventTime,
       releaseTime,
-      closeTime,
+      closeTime: close ? new Date(0) : closeTime,
       maxParticipant,
       reqPhoneNo,
       reqFaculty,
@@ -79,7 +86,9 @@ const CreateEventPage = ({ event }: { event: Event }) => {
       isOnline,
       exclusiveForActiveMembers,
       activeMembersGetFirst,
-      reqMajoring
+      reqMajoring,
+      activeMemberReleaseTime,
+      exclusiveForBoard,
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
@@ -168,6 +177,25 @@ const CreateEventPage = ({ event }: { event: Event }) => {
             placeholder="Kayıt zamanını giriniz."
             labelPlacement="outside"
           />
+          {activeMembersGetFirst && (
+            <>
+              <h2 className="text-rose-700">
+                Aşağıdaki alanı değiştirmeyi unutmayın.
+              </h2>
+              <Input
+                type="datetime-local"
+                label="Aktif Üyeler İçin Kayıt Açılış Zamanı"
+                value={activeMemberReleaseTime
+                  ?.toISOString()
+                  .slice(0, activeMemberReleaseTime?.toISOString().length - 8)}
+                onChange={(e) =>
+                  setActiveMemberReleaseTime(new Date(e.target.value))
+                }
+                placeholder="Kayıt zamanını giriniz."
+                labelPlacement="outside"
+              />
+            </>
+          )}
           <Input
             type="datetime-local"
             label="Kayıt Kapanış Zamanı"
@@ -205,6 +233,12 @@ const CreateEventPage = ({ event }: { event: Event }) => {
           Online etkinlik
         </Checkbox>
         <div className="flex flex-wrap gap-4">
+          <Checkbox
+            isSelected={exclusiveForBoard}
+            onValueChange={setExclusiveForBoard}
+          >
+            İdari kurula özel
+          </Checkbox>
           <Checkbox
             isSelected={exclusiveForActiveMembers}
             onValueChange={setExclusiveForActiveMembers}
@@ -252,6 +286,23 @@ const CreateEventPage = ({ event }: { event: Event }) => {
           className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
         >
           {loading ? <Spinner /> : "Etkinlik Güncelle"}
+        </button>
+        <button
+          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
+          onClick={async (e) => {
+            e.preventDefault();
+            try {
+              setLoading(true);
+              // setCloseTime(new Date(0))
+              await updateEvent(true);
+              setLoading(false);
+            } catch (error) {
+              console.log(error);
+              setLoading(false);
+            }
+          }}
+        >
+          Etkinliği kapat
         </button>
       </form>
       <div className="flex flex-col overflow-y-auto items-center gap-4 p-4 min-h-screen sm:w-1/3 w-11/12 my-12 bg-zinc-600/30 rounded-md">

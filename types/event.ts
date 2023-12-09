@@ -10,6 +10,8 @@ export interface Event{
     eventTime: Date;
     exclusiveForActiveMembers: boolean;
     activeMembersGetFirst: boolean;
+    activeMemberReleaseTime: Date;
+    exclusiveForBoard: boolean;
     currentMemberCount: number;
     releaseTime: Date;
     closeTime: Date;
