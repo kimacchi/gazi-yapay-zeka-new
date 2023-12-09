@@ -311,7 +311,7 @@ export const Events = () => {
                         : event.location}
                     </TableCell>
                     <TableCell className="sm:table-cell hidden">
-                      {event.participants.length}/{event.maxParticipant}
+                      {event.participants.length + (event.reserved ? event.reserved.length : 0)}/{event.maxParticipant} + {event.maxReserved}
                     </TableCell>
                   </TableRow>
                 ))}

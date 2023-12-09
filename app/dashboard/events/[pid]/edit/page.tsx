@@ -14,6 +14,7 @@ export default async function Page({ params }: { params: { pid: string } }) {
         },
       }
     );
+    console.log(res.data);
     return (
       <div>
         <AdminEventForm event={res.data} />

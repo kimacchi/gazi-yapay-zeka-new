@@ -27,5 +27,8 @@ export interface Event{
     participants: string[];
     expand?: {
         participants: UserContext_[];
+        reserved?: UserContext_[]; 
     }
+    reserved: string[];
+    maxReserved: number;
 }

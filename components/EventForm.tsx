@@ -33,13 +33,13 @@ const all_majors = {
   "Diş Hekimliği Fakültesi": [
     "Klinik Bilimler",
     "Temel Bilimler",
-    "Diğer Diş Hekimliği Bölümleri"
+    "Diğer Diş Hekimliği Bölümleri",
   ],
   "Eczacılık Fakültesi": [
     "Temel Eczacılık Bilimleri",
     "Eczacılık Meslek Bilimleri",
     "Eczacılık Teknolojisi",
-    "Diğer Eczacılık Bölümleri"
+    "Diğer Eczacılık Bölümleri",
   ],
   "Fen Fakültesi": [
     "Biyoloji",
@@ -47,7 +47,7 @@ const all_majors = {
     "Kimya",
     "Matematik",
     "İstatistik",
-    "Diğer Fen Bölümleri"
+    "Diğer Fen Bölümleri",
   ],
   "Gazi Eğitim Fakültesi": [
     "Bilgisayar ve Öğretim Teknolojileri Eğitimi",
@@ -58,7 +58,7 @@ const all_majors = {
     "Temel Eğitim",
     "Türkçe ve Sosyal Bilimler Eğitimi",
     "Yabancı Diller Eğitimi",
-    "Diğer Eğitim Bölümü"
+    "Diğer Eğitim Bölümü",
   ],
   "Hemşirelik Fakültesi": [
     "Cerrahi Hastalıkları Hemşireliği Ana Bilim Dalı",
@@ -69,7 +69,7 @@ const all_majors = {
     "Hemşirelikte Yönetim Ana Bilim Dalı",
     "İç Hastalıkları Hemşireliği Ana Bilim Dalı",
     "Ruh Sağlığı ve Hastalıkları Hemşireliği Ana Bilim Dalı",
-    "Diğer Hemşirelik Bölümü"
+    "Diğer Hemşirelik Bölümü",
   ],
   "Mühendislik Fakültesi": [
     "Bilgisayar Mühendisliği",
@@ -78,13 +78,13 @@ const all_majors = {
     "İnşaat Mühendisliği",
     "Makine Mühendisliği",
     "Kimya Mühendisliği",
-    "Diğer Mühendislik Bölümü"
+    "Diğer Mühendislik Bölümü",
   ],
   "Mimarlık Fakültesi": [
     "Endüstriyel Tasarım",
     "Mimarlık",
     "Şehir ve Bölge Planlama",
-    "Diğer Mimarlık Bölümü"
+    "Diğer Mimarlık Bölümü",
   ],
   "Sağlık Bilimleri Fakültesi": [
     "Beslenme ve Diyetetik",
@@ -93,14 +93,14 @@ const all_majors = {
     "Odyoloji",
     "Dil ve Konuşma Terapisi",
     "Sosyal Hizmet",
-    "Diğer Sağlık Bilimleri Bölümü"
+    "Diğer Sağlık Bilimleri Bölümü",
   ],
   "Spor Bilimleri Fakültesi": [
     "Antrenörlük Eğitimi",
     "Beden Eğitimi ve Spor Öğretmenliği",
     "Rekreasyon",
     "Spor Yöneticiliği",
-    "Diğer Spor Bilimleri Bölümü"
+    "Diğer Spor Bilimleri Bölümü",
   ],
   "Teknoloji Fakültesi": [
     "Ağaçişleri Endüstri Mühendisliği",
@@ -112,22 +112,20 @@ const all_majors = {
     "İmalat Mühendisliği",
     "Metalurji ve Malzeme Mühendisliği",
     "Otomotiv Mühendisliği",
-    "Diğer Teknoloji Bölümü"
+    "Diğer Teknoloji Bölümü",
   ],
   "Tıp Fakültesi": [
     "Temel Tıp Bilimleri",
     "Dahili Tıp Bilimleri",
     "Cerrahi Tıp Bilimleri",
-    "Diğer Tıp Bölümü"
+    "Diğer Tıp Bölümü",
   ],
   "Uygulamalı Bilimler Fakültesi": [
     "Fotonik",
     "Yönetim Bilişim Sistemleri",
-    "Diğer Uygulamalı Bilimler Bölümü"
+    "Diğer Uygulamalı Bilimler Bölümü",
   ],
-} as any
-
-
+} as any;
 
 const EventForm = ({
   event,
@@ -136,14 +134,14 @@ const EventForm = ({
   userGrade,
   userSchoolNo,
   userPhoneNo,
-  userMajoring
+  userMajoring,
 }: {
   event: Event;
   partOfEvent_: boolean;
   userPhoneNo: string;
   userFaculty: string;
   userSchoolNo: string;
-  userMajoring: string,
+  userMajoring: string;
   userGrade:
     | "Hazırlık"
     | "1. Sınıf"
@@ -166,17 +164,19 @@ const EventForm = ({
   const [partOfEvent, setPartOfEvent] = React.useState(false);
 
   useEffect(() => {
-    const x = async () => {      
-      const part_of_event_res = await axios.get<any, AxiosResponse<{partOfEvent: boolean}>>("http://localhost:3000/api/events/part-of-event/" + event.id, {
+    const x = async () => {
+      const part_of_event_res = await axios.get<
+        any,
+        AxiosResponse<{ partOfEvent: boolean }>
+      >("http://localhost:3000/api/events/part-of-event/" + event.id, {
         headers: {
           cookie: `pb_auth=${pb_auth}`,
         },
-      })
+      });
       setPartOfEvent(part_of_event_res.data.partOfEvent);
-    }
+    };
     x();
   }, []);
-
 
   const [phoneNo, setPhoneNo] = React.useState(userPhoneNo || "");
   const [majoring, setMajoring] = React.useState(userMajoring || "");
@@ -298,12 +298,24 @@ const EventForm = ({
             Bu etkinliğe üyesiniz. Dilerseniz etkinlikten ayrılabilirsiniz.
           </h2>
         )}
+        {!partOfEvent &&
+          event.participants.length >= event.maxParticipant &&
+          event.reserved.length < event.maxReserved && (
+            <h2 className="bg-rose-800/30 p-4 rounded-md">
+              <span className="font-semibold text-rose-700">UYARI: </span>
+              Bu etkinlik dolmuştur. Ancak rezervasyon yaptırabilirsiniz.
+              <br />
+              <span className="text-blue-300">Sıradaki kişi sayısı: {event.reserved.length}</span>
+            </h2>
+          )}
         {(event.reqFaculty ||
           event.reqGrade ||
           event.reqPhoneNo ||
           event.reqSchoolNo ||
           event.reqMajoring) &&
-          !partOfEvent && (
+          (!partOfEvent ||
+            event.participants.length + event.reserved.length >=
+              event.maxParticipant + event.maxReserved) && (
             <div className="flex flex-col gap-6">
               <hr className="w-full"></hr>
               <h1 className="text-lg font-semibold">
@@ -485,29 +497,7 @@ const EventForm = ({
               )}
             </div>
           )}
-
-        {!partOfEvent ? (
-          <button
-            type="submit"
-            disabled={loading || isDisabled}
-            onClick={async (e) => {
-              e.preventDefault();
-              try {
-                setLoading(true);
-                if (!partOfEvent) {
-                  await joinEvent();
-                }
-                setLoading(false);
-              } catch (error) {
-                console.log(error);
-                setLoading(false);
-              }
-            }}
-            className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
-          >
-            {loading ? <Spinner /> : "Etkinliğe Katıl"}
-          </button>
-        ) : (
+        {partOfEvent && (
           <button
             type="submit"
             disabled={loading}
@@ -526,6 +516,37 @@ const EventForm = ({
           >
             {loading ? <Spinner /> : "Etkinlikten Ayrıl"}
           </button>
+        )}
+        {!partOfEvent &&
+          event.participants.length + event.reserved.length <
+            event.maxParticipant + event.maxReserved && (
+            <button
+              type="submit"
+              disabled={loading || isDisabled}
+              onClick={async (e) => {
+                e.preventDefault();
+                try {
+                  setLoading(true);
+                  if (!partOfEvent) {
+                    await joinEvent();
+                  }
+                  setLoading(false);
+                } catch (error) {
+                  console.log(error);
+                  setLoading(false);
+                }
+              }}
+              className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
+            >
+              {loading ? <Spinner /> : `Etkinliğe Katıl`}
+            </button>
+          )}
+        {event.participants.length + event.reserved.length >=
+          event.maxParticipant + event.maxReserved && (
+          <h2 className="bg-rose-800/30 p-4 rounded-md">
+            <span className="font-semibold text-rose-700">UYARI: </span>
+            Bu etkinlik dolmuştur.
+          </h2>
         )}
       </div>
     </div>

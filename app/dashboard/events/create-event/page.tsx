@@ -5,8 +5,12 @@ import MDEditor from "@uiw/react-md-editor";
 import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const CreateEventPage = () => {
+
+  const router = useRouter();
+
   const [description, setDescription] = React.useState<string | undefined>(
     `### **Etkinlik Açıklaması**
 
@@ -34,6 +38,7 @@ _Çeşitli stiller deneyebilirsiniz._`
   const [reqGrade, setReqGrade] = React.useState(false);
   const [reqMajoring, setReqMajoring] = React.useState(false);
   const [exclusiveForBoard, setExclusiveForBoard] = React.useState(false);
+  const [maxReserved, setMaxReserved] = React.useState(10);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -59,6 +64,7 @@ _Çeşitli stiller deneyebilirsiniz._`
       activeMembersGetFirst,
       activeMemberReleaseTime,
       exclusiveForBoard,
+      maxReserved
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
@@ -67,6 +73,7 @@ _Çeşitli stiller deneyebilirsiniz._`
         cookie: `pb_auth=${pb_auth}`,
       },
     });
+    router.push("/dashboard/events");
     console.log(res.data);
   };
 
@@ -169,6 +176,17 @@ _Çeşitli stiller deneyebilirsiniz._`
             value={`${maxParticipant}`}
             onChange={(e) => setMaxParticipant(parseInt(e.target.value))}
             placeholder="Katılımcı sayısını giriniz."
+          />
+        </div>
+        <div>
+          <label>Yedek Katılımcı Sayısı</label>
+          <Input
+            type="number"
+            min="0"
+            max="1000"
+            value={`${maxReserved}`}
+            onChange={(e) => setMaxReserved(parseInt(e.target.value))}
+            placeholder="Yedek Katılımcı sayısını giriniz."
           />
         </div>
         <Checkbox isSelected={isOnline} onValueChange={setIsOnline}>
