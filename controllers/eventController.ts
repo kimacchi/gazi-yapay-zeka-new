@@ -68,16 +68,11 @@ export const addParticipant = async (id: string, data: {
   phoneNo?: string,
   schoolNo?: string,
   faculty?: string,
-  grade?: string
+  grade?: string,
+  majoring?: string,
 }, pb: PocketBase) => {
   try {
     if(pb.authStore.model){
-      // const participant = await pb.collection("participant").create({user: pb.authStore.model.id, ...data});
-      // console.log(participant);
-      // const event = await pb.collection("events").update(id, {
-      //   "participants+": participant.id,
-      // });
-      // return event;
       const updatedUser = await pb.collection("users").update(pb.authStore.model.id, data);
       const event = await pb.collection("events").update(id, {
         "participants+": updatedUser.id,

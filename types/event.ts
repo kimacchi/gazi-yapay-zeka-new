@@ -17,6 +17,7 @@ export interface Event{
     reqSchoolNo: boolean;
     reqFaculty: boolean;
     reqGrade: boolean;
+    reqMajoring: boolean;
     collectionId: string;
     collectionName: string;
     created: Date;

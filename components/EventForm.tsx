@@ -29,6 +29,104 @@ const faculties = [
   "Uygulamalı Bilimler Fakültesi",
 ];
 
+const all_majors = {
+  "Diş Hekimliği Fakültesi": [
+    "Klinik Bilimler",
+    "Temel Bilimler",
+    "Diğer Diş Hekimliği Bölümleri"
+  ],
+  "Eczacılık Fakültesi": [
+    "Temel Eczacılık Bilimleri",
+    "Eczacılık Meslek Bilimleri",
+    "Eczacılık Teknolojisi",
+    "Diğer Eczacılık Bölümleri"
+  ],
+  "Fen Fakültesi": [
+    "Biyoloji",
+    "Fizik",
+    "Kimya",
+    "Matematik",
+    "İstatistik",
+    "Diğer Fen Bölümleri"
+  ],
+  "Gazi Eğitim Fakültesi": [
+    "Bilgisayar ve Öğretim Teknolojileri Eğitimi",
+    "Eğitim Bilimleri",
+    "Güzel Sanatlar Eğitimi",
+    "Matematik ve Fen Bilimleri Eğitimi",
+    "Özel Eğitim",
+    "Temel Eğitim",
+    "Türkçe ve Sosyal Bilimler Eğitimi",
+    "Yabancı Diller Eğitimi",
+    "Diğer Eğitim Bölümü"
+  ],
+  "Hemşirelik Fakültesi": [
+    "Cerrahi Hastalıkları Hemşireliği Ana Bilim Dalı",
+    "Çocuk Sağlığı ve Hastalıkları Hemşireliği Ana Bilim Dalı",
+    "Doğum, Kadın Sağlığı ve Hastalıkları Hemşireliği Ana Bilim Dalı",
+    "Halk Sağlığı Hemşireliği Ana Bilim Dalı",
+    "Hemşirelik Esasları Ana Bilim Dalı",
+    "Hemşirelikte Yönetim Ana Bilim Dalı",
+    "İç Hastalıkları Hemşireliği Ana Bilim Dalı",
+    "Ruh Sağlığı ve Hastalıkları Hemşireliği Ana Bilim Dalı",
+    "Diğer Hemşirelik Bölümü"
+  ],
+  "Mühendislik Fakültesi": [
+    "Bilgisayar Mühendisliği",
+    "Elektrik-Elektronik Mühendisliği",
+    "Endüstri Mühendisliği",
+    "İnşaat Mühendisliği",
+    "Makine Mühendisliği",
+    "Kimya Mühendisliği",
+    "Diğer Mühendislik Bölümü"
+  ],
+  "Mimarlık Fakültesi": [
+    "Endüstriyel Tasarım",
+    "Mimarlık",
+    "Şehir ve Bölge Planlama",
+    "Diğer Mimarlık Bölümü"
+  ],
+  "Sağlık Bilimleri Fakültesi": [
+    "Beslenme ve Diyetetik",
+    "Fizyoterapi ve Rehabilitasyon",
+    "Hemşirelik (Hemşirelik Fakültesi)",
+    "Odyoloji",
+    "Dil ve Konuşma Terapisi",
+    "Sosyal Hizmet",
+    "Diğer Sağlık Bilimleri Bölümü"
+  ],
+  "Spor Bilimleri Fakültesi": [
+    "Antrenörlük Eğitimi",
+    "Beden Eğitimi ve Spor Öğretmenliği",
+    "Rekreasyon",
+    "Spor Yöneticiliği",
+    "Diğer Spor Bilimleri Bölümü"
+  ],
+  "Teknoloji Fakültesi": [
+    "Ağaçişleri Endüstri Mühendisliği",
+    "Bilgisayar Mühendisliği",
+    "Elektrik-Elektronik Mühendisliği",
+    "Endüstriyel Tasarım Mühendisliği",
+    "Enerji Sistemleri Mühendisliği",
+    "İnşaat Mühendisliği",
+    "İmalat Mühendisliği",
+    "Metalurji ve Malzeme Mühendisliği",
+    "Otomotiv Mühendisliği",
+    "Diğer Teknoloji Bölümü"
+  ],
+  "Tıp Fakültesi": [
+    "Temel Tıp Bilimleri",
+    "Dahili Tıp Bilimleri",
+    "Cerrahi Tıp Bilimleri",
+    "Diğer Tıp Bölümü"
+  ],
+  "Uygulamalı Bilimler Fakültesi": [
+    "Fotonik",
+    "Yönetim Bilişim Sistemleri",
+    "Diğer Uygulamalı Bilimler Bölümü"
+  ],
+} as any
+
 
 
 const EventForm = ({
@@ -38,12 +136,14 @@ const EventForm = ({
   userGrade,
   userSchoolNo,
   userPhoneNo,
+  userMajoring
 }: {
   event: Event;
   partOfEvent_: boolean;
   userPhoneNo: string;
   userFaculty: string;
   userSchoolNo: string;
+  userMajoring: string,
   userGrade:
     | "Hazırlık"
     | "1. Sınıf"
@@ -79,6 +179,7 @@ const EventForm = ({
 
 
   const [phoneNo, setPhoneNo] = React.useState(userPhoneNo || "");
+  const [majoring, setMajoring] = React.useState(userMajoring || "");
   const [faculty, setFaculty] = React.useState(userFaculty || "");
   const [schoolNo, setSchoolNo] = React.useState(userSchoolNo || "");
   const [grade, setGrade] = React.useState<
@@ -120,6 +221,7 @@ const EventForm = ({
           faculty: faculty ? faculty : null,
           schoolNo: schoolNo ? schoolNo : null,
           grade: grade ? grade : null,
+          majoring: majoring ? majoring : null,
         },
         {
           headers: {
@@ -199,7 +301,8 @@ const EventForm = ({
         {(event.reqFaculty ||
           event.reqGrade ||
           event.reqPhoneNo ||
-          event.reqSchoolNo) &&
+          event.reqSchoolNo ||
+          event.reqMajoring) &&
           !partOfEvent && (
             <div className="flex flex-col gap-6">
               <hr className="w-full"></hr>
@@ -224,6 +327,29 @@ const EventForm = ({
                         }}
                       >
                         {faculty}
+                      </SelectItem>
+                    );
+                  })}
+                </Select>
+              )}
+              {event.reqMajoring && (
+                <Select
+                  label="Bölümünüz"
+                  labelPlacement="outside"
+                  placeholder="Bölümünüz"
+                  selectedKeys={majoring ? [majoring] : []}
+                  onChange={(e) => setMajoring(e.target.value)}
+                >
+                  {all_majors[faculty]?.map((major: any) => {
+                    return (
+                      <SelectItem
+                        value={major}
+                        key={major}
+                        onClick={() => {
+                          setMajoring(major);
+                        }}
+                      >
+                        {major}
                       </SelectItem>
                     );
                   })}

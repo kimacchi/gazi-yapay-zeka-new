@@ -42,6 +42,7 @@ export interface UserContext_ {
     | "Yüksek Lisans"
     | "Doktora"
     | "";
+  majoring: string;
 }
 export interface UserContextType {
   user: UserContext_ | null;
