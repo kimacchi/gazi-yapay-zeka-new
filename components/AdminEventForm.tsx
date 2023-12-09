@@ -5,40 +5,65 @@ import MDEditor from "@uiw/react-md-editor";
 import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Event } from "@/types/event";
 
-const CreateEventPage = () => {
+const CreateEventPage = ({ event }: { event: Event }) => {
   const [description, setDescription] = React.useState<string | undefined>(
-    `### **Etkinlik Açıklaması**
-
-Burada etkinlik açıklamasını giriniz.
-    
-[KONUM](https://www.google.com/)
-    
-_Çeşitli stiller deneyebilirsiniz._`
+    event.description
   );
-  const [name, setName] = React.useState("");
-  const [eventTime, setEventTime] = React.useState<Date | null>(new Date());
-  const [location, setLocation] = React.useState("");
+  const [name, setName] = React.useState(event.name);
+  const [eventTime, setEventTime] = React.useState<Date | null>(
+    new Date(event.eventTime)
+  );
+  const [location, setLocation] = React.useState(event.location);
   const [exclusiveForActiveMembers, setExclusiveForActiveMembers] =
-    React.useState(false);
-  const [activeMembersGetFirst, setActiveMembersGetFirst] =
-    React.useState(false);
-  const [isOnline, setIsOnline] = React.useState(false);
-  const [maxParticipant, setMaxParticipant] = React.useState(100);
-  const [releaseTime, setReleaseTime] = React.useState<Date | null>(new Date());
-  const [closeTime, setCloseTime] = React.useState<Date | null>(new Date());
-  const [reqPhoneNo, setReqPhoneNo] = React.useState(false);
-  const [reqFaculty, setReqFaculty] = React.useState(false);
-  const [reqSchoolNo, setReqSchoolNo] = React.useState(false);
-  const [reqGrade, setReqGrade] = React.useState(false);
+    React.useState(event.exclusiveForActiveMembers);
+  const [activeMembersGetFirst, setActiveMembersGetFirst] = React.useState(
+    event.activeMembersGetFirst
+  );
+  const [isOnline, setIsOnline] = React.useState(event.isOnline);
+  const [maxParticipant, setMaxParticipant] = React.useState(
+    event.maxParticipant
+  );
+  const [releaseTime, setReleaseTime] = React.useState<Date | null>(
+    new Date(event.releaseTime)
+  );
+  const [closeTime, setCloseTime] = React.useState<Date | null>(
+    new Date(event.closeTime)
+  );
+  const [reqPhoneNo, setReqPhoneNo] = React.useState(event.reqPhoneNo);
+  const [reqFaculty, setReqFaculty] = React.useState(event.reqFaculty);
+  const [reqSchoolNo, setReqSchoolNo] = React.useState(event.reqSchoolNo);
+  const [reqGrade, setReqGrade] = React.useState(event.reqGrade);
+  const [participants, setParticipants] = React.useState(
+    event.expand?.participants || []
+  );
 
   const [loading, setLoading] = React.useState(false);
 
-  const createEvent = async () => {
+  const updateStates = () => {
+    setDescription(event.description);
+    setName(event.name);
+    setEventTime(new Date(event.eventTime));
+    setLocation(event.location);
+    setExclusiveForActiveMembers(event.exclusiveForActiveMembers);
+    setActiveMembersGetFirst(event.activeMembersGetFirst);
+    setIsOnline(event.isOnline);
+    setMaxParticipant(event.maxParticipant);
+    setReleaseTime(new Date(event.releaseTime));
+    setCloseTime(new Date(event.closeTime));
+    setReqPhoneNo(event.reqPhoneNo);
+    setReqFaculty(event.reqFaculty);
+    setReqSchoolNo(event.reqSchoolNo);
+    setReqGrade(event.reqGrade);
+    setParticipants(event.expand?.participants || []);
+  };
+
+  const updateEvent = async () => {
     // TODO: Go back to admin events page after creation, keep while developing
-    const pb_auth = Cookies.get("pb_auth")
+    const pb_auth = Cookies.get("pb_auth");
     const data = new FormData();
-    const event = {
+    const patch_data = {
       name,
       description,
       location,
@@ -56,17 +81,31 @@ _Çeşitli stiller deneyebilirsiniz._`
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
-    const res = await axios.post("/api/events/", event, {
+    const res = await axios.patch("/api/events/" + event.id, patch_data, {
       headers: {
         cookie: `pb_auth=${pb_auth}`,
       },
     });
-    console.log(res.data);
+    event = res.data;
+    updateStates();
+  };
+  const removeUser = async (id: string) => {
+    const pb_auth = Cookies.get("pb_auth");
+    const res = await axios.delete(
+      "/api/events/remove-participant/" + event.id + "?user_id=" + id,
+      {
+        headers: {
+          cookie: `pb_auth=${pb_auth}`,
+        },
+      }
+    );
+    event = res.data;
+    updateStates();
   };
 
   return (
-    <div className="w-full flex justify-center items-center ">
-      <form className="sm:w-1/3 w-3/4 flex flex-col gap-4 my-12">
+    <div className="w-full flex sm:flex-row flex-col sm:justify-around justify-center sm:items-start items-center ">
+      <form className="sm:w-1/3 w-11/12 flex flex-col gap-4 my-12">
         <Input
           type="text"
           label="Etkinlik Adı"
@@ -198,7 +237,7 @@ _Çeşitli stiller deneyebilirsiniz._`
             e.preventDefault();
             try {
               setLoading(true);
-              await createEvent();
+              await updateEvent();
               setLoading(false);
             } catch (error) {
               console.log(error);
@@ -207,9 +246,47 @@ _Çeşitli stiller deneyebilirsiniz._`
           }}
           className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
         >
-          {loading ? <Spinner /> : "Etkinlik Oluştur"}
+          {loading ? <Spinner /> : "Etkinlik Güncelle"}
         </button>
       </form>
+      <div className="flex flex-col overflow-y-auto items-center gap-4 p-4 min-h-screen sm:w-1/3 w-11/12 my-12 bg-zinc-600/30 rounded-md">
+        <h2 className="text-2xl">
+          Katılımcılar {participants.length}/{event.maxParticipant}
+        </h2>
+        {participants.map((item) => {
+          return (
+            <button
+              key={item.id}
+              className="w-full flex flex-col group p-2 bg-zinc-500/20 hover:bg-rose-600/30 rounded-md"
+              onClick={() => {
+                removeUser(item.id);
+              }}
+            >
+              <div className="flex w-full justify-between items-center">
+                <p>{item.name}</p>
+                <span className="invisible group-hover:visible">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-trash3-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+                  </svg>
+                </span>
+              </div>
+              <div className="text-sm text-zinc-400 text-left">
+                <p>{item.phoneNo}</p>
+                <p>{item.schoolNo}</p>
+                <p>{item.faculty}</p>
+                <p>{item.grade}</p>
+              </div>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };

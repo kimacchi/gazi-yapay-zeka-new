@@ -41,7 +41,7 @@ export interface UserContext_ {
     | "6. Sınıf"
     | "Yüksek Lisans"
     | "Doktora"
-    | null;
+    | "";
 }
 export interface UserContextType {
   user: UserContext_ | null;

@@ -5,7 +5,8 @@ import pb from "./pocketbase";
 // TODO: Change models to use FormData in order to add pictures
 
 export const createUser = async (
-  data: User
+  data: User,
+  pb: PocketBase
 ) => {
   try {
     const record = await pb.collection("users").create(data);
@@ -17,22 +18,28 @@ export const createUser = async (
 
 export const login = async (
   verifier: string,
-  password: string
+  password: string,
+  pb: PocketBase
 ) => {
   try {
     const authData = await pb.collection("users").authWithPassword(verifier, password);
+    console.log(authData)
     console.log(pb.authStore.model)
     return authData
   } catch (error) {
+    const err = error as any
+    if(err.response.message === "Failed to authenticate." || err.status === 400){
+      return {"error": error, "status": 400}
+    }
     return {"error": error}
   }
 }
 
-export const logoff = () => {
+export const logoff = (pb: PocketBase) => {
   pb.authStore.clear()
 }
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (pb: PocketBase) => {
   try {
     const record = await pb.collection("users").getFullList();
     return record
@@ -41,7 +48,7 @@ export const getAllUsers = async () => {
   }
 }
 
-export const getList = async (page: number = 1, perPage: number = 20) => {
+export const getList = async (page: number = 1, perPage: number = 20,pb: PocketBase) => {
   try {
     const resultList = await pb.collection("users").getList(page, perPage)
     return resultList
@@ -50,7 +57,7 @@ export const getList = async (page: number = 1, perPage: number = 20) => {
   }
 }
 
-export const getUser = async (id: string) => {
+export const getUser = async (id: string,pb: PocketBase) => {
   try {
     const result = await pb.collection("users").getOne(id)
     return result
@@ -59,7 +66,7 @@ export const getUser = async (id: string) => {
   }
 }
 
-export const deleteUser = async (id: string) => {
+export const deleteUser = async (id: string,pb: PocketBase) => {
   try {
     await pb.collection("users").delete(id)
     return {"status": 200}
@@ -68,7 +75,7 @@ export const deleteUser = async (id: string) => {
   }
 }
 
-export const patchUser = async (id: string, changes: UserPatch) => {
+export const patchUser = async (id: string, changes: UserPatch,pb: PocketBase) => {
   try {
     const record = await pb.collection('users').update(id, changes);
     return record
@@ -77,7 +84,7 @@ export const patchUser = async (id: string, changes: UserPatch) => {
   }
 }
 
-export const sendPasswordReset = async (email: string) => {
+export const sendPasswordReset = async (email: string,pb: PocketBase) => {
   try {
     await pb.collection("users").requestPasswordReset(email)
     return {"status": 200}
@@ -86,7 +93,7 @@ export const sendPasswordReset = async (email: string) => {
   }
 }
 
-export const resetPassword = async (token: string, password: string, passwordConfirm: string) => {
+export const resetPassword = async (token: string, password: string, passwordConfirm: string,pb: PocketBase) => {
   try {
     await pb.collection("users").confirmPasswordReset(token, password, passwordConfirm)
     return {"status": 200}
@@ -95,16 +102,16 @@ export const resetPassword = async (token: string, password: string, passwordCon
   }
 }
 
-export const deleteAllUsers = async () => {
+export const deleteAllUsers = async (pb: PocketBase) => {
   try {
-    const record = await getAllUsers();
+    const record = await getAllUsers(pb);
     if (Array.isArray(record)) {
       console.log("this run")
       record.forEach(async (event) => {
-        await deleteUser(event.id);
+        await deleteUser(event.id, pb);
       });
     }
-    return await getAllUsers();
+    return await getAllUsers(pb);
   } catch (error) {
     return {"error": error, "status": 400}
   }

@@ -20,8 +20,9 @@ import React, { use, useEffect, useState } from "react";
 import { Event } from "@/types/event";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
-// const events = [
+
 //   {
 //     id: "1",
 //     name: "Etkinlik 1 sdfgsdfg",
@@ -204,6 +205,8 @@ export const Events = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
+    console.log("sdfdsfg")
+    const pb_auth = Cookies.get("pb_auth")
     const getData = async () => {
       const res = await axios.get<
         any,
@@ -214,8 +217,12 @@ export const Events = () => {
           totalItems: number;
           totalPages: number;
         }>
-      >(`http://localhost:3000/api/events?page=${page}&per_page=10`);
-      console.log(res.data);
+      >(`http://localhost:3000/api/events?page=${page}&per_page=10`, {
+        headers:{
+          cookie: `pb_auth=${pb_auth}`
+        }
+      });
+      // console.log(res.data);
       setEvents(res.data.items);
       setTotalPages(totalPages);
     };
@@ -230,7 +237,7 @@ export const Events = () => {
    * ! However, this could cause problems if the user's timezone is different from turkey's timezone.
    */
   return (
-    <div className="sm:w-10/12 w-full mb-4 flex sm:flex-col flex-col-reverse items-center border-2 border-neutral-200 p-2 rounded-xl">
+    <div className="sm:w-1/2 w-full mb-4 flex sm:flex-col flex-col-reverse items-center border-2 border-neutral-200 p-2 rounded-xl">
       {/* <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -253,7 +260,7 @@ export const Events = () => {
         </ModalContent>
       </Modal> */}
       <div className="w-full flex flex-col items-center my-4">
-        <h1 className="text-3xl font-bold">Yaklaşan Etkinlikler</h1>
+        <h1 className="text-3xl font-bold text-center">Yaklaşan Etkinlikler</h1>
         <hr className="my-4 w-2/3" />
         <div className="w-fit">
           {events ? (
