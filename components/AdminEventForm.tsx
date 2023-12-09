@@ -34,6 +34,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
   const [reqPhoneNo, setReqPhoneNo] = React.useState(event.reqPhoneNo);
   const [reqFaculty, setReqFaculty] = React.useState(event.reqFaculty);
   const [reqSchoolNo, setReqSchoolNo] = React.useState(event.reqSchoolNo);
+  const [reqMajoring, setReqMajoring] = React.useState(event.reqMajoring);
   const [reqGrade, setReqGrade] = React.useState(event.reqGrade);
   const [participants, setParticipants] = React.useState(
     event.expand?.participants || []
@@ -78,6 +79,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
       isOnline,
       exclusiveForActiveMembers,
       activeMembersGetFirst,
+      reqMajoring
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
@@ -225,6 +227,9 @@ const CreateEventPage = ({ event }: { event: Event }) => {
           </Checkbox>
           <Checkbox isSelected={reqFaculty} onValueChange={setReqFaculty}>
             Fakülte gerekli
+          </Checkbox>
+          <Checkbox isSelected={reqMajoring} onValueChange={setReqMajoring}>
+            Bölüm Gerekli
           </Checkbox>
           <Checkbox isSelected={reqGrade} onValueChange={setReqGrade}>
             Sınıf gerekli
