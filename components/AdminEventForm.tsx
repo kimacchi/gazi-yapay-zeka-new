@@ -66,8 +66,9 @@ const CreateEventPage = ({ event }: { event: Event }) => {
     setReqMajoring(event.reqMajoring);
   };
 
-  const updateEvent = async () => {
+  const updateEvent = async (close = false) => {
     // TODO: Go back to admin events page after creation, keep while developing
+    console.log(closeTime)
     const pb_auth = Cookies.get("pb_auth");
     const data = new FormData();
     const patch_data = {
@@ -76,7 +77,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
       location,
       eventTime,
       releaseTime,
-      closeTime,
+      closeTime: close ? new Date(0) : closeTime,
       maxParticipant,
       reqPhoneNo,
       reqFaculty,
@@ -285,6 +286,23 @@ const CreateEventPage = ({ event }: { event: Event }) => {
           className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
         >
           {loading ? <Spinner /> : "Etkinlik Güncelle"}
+        </button>
+        <button
+          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
+          onClick={async (e) => {
+            e.preventDefault();
+            try {
+              setLoading(true);
+              // setCloseTime(new Date(0))
+              await updateEvent(true);
+              setLoading(false);
+            } catch (error) {
+              console.log(error);
+              setLoading(false);
+            }
+          }}
+        >
+          Etkinliği kapat
         </button>
       </form>
       <div className="flex flex-col overflow-y-auto items-center gap-4 p-4 min-h-screen sm:w-1/3 w-11/12 my-12 bg-zinc-600/30 rounded-md">
