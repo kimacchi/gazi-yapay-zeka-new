@@ -38,6 +38,7 @@ const page = async ({ params }: { params: { pid: string } }) => {
     | "" = "";
   let schoolNo = "";
   let phoneNo = "";
+  let majoring = "";
 
   const part_of_event_res = await axios.get<any, AxiosResponse<{partOfEvent: boolean}>>("http://localhost:3000/api/events/part-of-event/" + params.pid + "?user_id=" + pb.authStore.model?.id, {
     headers: {
@@ -52,6 +53,7 @@ const page = async ({ params }: { params: { pid: string } }) => {
     faculty = pb.authStore.model.faculty;
     schoolNo = pb.authStore.model.schoolNo;
     phoneNo = pb.authStore.model.phoneNo;
+    majoring = pb.authStore.model.majoring;
     grade = pb.authStore.model.grade as
       | "Hazırlık"
       | "1. Sınıf"
@@ -64,12 +66,13 @@ const page = async ({ params }: { params: { pid: string } }) => {
       | "Doktora"
       | "";
   }
-  console.log(partOfEvent);
+  console.log(pb.authStore.model);
   // console.log(res.data)
   return (
     <div className="w-full py-12">
       <EventForm
         event={res.data}
+        userMajoring={majoring}
         partOfEvent_={partOfEvent}
         userFaculty={faculty}
         userGrade={grade}
