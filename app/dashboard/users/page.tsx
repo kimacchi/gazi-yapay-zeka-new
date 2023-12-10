@@ -30,7 +30,7 @@ const page = async ({searchParams}: {
         <>
             {
                 res.data.items.map((user, index) => (
-                    <Link href={`/dashboard/users/${user.id}`} className='sm:w-1/3 w-11/12 text-left '>
+                    <Link key={index} href={`/dashboard/users/${user.id}`} className='sm:w-1/3 w-11/12 text-left '>
                         {user.name}
                     </Link>
                 ))
