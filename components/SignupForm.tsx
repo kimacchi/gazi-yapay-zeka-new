@@ -16,16 +16,16 @@ import { useUserContext } from "@/app/UserContext";
 import Link from "next/link";
 
 const SignupForm = () => {
-  const {user, setUser} = useUserContext();
+  // const {user, setUser} = useUserContext();
 
   
   const route = useRouter();
-  useEffect(() => {
-    if(user){
-      route.push("/dashboard");
-    }
-    console.log(user)
-  }, [user]);
+  // useEffect(() => {
+  //   if(user){
+  //     route.push("/dashboard");
+  //   }
+  //   console.log(user)
+  // }, [user]);
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");

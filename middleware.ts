@@ -35,10 +35,16 @@ export async function middleware(req: NextRequest) {
       pb.authStore.exportToCookie({ httpOnly: false })
     );
   }
-  if(req.nextUrl.pathname.startsWith("/signup")){
-    pb.authStore.clear();
+  // if(req.nextUrl.pathname.startsWith("/signup")){
+  //   pb.authStore.clear();
+  //   response.headers.set(
+  //     "set-cookie",
+  //     ""
+  //   );
+  //   const loginUrl = new URL("/signup", req.url);
+  //   return NextResponse.redirect(loginUrl);
 
-  }
+  // }
   if(pb.authStore.isValid && req.nextUrl.pathname.startsWith("/login")){
     const dashboardUrl = new URL("/dashboard", req.url);
     return NextResponse.redirect(dashboardUrl);
