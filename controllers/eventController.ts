@@ -225,7 +225,8 @@ export const getList = async (
       type userModel = AuthModel & { activeMember: boolean; admin: boolean };
       let user = pb.authStore.model as userModel;
       // console.log("outside of if statement", user);
-      const now = new Date(Date.now());
+      const temp = new Date().toLocaleString("en-US", {timeZone: 'Asia/Almaty'});
+      const now = new Date(temp);
       const stringNow = `${now.getFullYear()}-${
         now.getMonth() + 1
       }-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(

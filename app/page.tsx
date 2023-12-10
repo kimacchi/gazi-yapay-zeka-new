@@ -1,10 +1,15 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Test } from "@/components/test";
-import pb from "@/controllers/pocketbase";
 import axios from "axios";
 import SocialsCard from "@/components/SocialsCard";
 import { Metadata } from "next";
+import Celebration from "@/components/Celebration";
+import PocketBase from "pocketbase";
+import { Event } from "@/types/event";
+import Link from "next/link";
+
+const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -123,40 +128,102 @@ export const metadata: Metadata = {
   robots: "index, follow",
 };
 
-export default function Home() {
-  // TODO: add autoRefresh to every page on initial load to revalidate user data
+export default async function Home() {
+  const temp = new Date().toLocaleString("en-US", { timeZone: "Asia/Almaty" });
+  const now = new Date(temp);
+  const stringNow = `${now.getFullYear()}-${
+    now.getMonth() + 1
+  }-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(
+    2,
+    "0"
+  )}:${now.getSeconds()}`;
+
+  const events_ = await pb.collection("events").getList(1, 5, {
+    filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (eventTime >= "${stringNow}") && (exclusiveForActiveMembers = false) && (exclusiveForBoard = false)`,
+    sort: "+eventTime",
+  });
+  const temp_events = events_.items as unknown;
+  const events = temp_events as Event[];
+  console.log(events);
+
   return (
-    <main className="text-neutral-200 flex flex-col items-center justify-center h-full gap-8 py-24">
-      <h1 className="text-4xl font-medium">Gazi Yapay Zeka</h1>
-      <hr className="w-1/12" />
-      <p className="sm:w-1/3 w-4/5 text-center text-sm text-neutral-400">
-        Sitemiz şu anda yapım aşamasındadır.
-        <br />
-        <br /> Çok yakın zamanda sizlerle beraber burada olacağız!
-        <br />
-        <br /> Siz bizi beklerken dilerseniz kayıt olabilir, aşağıdaki
-        linklerden bizi takibe alabilirsiniz!
-      </p>
-      <a
-        href="/signup"
-        className="p-4 bg-fuchsia-800 rounded-md transition-all hover:scale-105"
-      >
-        Kayıt Ol
-      </a>
-      <hr className="w-1/12" />
-      <a
-        href={"https://forms.gle/F8BPyhgwy43JgDQh7"}
-        target="_blank"
-        rel="noreferrer"
-        className="flex flex-col items-start justify-center gap-2 sm:w-1/3 w-4/5 border-cyan-600 border-4 rounded-xl p-4 transition-all hover:bg-cyan-600 hover:rounded-3xl"
-      >
-        <div className="flex items-center gap-2 w-full">
-          <h2 className="text-lg font-medium">🥐🍳🥖 Kahvaltı Zamanı! 🥞☕</h2>
-        </div>
-        <p className="text-xs text-neutral-400 text-left">🙌 Kahvaltımıza gelmeyi unutmayın! Hepinizi bekliyoruz! Formu doldurabilirsiniz!</p>
-      </a>
-      <hr className="w-1/12" />
-      <SocialsCard links={links} />
+    <main className="w-full min-h-screen scroll-smooth">
+      <div className="absolute w-full h-full">
+        <Celebration />
+      </div>
+      <div className="relative z-20 w-full min-h-screen flex flex-col sm:px-32 px-4 sm:pb-32 pb-12">
+        <section className="md:w-2/5 sm:3/5 w-full min-h-screen flex flex-col sm:gap-4 gap-16 sm:py-32 py-12 md:text-base text-lg">
+          <h1 className="text-4xl font-bold">
+            Gazi Yapay Zeka Sitesi Beta Aşamasında!
+          </h1>
+          <p>
+            Aramıza tekrardan hoş geldin! Sitemizin yönetim sistemini artık
+            kullanabilirsin! Tek yapman gereken{" "}
+            <a href="/login" className="underline text-blue-400">
+              buraya
+            </a>{" "}
+            tıklayarak giriş yapmak.
+          </p>
+          <p>
+            Güncellemeleri takipte kalmayı ve etkinliklerimize siteye giriş
+            yaptıktan sonra kaydolmayı sakın unutma!
+          </p>
+          <div className="flex gap-4">
+            <a
+              href="/login"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+            >
+              Giriş Yap
+            </a>
+            <a
+              href="#etkinlikler"
+              className="bg-green-800 hover:bg-green-900 text-white px-4 py-2 rounded-md"
+            >
+              Etkinliklerimizi incele
+            </a>
+          </div>
+        </section>
+        <section
+          id="etkinlikler"
+          className="w-full flex flex-col items-center gap-4"
+        >
+          <h2 className="text-2xl font-bold mb-12 text-center">
+            Yakındaki etkinliklerimiz
+          </h2>
+          {events.length > 0 ? (
+            <>
+              {events.map((item) => (
+                <Link
+                  href={`/login`}
+                  key={item.id}
+                  className="sm:w-2/5 w-11/12 h-20 p-2 flex flex-col justify-between rounded-md bg-zinc-600/30 hover:bg-zinc-500/30"
+                >
+                  <div className="flex justify-between">
+                    <h2>{item.name}</h2>
+                    <h2>
+                      {item.participants.length}/{item.maxParticipant}
+                    </h2>
+                  </div>
+                  <h2>{new Date(item.eventTime).toLocaleDateString()}</h2>
+                </Link>
+              ))}
+            </>
+          ) : (
+            <p className="sm:w-1/2 text-center w-full">
+              Ne yazık ki yakında bir etkinliğimiz yoktur. Ancak bu her an
+              değişebilir! Güncellemeleri takip edin!
+            </p>
+          )}
+        </section>
+        <section className="mt-32 flex flex-col items-center gap-4">
+          <h2 className="text-2xl font-bold mb-12 text-center">
+            Sosyal medya hesaplarımız
+          </h2>
+          {/* <div className="w-full flex flex-wrap justify-center gap-4"> */}
+            <SocialsCard links={links} />
+          {/* </div> */}
+        </section>
+      </div>
     </main>
   );
 }
