@@ -245,7 +245,7 @@ const ProfilePage = ({ user }: { user: UserContext_ }) => {
               </ModalBody>
               <ModalFooter className="flex flex-col items-center">
                 <Button color="primary" onPress={sendResetEmail}>
-                  E-posta'mı değiştir
+                  {"E-posta\'mı değiştir"}
                 </Button>
               </ModalFooter>
             </>
