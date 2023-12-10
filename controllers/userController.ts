@@ -93,6 +93,16 @@ export const sendPasswordReset = async (email: string,pb: PocketBase) => {
   }
 }
 
+export const sendEmailReset = async (email: string,pb: PocketBase) => {
+  try {
+    await pb.collection("users").requestEmailChange(email)
+    return {"status": 200}
+  } catch (error) {
+    return {"error": error, "status": 400}
+  }
+
+}
+
 export const resetPassword = async (token: string, password: string, passwordConfirm: string,pb: PocketBase) => {
   try {
     await pb.collection("users").confirmPasswordReset(token, password, passwordConfirm)

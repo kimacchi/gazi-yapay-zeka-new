@@ -25,7 +25,9 @@ export const deleteEvent = async (id: string, pb: PocketBase) => {
 
 export const getEvent = async (id: string, pb: PocketBase) => {
   try {
-    const record = await pb.collection("events").getOne(id, {expand: 'participants'});
+    const record = await pb
+      .collection("events")
+      .getOne(id, { expand: "participants,reserved,left" });
     return record;
   } catch (error) {
     return { error: error };
@@ -43,6 +45,19 @@ export const getAllEvents = async (pb: PocketBase) => {
 
 export const updateEvent = async (id: string, data: any, pb: PocketBase) => {
   try {
+    const prev = await pb.collection("events").getOne(id);
+    let partDiff = prev.maxParticipant - data.maxParticipant;
+    while (partDiff > 0) {
+      if (prev.participants.length > 0) {
+        const reservedUser = prev.participants[0];
+        data = {
+          ...data,
+          "participants+": reservedUser,
+          "reserved-": reservedUser,
+        };
+      }
+      partDiff--;
+    }
     const record = await pb.collection("events").update(id, data);
     return record;
   } catch (error) {
@@ -64,67 +79,129 @@ export const deleteEvents = async (pb: PocketBase) => {
   }
 };
 
-export const addParticipant = async (id: string, data: {
-  phoneNo?: string,
-  schoolNo?: string,
-  faculty?: string,
-  grade?: string,
-  majoring?: string,
-}, pb: PocketBase) => {
+export const addParticipant = async (
+  id: string,
+  data: {
+    phoneNo?: string;
+    schoolNo?: string;
+    faculty?: string;
+    grade?: string;
+    majoring?: string;
+  },
+  pb: PocketBase
+) => {
   try {
-    if(pb.authStore.model){
-      const updatedUser = await pb.collection("users").update(pb.authStore.model.id, data);
-      const event = await pb.collection("events").update(id, {
-        "participants+": updatedUser.id,
-      });
-      return event;
-    }
-    else{
-      return {error: "Not logged in"}
+    if (pb.authStore.model) {
+      const updatedUser = await pb
+        .collection("users")
+        .update(pb.authStore.model.id, data);
+      const event_ = await pb.collection("events").getOne(id);
+      if (event_.participants.length < event_.maxParticipant) {
+        const event = await pb.collection("events").update(id, {
+          "participants+": updatedUser.id,
+          "left-": updatedUser.id,
+        });
+        return event;
+      }
+      if (event_.reserved.length < event_.maxReserved) {
+        const event = await pb.collection("events").update(id, {
+          "reserved+": updatedUser.id,
+          "left-": updatedUser.id,
+        });
+        return event;
+      }
+      return { error: "Event is full" };
+    } else {
+      return { error: "Not logged in" };
     }
   } catch (error) {
     return { error: error };
   }
-}
+};
 
 export const removeParticipant = async (id: string, pb: PocketBase) => {
   try {
-    if(pb.authStore.model){
+    if (pb.authStore.model) {
       // TODO: check if this works.
-      
-      // const selectedEvent = await pb.collection("events").getOne(id, {
-      //   expand: 'participants',
-      // });
-      // const participant = selectedEvent.expand?.participants.find((user: any) => user.user  === pb.authStore.model?.id)
-      // // console.log(selectedEvent.participants)
-      const event = await pb.collection("events").update(id, {
-        "participants-": pb.authStore.model.id,
-      });
-      return event;
-    }
-    else{
-      return {error: "Not logged in"}
-    }
-  } catch (error) {
-    return { error: error };
-  }
-}
+      const event_ = await pb.collection("events").getOne(id);
+      if(event_.reserved.includes(pb.authStore.model.id)){
+        const event = await pb.collection("events").update(id, {
+          "reserved-": pb.authStore.model.id,
+          "left+": pb.authStore.model.id,
+        });
+        return event;
+      }
 
-export const removeAnyParticipant = async (id: string, userId: string, pb: PocketBase) => {
-  try {
-    if(pb.authStore.model){
-      const event = await pb.collection("events").update(id, {
-        "participants-": userId,
+      let event = await pb.collection("events").update(id, {
+        "participants-": pb.authStore.model.id,
+        "left+": pb.authStore.model.id,
       });
+      event = await pb.collection("events").getOne(id);
+      if (event.reserved.length > 0) {
+        const reservedUser = event.reserved[0];
+        event = await pb.collection("events").update(id, {
+          "participants+": reservedUser,
+          "reserved-": reservedUser,
+        });
+      }
       return event;
-    }
-    else{
-      return {error: "Not logged in"}
+    } else {
+      return { error: "Not logged in" };
     }
   } catch (error) {
     return { error: error };
   }
-}
+};
+
+export const removeAnyParticipant = async (
+  id: string,
+  userId: string,
+  pb: PocketBase
+) => {
+  try {
+    if (pb.authStore.model) {
+      let event = await pb.collection("events").update(id, {
+        "participants-": userId,
+        "left+": userId,
+      });
+      event = await pb.collection("events").getOne(id);
+      if (event.reserved.length > 0) {
+        const reservedUser = event.reserved[0];
+        event = await pb.collection("events").update(id, {
+          "participants+": reservedUser,
+          "reserved-": reservedUser,
+        });
+      }
+      console.log(event);
+      return event;
+    } else {
+      return { error: "Not logged in" };
+    }
+  } catch (error) {
+    return { error: error };
+  }
+};
+
+export const deleteReserved = async (
+  id: string,
+  userId: string,
+  pb: PocketBase
+) => {
+  try {
+    if (pb.authStore.model) {
+      const event = await pb.collection("events").update(id, {
+        "reserved-": userId,
+        "left+": userId,
+      });
+
+      return event;
+    } else {
+      return { error: "Not logged in" };
+    }
+  } catch (error) {
+    return { error: error };
+  }
+};
 
 export const getAdminList = async (pb: PocketBase) => {
   try {
@@ -137,32 +214,41 @@ export const getAdminList = async (pb: PocketBase) => {
   }
 };
 
-export const getList = async (page: number = 1, perPage: number = 20, pb: PocketBase) => {
-  console.log(pb.authStore.isValid, "is it valid ?")
+export const getList = async (
+  page: number = 1,
+  perPage: number = 20,
+  pb: PocketBase
+) => {
+  console.log(pb.authStore.isValid, "is it valid ?");
   try {
-    if(pb.authStore.model){
-      type userModel = AuthModel & { activeMember: boolean, admin: boolean };
+    if (pb.authStore.model) {
+      type userModel = AuthModel & { activeMember: boolean; admin: boolean };
       let user = pb.authStore.model as userModel;
       // console.log("outside of if statement", user);
       const now = new Date(Date.now());
-      const stringNow = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${now.getSeconds()}`;
+      const stringNow = `${now.getFullYear()}-${
+        now.getMonth() + 1
+      }-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(
+        2,
+        "0"
+      )}:${now.getSeconds()}`;
       // console.log(user, "this is user")
-      if(user.admin){
+      if (user.admin) {
         return await pb.collection("events").getList(page, perPage, {
           filter: `(closeTime >= "${stringNow}")`,
-          sort: "+eventTime"
+          sort: "+eventTime",
         });
       }
       if (user.activeMember) {
         // console.log("inside of if statement", user);
         return await pb.collection("events").getList(page, perPage, {
           filter: `((releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = false) && (exclusiveForBoard = false)) || ((activeMemberReleaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (activeMembersGetFirst = true) && exclusiveForBoard = false)`,
-          sort: "+eventTime"
+          sort: "+eventTime",
         });
-      }else{
+      } else {
         const events = await pb.collection("events").getList(page, perPage, {
           filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (exclusiveForActiveMembers = false) && (exclusiveForBoard = false)`,
-          sort: "+eventTime"
+          sort: "+eventTime",
         });
         // console.log(events);
         return events;
@@ -175,12 +261,12 @@ export const getList = async (page: number = 1, perPage: number = 20, pb: Pocket
          * items
          */
       }
-    }else{
+    } else {
       console.log("not logged in");
-      return {error: "Not logged in"}
+      return { error: "Not logged in" };
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return { error: error };
   }
   // try {

@@ -5,8 +5,13 @@ import MDEditor from "@uiw/react-md-editor";
 import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+
 
 const CreateEventPage = () => {
+
+  const router = useRouter();
+
   const [description, setDescription] = React.useState<string | undefined>(
     `### **Etkinlik Açıklaması**
 
@@ -16,8 +21,9 @@ Burada etkinlik açıklamasını giriniz.
     
 _Çeşitli stiller deneyebilirsiniz._`
   );
+  const temp = new Date().toLocaleString("en-US", {timeZone: 'Asia/Almaty'});
   const [name, setName] = React.useState("");
-  const [eventTime, setEventTime] = React.useState<Date | null>(new Date());
+  const [eventTime, setEventTime] = React.useState<Date | null>(new Date(temp));
   const [location, setLocation] = React.useState("");
   const [exclusiveForActiveMembers, setExclusiveForActiveMembers] =
     React.useState(false);
@@ -25,15 +31,16 @@ _Çeşitli stiller deneyebilirsiniz._`
     React.useState(false);
   const [isOnline, setIsOnline] = React.useState(false);
   const [maxParticipant, setMaxParticipant] = React.useState(100);
-  const [releaseTime, setReleaseTime] = React.useState<Date | null>(new Date());
-  const [activeMemberReleaseTime, setActiveMemberReleaseTime] = React.useState<Date | null>(new Date());
-  const [closeTime, setCloseTime] = React.useState<Date | null>(new Date());
+  const [releaseTime, setReleaseTime] = React.useState<Date | null>(new Date(temp));
+  const [activeMemberReleaseTime, setActiveMemberReleaseTime] = React.useState<Date | null>(new Date(temp));
+  const [closeTime, setCloseTime] = React.useState<Date | null>(new Date(temp));
   const [reqPhoneNo, setReqPhoneNo] = React.useState(false);
   const [reqFaculty, setReqFaculty] = React.useState(false);
   const [reqSchoolNo, setReqSchoolNo] = React.useState(false);
   const [reqGrade, setReqGrade] = React.useState(false);
   const [reqMajoring, setReqMajoring] = React.useState(false);
   const [exclusiveForBoard, setExclusiveForBoard] = React.useState(false);
+  const [maxReserved, setMaxReserved] = React.useState(10);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -59,6 +66,7 @@ _Çeşitli stiller deneyebilirsiniz._`
       activeMembersGetFirst,
       activeMemberReleaseTime,
       exclusiveForBoard,
+      maxReserved
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
@@ -67,6 +75,7 @@ _Çeşitli stiller deneyebilirsiniz._`
         cookie: `pb_auth=${pb_auth}`,
       },
     });
+    router.push("/dashboard/events");
     console.log(res.data);
   };
 
@@ -169,6 +178,17 @@ _Çeşitli stiller deneyebilirsiniz._`
             value={`${maxParticipant}`}
             onChange={(e) => setMaxParticipant(parseInt(e.target.value))}
             placeholder="Katılımcı sayısını giriniz."
+          />
+        </div>
+        <div>
+          <label>Yedek Katılımcı Sayısı</label>
+          <Input
+            type="number"
+            min="0"
+            max="1000"
+            value={`${maxReserved}`}
+            onChange={(e) => setMaxReserved(parseInt(e.target.value))}
+            placeholder="Yedek Katılımcı sayısını giriniz."
           />
         </div>
         <Checkbox isSelected={isOnline} onValueChange={setIsOnline}>

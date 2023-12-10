@@ -2,12 +2,20 @@
 
 import { Checkbox, Input, Spinner } from "@nextui-org/react";
 import MDEditor from "@uiw/react-md-editor";
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Event } from "@/types/event";
+import { useRouter } from "next/navigation";
+import * as FileSaver from "file-saver";
+import XLSX$Utils from "sheetjs-style";
+
+
 
 const CreateEventPage = ({ event }: { event: Event }) => {
+
+  const router = useRouter();
+
   const [description, setDescription] = React.useState<string | undefined>(
     event.description
   );
@@ -42,8 +50,16 @@ const CreateEventPage = ({ event }: { event: Event }) => {
   const [exclusiveForBoard, setExclusiveForBoard] = React.useState(false);
   const [activeMemberReleaseTime, setActiveMemberReleaseTime] =
     React.useState<Date | null>(new Date());
+  const [maxReserved, setMaxReserved] = React.useState(10);
+  const [reserved, setReserved] = React.useState(event.expand?.reserved || []);
+  const [left, setLeft] = React.useState(event.expand?.left || []);
 
   const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    console.log(reserved);
+    console.log(participants)
+  })
 
   const updateStates = () => {
     setDescription(event.description);
@@ -64,11 +80,14 @@ const CreateEventPage = ({ event }: { event: Event }) => {
     setExclusiveForBoard(event.exclusiveForBoard);
     setActiveMemberReleaseTime(new Date(event.activeMemberReleaseTime));
     setReqMajoring(event.reqMajoring);
+    setMaxReserved(event.maxReserved);
+    setReserved(event.expand?.reserved || []);
+    setLeft(event.expand?.left || []);
   };
 
   const updateEvent = async (close = false) => {
     // TODO: Go back to admin events page after creation, keep while developing
-    console.log(closeTime)
+    console.log(closeTime);
     const pb_auth = Cookies.get("pb_auth");
     const data = new FormData();
     const patch_data = {
@@ -89,6 +108,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
       reqMajoring,
       activeMemberReleaseTime,
       exclusiveForBoard,
+      maxReserved,
     };
     data.append("data", JSON.stringify(event));
     console.log(data.get("data"));
@@ -113,6 +133,33 @@ const CreateEventPage = ({ event }: { event: Event }) => {
     event = res.data;
     updateStates();
   };
+
+  const removeReserved = async (id: string) => {
+    const pb_auth = Cookies.get("pb_auth");
+    const res = await axios.delete(
+      "/api/events/remove-reserved/" + event.id + "?user_id=" + id,
+      {
+        headers: {
+          cookie: `pb_auth=${pb_auth}`,
+        },
+      }
+    );
+    event = res.data;
+    updateStates();
+  };
+
+  const deleteEvent = async () => {
+    const pb_auth = Cookies.get("pb_auth");
+    const res = await axios.delete(
+      "/api/events/" + event.id,
+      {
+        headers: {
+          cookie: `pb_auth=${pb_auth}`,
+        },
+      }
+    );
+    router.push("/dashboard/events");
+  }
 
   return (
     <div className="w-full flex sm:flex-row flex-col sm:justify-around justify-center sm:items-start items-center ">
@@ -229,6 +276,17 @@ const CreateEventPage = ({ event }: { event: Event }) => {
             placeholder="Katılımcı sayısını giriniz."
           />
         </div>
+        <div>
+          <label>Yedek Katılımcı Sayısı</label>
+          <Input
+            type="number"
+            min="0"
+            max="1000"
+            value={`${maxReserved}`}
+            onChange={(e) => setMaxReserved(parseInt(e.target.value))}
+            placeholder="Yedek Katılımcı sayısını giriniz."
+          />
+        </div>
         <Checkbox isSelected={isOnline} onValueChange={setIsOnline}>
           Online etkinlik
         </Checkbox>
@@ -288,7 +346,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
           {loading ? <Spinner /> : "Etkinlik Güncelle"}
         </button>
         <button
-          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
+          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-blue-500 transition-all hover:bg-blue-500 hover:text-neutral-900"
           onClick={async (e) => {
             e.preventDefault();
             try {
@@ -302,7 +360,52 @@ const CreateEventPage = ({ event }: { event: Event }) => {
             }
           }}
         >
-          Etkinliği kapat
+          Etkinliği Kapat
+        </button>
+        <button
+          type="submit"
+          disabled={loading}
+          onClick={async (e) => {
+            e.preventDefault();
+            try {
+              setLoading(true);
+              await deleteEvent();
+              setLoading(false);
+            } catch (error) {
+              console.log(error);
+              setLoading(false);
+            }
+          }}
+          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-rose-700 transition-all hover:bg-rose-700 hover:text-neutral-900"
+        >
+          {loading ? <Spinner /> : "Etkinliği Sil"}
+        </button>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={async (e) => {
+            e.preventDefault();
+            const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+            const fileExtension = '.xlsx';
+            const data = participants.map((item) => {
+              return {
+                "İsim": item.name,
+                "Telefon No": item.phoneNo,
+                "Okul No": item.schoolNo,
+                "Fakülte": item.faculty,
+                "Bölüm": item.majoring,
+                "Sınıf": item.grade
+              }
+            })
+            const ws = XLSX$Utils.utils.json_to_sheet(data);
+            const wb= {Sheets: {"data": ws}, SheetNames: ["data"]};
+            const excelBuffer = XLSX$Utils.write(wb, {bookType: 'xlsx', type: 'array'});
+            const file = new Blob([excelBuffer], {type: fileType});
+            FileSaver.saveAs(file, `${event.name} Katılımcı Listesi${fileExtension}`);
+          }}
+          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-emerald-600 transition-all hover:bg-emerald-600 hover:text-neutral-900"
+        >
+          {"Excel\'e Aktar"}
         </button>
       </form>
       <div className="flex flex-col overflow-y-auto items-center gap-4 p-4 min-h-screen sm:w-1/3 w-11/12 my-12 bg-zinc-600/30 rounded-md">
@@ -342,6 +445,77 @@ const CreateEventPage = ({ event }: { event: Event }) => {
             </button>
           );
         })}
+        {reserved.length > 0 && (
+          <>
+            <hr className="w-full"></hr>
+            <h2 className="text-md">
+              Yedek Katılımcılar {reserved.length}/{event.maxReserved}
+            </h2>
+          </>
+        )}
+        {reserved.map((item) => {
+          return (
+            <button
+              key={item.id}
+              className="w-full flex flex-col group p-2 bg-zinc-500/20 hover:bg-rose-600/30 rounded-md"
+              onClick={() => {
+                removeReserved(item.id);
+              }}
+            >
+              <div className="flex w-full justify-between items-center">
+                <p>{item.name}</p>
+                <span className="invisible group-hover:visible">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-trash3-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+                  </svg>
+                </span>
+              </div>
+              <div className="text-sm text-zinc-400 text-left">
+                <p>{item.phoneNo}</p>
+                <p>{item.schoolNo}</p>
+                <p>{item.faculty}</p>
+                <p>{item.grade}</p>
+              </div>
+            </button>
+          );
+        })}
+        {left.length > 0 && (
+          <>
+            <hr className="w-full"></hr>
+            <h2 className="text-md">
+              Ayrılan Kişiler
+            </h2>
+          </>
+        )}
+        {
+          left.map((item) => {
+            return (
+              <button
+                key={item.id}
+                className="w-full flex flex-col group p-2 bg-zinc-500/20 hover:bg-rose-600/30 rounded-md cursor-default"
+              >
+              <div className="flex w-full justify-between items-center">
+                <p>{item.name}</p>
+                <span className="invisible group-hover:visible">
+                </span>
+              </div>
+              <div className="text-sm text-zinc-400 text-left">
+                <p>{item.phoneNo}</p>
+                <p>{item.schoolNo}</p>
+                <p>{item.faculty}</p>
+                <p>{item.grade}</p>
+              </div>
+            </button>
+            )
+          })
+        }
       </div>
     </div>
   );
