@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { pid: string } }) {
     // ! This page is for admins only.
     const pb_auth = cookies().get("pb_auth")?.value;
     const res = await axios.get<any, AxiosResponse<Event>>(
-      `https://www.gaziyapayzeka.com/api/events/${params.pid}`,
+      `/api/events/${params.pid}`,
       {
         headers: {
           cookie: `pb_auth=${pb_auth}`,

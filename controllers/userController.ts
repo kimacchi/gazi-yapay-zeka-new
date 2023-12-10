@@ -28,6 +28,7 @@ export const login = async (
     return authData
   } catch (error) {
     const err = error as any
+    
     if(err.response.message === "Failed to authenticate." || err.status === 400){
       return {"error": error, "status": 400}
     }

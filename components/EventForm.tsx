@@ -168,7 +168,7 @@ const EventForm = ({
       const part_of_event_res = await axios.get<
         any,
         AxiosResponse<{ partOfEvent: boolean }>
-      >("https://www.gaziyapayzeka.com/api/events/part-of-event/" + event.id, {
+      >("/api/events/part-of-event/" + event.id, {
         headers: {
           cookie: `pb_auth=${pb_auth}`,
         },

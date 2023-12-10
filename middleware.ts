@@ -13,10 +13,10 @@ export async function middleware(req: NextRequest) {
       console.log("worked!");
     } catch (error) {
       pb.authStore.clear();
-      response.headers.set(
-        "set-cookie",
-        pb.authStore.exportToCookie({ httpOnly: false })
-      );
+      // response.headers.set(
+      //   "set-cookie",
+      //   pb.authStore.exportToCookie({ httpOnly: false })
+      // );
       console.log("failed...");
     }
   }
@@ -35,7 +35,10 @@ export async function middleware(req: NextRequest) {
       pb.authStore.exportToCookie({ httpOnly: false })
     );
   }
+  if(req.nextUrl.pathname.startsWith("/signup")){
+    pb.authStore.clear();
 
+  }
   if(pb.authStore.isValid && req.nextUrl.pathname.startsWith("/login")){
     const dashboardUrl = new URL("/dashboard", req.url);
     return NextResponse.redirect(dashboardUrl);
@@ -44,15 +47,6 @@ export async function middleware(req: NextRequest) {
     const loginUrl = new URL("/login", req.url);
     return NextResponse.redirect(loginUrl);
   }
-
-  // if(!pb.authStore.model && (!req.nextUrl.pathname.startsWith("/login") && !req.nextUrl.pathname.startsWith("/signup"))){
-  //   console.log("triggered1")
-  //   if(req.nextUrl.pathname !== "/"){
-  //     console.log("triggered2")
-  //     const loginUrl = new URL("/login", req.nextUrl.origin);
-  //     return NextResponse.redirect(loginUrl);
-  //   }
-  // }
 
   return response;
 }

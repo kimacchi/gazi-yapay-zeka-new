@@ -10,7 +10,7 @@ export const Test = () => {
     if (!file) return;
     const data = new FormData();
     data.append("picture", file);
-    axios.post("https://www.gaziyapayzeka.com/api/users/test", data).then((res) => {
+    axios.post("/api/users/test", data).then((res) => {
       console.log(res.data);
     });
   };

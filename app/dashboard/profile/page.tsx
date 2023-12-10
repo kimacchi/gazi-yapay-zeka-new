@@ -18,14 +18,14 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const pb_auth = cookies().get("pb_auth")?.value;
-  const res = await axios.get<any, AxiosResponse<Event[]>>(
-    `https://www.gaziyapayzeka.com/api/events/admin`,
-    {
-      headers: {
-        cookie: `pb_auth=${pb_auth}`,
-      },
-    }
-  );
+  // const res = await axios.get<any, AxiosResponse<Event[]>>(
+  //   `/api/events/admin`,
+  //   {
+  //     headers: {
+  //       cookie: `pb_auth=${pb_auth}`,
+  //     },
+  //   }
+  // );
   pb.authStore.loadFromCookie(pb_auth || "");
   const user_ = pb.authStore.model as unknown;
   const user = user_ as UserContext_;

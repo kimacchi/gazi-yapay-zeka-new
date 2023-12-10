@@ -38,7 +38,7 @@ const EventsPage = async () => {
   let pb_auth = Cookies.get("pb_auth");
   if (!pb_auth) pb_auth = cookies().get("pb_auth")?.value;
   const res = await axios.get<any, AxiosResponse<Event[]>>(
-    `https://www.gaziyapayzeka.com/api/events/admin`,
+    `/api/events/admin`,
     {
       headers: {
         cookie: `pb_auth=${pb_auth}`,
