@@ -9,22 +9,37 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.15",
+    "@mui/x-date-pickers": "^6.17.0",
     "@nextui-org/react": "^2.1.13",
     "@types/node": "20.5.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
+    "@uiw/react-md-editor": "^3.24.1",
     "@vercel/analytics": "^1.0.2",
     "autoprefixer": "10.4.15",
     "axios": "^1.5.0",
+    "dayjs": "^1.11.10",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
+    "file-saver": "^2.0.5",
     "framer-motion": "^10.16.4",
+    "js-cookie": "^3.0.5",
     "next": "13.4.19",
     "pocketbase": "^0.17.3",
     "postcss": "8.4.29",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-markdown": "^9.0.1",
+    "react-phone-input-2": "^2.15.1",
+    "sheetjs-style": "^0.15.8",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.7",
+    "@types/js-cookie": "^3.0.6"
   }
 }

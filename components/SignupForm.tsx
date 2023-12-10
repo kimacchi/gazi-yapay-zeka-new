@@ -1,7 +1,7 @@
 "use client";
 
 import axios, { AxiosResponse } from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalBody,
@@ -12,9 +12,20 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import { useUserContext } from "@/app/UserContext";
+import Link from "next/link";
 
 const SignupForm = () => {
+  const {user, setUser} = useUserContext();
+
+  
   const route = useRouter();
+  useEffect(() => {
+    if(user){
+      route.push("/dashboard");
+    }
+    console.log(user)
+  }, [user]);
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -227,6 +238,9 @@ const SignupForm = () => {
             placeholder="Şifrenizi onaylayın..."
           />
         </Tooltip>
+        <Link href="/login" className="hover:underline">
+          Giriş yap
+        </Link> 
         <button
           className="text-xl sm:w-96 mt-2 w-72 border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
           onClick={handleSubmit}
