@@ -405,7 +405,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
           }}
           className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-emerald-600 transition-all hover:bg-emerald-600 hover:text-neutral-900"
         >
-          Excel'e Aktar
+          {"Excel\'e Aktar"}
         </button>
       </form>
       <div className="flex flex-col overflow-y-auto items-center gap-4 p-4 min-h-screen sm:w-1/3 w-11/12 my-12 bg-zinc-600/30 rounded-md">
