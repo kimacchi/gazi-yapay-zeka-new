@@ -6,6 +6,17 @@ import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  icons: "favicon.ico",
+  title: "Etkinlik oluştur | Gazi Yapay Zeka",
+  description: "Gazi Üniversitesi Yapay Zeka Topluluğu'nun Websitesi",
+  keywords:
+    "gazi üniversitesi,gazi üniversitesi mühendislik fakültesi,gazi üniversitesi topluluk,yapay zeka,yapay zeka topluluğu,gazi üniversitesi yapay zeka,gazi üniversitesi yapay zeka topluluğu,gazi yapay zeka,gazi yapay zeka topluluğu,gazi ai,gazi ai topluluğu,gazi artificial intelligence,gazi artificial intelligence topluluğu,gazi artificial intelligence society,yapay zekâ,gazi üniversitesi,gazi,gazi üni,topluluk,makine öğrenmesi,yapay zeka ve makine öğrenmesi,gazi yapay zeka yönetim sistemi,gazi yapay zeka login,yapay zeka login,yapay zeka haberleri,yapay zeka yönetim sistemi",
+  robots: "index, follow",
+};
 
 const CreateEventPage = () => {
 
@@ -20,8 +31,9 @@ Burada etkinlik açıklamasını giriniz.
     
 _Çeşitli stiller deneyebilirsiniz._`
   );
+  const temp = new Date().toLocaleString("en-US", {timeZone: 'Asia/Almaty'});
   const [name, setName] = React.useState("");
-  const [eventTime, setEventTime] = React.useState<Date | null>(new Date());
+  const [eventTime, setEventTime] = React.useState<Date | null>(new Date(temp));
   const [location, setLocation] = React.useState("");
   const [exclusiveForActiveMembers, setExclusiveForActiveMembers] =
     React.useState(false);
@@ -29,9 +41,9 @@ _Çeşitli stiller deneyebilirsiniz._`
     React.useState(false);
   const [isOnline, setIsOnline] = React.useState(false);
   const [maxParticipant, setMaxParticipant] = React.useState(100);
-  const [releaseTime, setReleaseTime] = React.useState<Date | null>(new Date());
-  const [activeMemberReleaseTime, setActiveMemberReleaseTime] = React.useState<Date | null>(new Date());
-  const [closeTime, setCloseTime] = React.useState<Date | null>(new Date());
+  const [releaseTime, setReleaseTime] = React.useState<Date | null>(new Date(temp));
+  const [activeMemberReleaseTime, setActiveMemberReleaseTime] = React.useState<Date | null>(new Date(temp));
+  const [closeTime, setCloseTime] = React.useState<Date | null>(new Date(temp));
   const [reqPhoneNo, setReqPhoneNo] = React.useState(false);
   const [reqFaculty, setReqFaculty] = React.useState(false);
   const [reqSchoolNo, setReqSchoolNo] = React.useState(false);

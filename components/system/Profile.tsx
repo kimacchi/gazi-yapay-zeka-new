@@ -5,6 +5,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownSection,
   DropdownTrigger,
 } from "@nextui-org/react";
 import { RecordModel } from "pocketbase";
@@ -68,14 +69,24 @@ const Profile = ({ user }: { user: AuthModel_ | null }) => {
           </button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
-          <DropdownItem key="main_menu" className="" onClick={() => {
-            router.push("/");
-          }}>
-            Ana Sayfaya Dön
-          </DropdownItem>
-          <DropdownItem key="logout" className="text-danger" color="danger" onClick={logout}>
-            Çıkış Yap
-          </DropdownItem>
+          <DropdownSection title="Profilim">
+            <DropdownItem key="profile" className="" onClick={() => {
+              router.push("/dashboard/profile");
+            }}>
+              Profilim
+            </DropdownItem>
+            
+          </DropdownSection>
+          <DropdownSection title="Diğer işlemler">
+            <DropdownItem key="main_menu" className="text-cyan-600" onClick={() => {
+              router.push("/");
+            }}>
+              Ana Sayfaya Dön
+            </DropdownItem>
+            <DropdownItem key="logout" className="text-danger" color="danger" onClick={logout}>
+              Çıkış Yap
+            </DropdownItem>
+          </DropdownSection>
         </DropdownMenu>
       </Dropdown>
     </>

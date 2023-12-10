@@ -7,6 +7,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Event } from "@/types/event";
 import { useRouter } from "next/navigation";
+import * as FileSaver from "file-saver";
+import XLSX$Utils from "sheetjs-style";
+
+
 
 const CreateEventPage = ({ event }: { event: Event }) => {
 
@@ -48,6 +52,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
     React.useState<Date | null>(new Date());
   const [maxReserved, setMaxReserved] = React.useState(10);
   const [reserved, setReserved] = React.useState(event.expand?.reserved || []);
+  const [left, setLeft] = React.useState(event.expand?.left || []);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -77,6 +82,7 @@ const CreateEventPage = ({ event }: { event: Event }) => {
     setReqMajoring(event.reqMajoring);
     setMaxReserved(event.maxReserved);
     setReserved(event.expand?.reserved || []);
+    setLeft(event.expand?.left || []);
   };
 
   const updateEvent = async (close = false) => {
@@ -374,6 +380,33 @@ const CreateEventPage = ({ event }: { event: Event }) => {
         >
           {loading ? <Spinner /> : "Etkinliği Sil"}
         </button>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={async (e) => {
+            e.preventDefault();
+            const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+            const fileExtension = '.xlsx';
+            const data = participants.map((item) => {
+              return {
+                "İsim": item.name,
+                "Telefon No": item.phoneNo,
+                "Okul No": item.schoolNo,
+                "Fakülte": item.faculty,
+                "Bölüm": item.majoring,
+                "Sınıf": item.grade
+              }
+            })
+            const ws = XLSX$Utils.utils.json_to_sheet(data);
+            const wb= {Sheets: {"data": ws}, SheetNames: ["data"]};
+            const excelBuffer = XLSX$Utils.write(wb, {bookType: 'xlsx', type: 'array'});
+            const file = new Blob([excelBuffer], {type: fileType});
+            FileSaver.saveAs(file, `${event.name} Katılımcı Listesi${fileExtension}`);
+          }}
+          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-emerald-600 transition-all hover:bg-emerald-600 hover:text-neutral-900"
+        >
+          Excel'e Aktar
+        </button>
       </form>
       <div className="flex flex-col overflow-y-auto items-center gap-4 p-4 min-h-screen sm:w-1/3 w-11/12 my-12 bg-zinc-600/30 rounded-md">
         <h2 className="text-2xl">
@@ -453,6 +486,36 @@ const CreateEventPage = ({ event }: { event: Event }) => {
             </button>
           );
         })}
+        {left.length > 0 && (
+          <>
+            <hr className="w-full"></hr>
+            <h2 className="text-md">
+              Ayrılan Kişiler
+            </h2>
+          </>
+        )}
+        {
+          left.map((item) => {
+            return (
+              <button
+                key={item.id}
+                className="w-full flex flex-col group p-2 bg-zinc-500/20 hover:bg-rose-600/30 rounded-md cursor-default"
+              >
+              <div className="flex w-full justify-between items-center">
+                <p>{item.name}</p>
+                <span className="invisible group-hover:visible">
+                </span>
+              </div>
+              <div className="text-sm text-zinc-400 text-left">
+                <p>{item.phoneNo}</p>
+                <p>{item.schoolNo}</p>
+                <p>{item.faculty}</p>
+                <p>{item.grade}</p>
+              </div>
+            </button>
+            )
+          })
+        }
       </div>
     </div>
   );

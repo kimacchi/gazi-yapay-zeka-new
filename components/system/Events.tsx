@@ -193,7 +193,7 @@ import Cookies from "js-cookie";
 //     closeTime: new Date(2025, 7, 31, 23, 59, 59, 999),
 //   },
 // ];
-export const Events = () => {
+export const Events = ({previous = false}) => {
   const router = useRouter();
 
   const [events, setEvents] = useState<Event[] | null>(null);
@@ -238,29 +238,8 @@ export const Events = () => {
    */
   return (
     <div className="sm:w-1/2 w-full mb-4 flex sm:flex-col flex-col-reverse items-center border-2 border-neutral-200 p-2 rounded-xl">
-      {/* <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        scrollBehavior="inside"
-        placement="center"
-      >
-        <ModalContent>
-          <ModalHeader>{selectedEvent.name}</ModalHeader>
-          <ModalBody>
-            <p>{selectedEvent.description}</p>
-            <p>
-              {selectedEvent.participants.length}/{selectedEvent.maxParticipant}
-            </p>
-          </ModalBody>
-          <ModalFooter>
-            <button onClick={() => {
-              
-            }}>Etkinliğe Katıl</button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal> */}
       <div className="w-full flex flex-col items-center my-4">
-        <h1 className="text-3xl font-bold text-center">Yaklaşan Etkinlikler</h1>
+        <h1 className="text-3xl font-bold text-center">{previous ? "Geçmiş Etkinlikler" : "Yaklaşan Etkinlikler"}</h1>
         <hr className="my-4 w-2/3" />
         <div className="w-fit">
           {events ? (

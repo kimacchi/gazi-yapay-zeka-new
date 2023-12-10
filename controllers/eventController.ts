@@ -27,7 +27,7 @@ export const getEvent = async (id: string, pb: PocketBase) => {
   try {
     const record = await pb
       .collection("events")
-      .getOne(id, { expand: "participants,reserved" });
+      .getOne(id, { expand: "participants,reserved,left" });
     return record;
   } catch (error) {
     return { error: error };
@@ -45,6 +45,19 @@ export const getAllEvents = async (pb: PocketBase) => {
 
 export const updateEvent = async (id: string, data: any, pb: PocketBase) => {
   try {
+    const prev = await pb.collection("events").getOne(id);
+    let partDiff = prev.maxParticipant - data.maxParticipant;
+    while (partDiff > 0) {
+      if (prev.participants.length > 0) {
+        const reservedUser = prev.participants[0];
+        data = {
+          ...data,
+          "participants+": reservedUser,
+          "reserved-": reservedUser,
+        };
+      }
+      partDiff--;
+    }
     const record = await pb.collection("events").update(id, data);
     return record;
   } catch (error) {
@@ -86,12 +99,14 @@ export const addParticipant = async (
       if (event_.participants.length < event_.maxParticipant) {
         const event = await pb.collection("events").update(id, {
           "participants+": updatedUser.id,
+          "left-": updatedUser.id,
         });
         return event;
       }
       if (event_.reserved.length < event_.maxReserved) {
         const event = await pb.collection("events").update(id, {
           "reserved+": updatedUser.id,
+          "left-": updatedUser.id,
         });
         return event;
       }
@@ -108,13 +123,22 @@ export const removeParticipant = async (id: string, pb: PocketBase) => {
   try {
     if (pb.authStore.model) {
       // TODO: check if this works.
+      const event_ = await pb.collection("events").getOne(id);
+      if(event_.reserved.includes(pb.authStore.model.id)){
+        const event = await pb.collection("events").update(id, {
+          "reserved-": pb.authStore.model.id,
+          "left+": pb.authStore.model.id,
+        });
+        return event;
+      }
 
       let event = await pb.collection("events").update(id, {
         "participants-": pb.authStore.model.id,
+        "left+": pb.authStore.model.id,
       });
-      event = await pb.collection("events").getOne(id)
-      if(event.reserved.length > 0){
-        const reservedUser = event.reserved[0]
+      event = await pb.collection("events").getOne(id);
+      if (event.reserved.length > 0) {
+        const reservedUser = event.reserved[0];
         event = await pb.collection("events").update(id, {
           "participants+": reservedUser,
           "reserved-": reservedUser,
@@ -138,16 +162,17 @@ export const removeAnyParticipant = async (
     if (pb.authStore.model) {
       let event = await pb.collection("events").update(id, {
         "participants-": userId,
+        "left+": userId,
       });
-      event = await pb.collection("events").getOne(id)
-      if(event.reserved.length > 0){
-        const reservedUser = event.reserved[0]
+      event = await pb.collection("events").getOne(id);
+      if (event.reserved.length > 0) {
+        const reservedUser = event.reserved[0];
         event = await pb.collection("events").update(id, {
           "participants+": reservedUser,
           "reserved-": reservedUser,
         });
       }
-      console.log(event)
+      console.log(event);
       return event;
     } else {
       return { error: "Not logged in" };
@@ -166,6 +191,7 @@ export const deleteReserved = async (
     if (pb.authStore.model) {
       const event = await pb.collection("events").update(id, {
         "reserved-": userId,
+        "left+": userId,
       });
 
       return event;
