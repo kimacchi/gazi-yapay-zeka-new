@@ -35,17 +35,27 @@ export async function middleware(req: NextRequest) {
       pb.authStore.exportToCookie({ httpOnly: false })
     );
   }
-  // if(req.nextUrl.pathname.startsWith("/signup")){
-  //   pb.authStore.clear();
-  //   response.headers.set(
-  //     "set-cookie",
-  //     ""
-  //   );
-  //   const loginUrl = new URL("/signup", req.url);
-  //   return NextResponse.redirect(loginUrl);
-
-  // }
   if(pb.authStore.isValid && req.nextUrl.pathname.startsWith("/login")){
+    const dashboardUrl = new URL("/dashboard", req.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
+  if(!pb.authStore.model?.admin && req.nextUrl.pathname.startsWith("/dashboard/users")){
+    const dashboardUrl = new URL("/dashboard", req.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
+  if(!pb.authStore.model?.admin && req.nextUrl.pathname.startsWith("/dashboard/comitees")){
+    const dashboardUrl = new URL("/dashboard", req.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
+  if(!pb.authStore.model?.admin && req.nextUrl.pathname.startsWith("/dashboard/board-members")){
+    const dashboardUrl = new URL("/dashboard", req.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
+  if(!pb.authStore.model?.admin && req.nextUrl.pathname.startsWith("/dashboard/sponsor-management")){
+    const dashboardUrl = new URL("/dashboard", req.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
+  if(!pb.authStore.model?.admin && req.nextUrl.pathname.startsWith("/dashboard/blog-posts")){
     const dashboardUrl = new URL("/dashboard", req.url);
     return NextResponse.redirect(dashboardUrl);
   }

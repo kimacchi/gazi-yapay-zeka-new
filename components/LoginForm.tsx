@@ -46,7 +46,7 @@ const LoginForm = () => {
         email: email.trim(),
         password: password.trim(),
       });
-      if (loginResponse.data.status) {
+      if (loginResponse.data.error) {
         setPassword("");
         console.log("authentication failed.");
         setError(true);
@@ -70,6 +70,7 @@ const LoginForm = () => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [resetEmail, setResetEmail] = useState("");
+
   const resetPassword = async () => {
     try {
       const resetResponse = await axios.post<{

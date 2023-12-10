@@ -34,5 +34,6 @@ export async function PATCH(req: Request, {params}: {params: {pid: string}}){
 
     const body = await req.json();
     const patchedUser = await patchUser(params.pid, body, pb)
+    console.log(body, "sdafsdfsf")
     return new Response(JSON.stringify(patchedUser))
 }
