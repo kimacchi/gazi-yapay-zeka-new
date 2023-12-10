@@ -6,17 +6,7 @@ import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { Metadata } from "next";
 
-
-export const metadata: Metadata = {
-  icons: "favicon.ico",
-  title: "Etkinlik oluştur | Gazi Yapay Zeka",
-  description: "Gazi Üniversitesi Yapay Zeka Topluluğu'nun Websitesi",
-  keywords:
-    "gazi üniversitesi,gazi üniversitesi mühendislik fakültesi,gazi üniversitesi topluluk,yapay zeka,yapay zeka topluluğu,gazi üniversitesi yapay zeka,gazi üniversitesi yapay zeka topluluğu,gazi yapay zeka,gazi yapay zeka topluluğu,gazi ai,gazi ai topluluğu,gazi artificial intelligence,gazi artificial intelligence topluluğu,gazi artificial intelligence society,yapay zekâ,gazi üniversitesi,gazi,gazi üni,topluluk,makine öğrenmesi,yapay zeka ve makine öğrenmesi,gazi yapay zeka yönetim sistemi,gazi yapay zeka login,yapay zeka login,yapay zeka haberleri,yapay zeka yönetim sistemi",
-  robots: "index, follow",
-};
 
 const CreateEventPage = () => {
 
