@@ -110,6 +110,7 @@ const SignupForm = () => {
         onOpenChange={(e) => {
           setSuccess(e);
         }}
+        placement="center"
       >
         <ModalContent className="bg-emerald-800">
           <ModalHeader>Kayıt olma başarılı!</ModalHeader>
