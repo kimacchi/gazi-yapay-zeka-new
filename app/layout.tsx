@@ -24,7 +24,7 @@ export default function RootLayout({
           <link rel="icon" href="/favicon.ico" />
         </head>
         <body
-          className={` bg-neutral-900 min-h-screen font-Roboto text-neutral-200`}
+          className={` bg-celebration-bg min-h-screen font-Roboto text-neutral-200 scroll-smooth`}
         >
             <UserProvider>
               {children}
