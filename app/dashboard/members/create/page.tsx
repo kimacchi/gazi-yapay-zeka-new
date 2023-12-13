@@ -66,7 +66,7 @@ const page = () => {
   };
   return (
     <div className="flex flex-col gap-8 items-center py-12">
-      <h1 className="text-4xl font-bold">Üye Ekle</h1>
+      <h1 className="text-4xl font-bold text-center">İK Üyesi Ekle</h1>
       <form className="sm:w-1/3 w-11/12 flex flex-col gap-4">
         <Input
           isRequired
