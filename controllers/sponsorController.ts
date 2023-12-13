@@ -1,6 +1,6 @@
-import pb from "./pocketbase";
+import PocketBase from "pocketbase";
 
-export const createSponsor = async (data: FormData) => {
+export const createSponsor = async (data: FormData, pb: PocketBase) => {
     try {
         const record = await pb.collection("sponsors").create(data);
         return record;      
@@ -9,7 +9,7 @@ export const createSponsor = async (data: FormData) => {
     }
 };
 
-export const deleteSponsor = async (id: string) => {
+export const deleteSponsor = async (id: string, pb: PocketBase) => {
     try {
         const record = await pb.collection("sponsors").delete(id);
         return record;      
@@ -18,7 +18,7 @@ export const deleteSponsor = async (id: string) => {
     }
 }
 
-export const getSponsor = async (id: string) => {
+export const getSponsor = async (id: string, pb: PocketBase) => {
     try {
         const record = await pb.collection("sponsors").getOne(id);
         return record;      
@@ -27,7 +27,7 @@ export const getSponsor = async (id: string) => {
     }
 }
 
-export const getSponsors = async () => {
+export const getSponsors = async (pb: PocketBase) => {
     try {
         const record = await pb.collection("sponsors").getFullList();
         return record;      
@@ -36,7 +36,7 @@ export const getSponsors = async () => {
     }
 }
 
-export const updateSponsor = async (id: string, data: FormData) => {
+export const updateSponsor = async (id: string, data: FormData, pb: PocketBase) => {
     try {
         const record = await pb.collection("sponsors").update(id, data);
         return record;      
@@ -45,15 +45,15 @@ export const updateSponsor = async (id: string, data: FormData) => {
     }
 }
 
-export const deleteSponsors = async () => {
+export const deleteSponsors = async (pb: PocketBase) => {
     try {
-        const record = await getSponsors();
+        const record = await getSponsors(pb);
         if(Array.isArray(record)) {
             record.forEach(async (sponsor) => {
-                await deleteSponsor(sponsor.id);
+                await deleteSponsor(sponsor.id, pb);
             })
         }
-        return await getSponsors();      
+        return await getSponsors(pb);      
     } catch (error) {
         return {"error": error}
     }

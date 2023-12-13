@@ -1,6 +1,6 @@
-import pb from "./pocketbase";
+import PocketBase from "pocketbase";
 
-export const createBlog = async (data: FormData) => {
+export const createBlog = async (data: FormData, pb: PocketBase) => {
   try {
     const record = await pb.collection("blogs").create(data);
     return record;
@@ -9,7 +9,7 @@ export const createBlog = async (data: FormData) => {
   }
 };
 
-export const deleteBlog = async (id: string) => {
+export const deleteBlog = async (id: string, pb: PocketBase) => {
   try {
     const record = await pb.collection("blogs").delete(id);
     return record;
@@ -18,7 +18,7 @@ export const deleteBlog = async (id: string) => {
   }
 };
 
-export const getBlog = async (id: string) => {
+export const getBlog = async (id: string, pb: PocketBase) => {
   try {
     const record = await pb.collection("blogs").getOne(id);
     return record;
@@ -27,7 +27,7 @@ export const getBlog = async (id: string) => {
   }
 };
 
-export const getAllBlogs = async () => {
+export const getAllBlogs = async (pb: PocketBase) => {
   try {
     const record = await pb.collection("blogs").getFullList();
     return record;
@@ -36,7 +36,7 @@ export const getAllBlogs = async () => {
   }
 };
 
-export const updateBlog = async (id: string, data: FormData) => {
+export const updateBlog = async (id: string, data: FormData, pb: PocketBase) => {
   try {
     const record = await pb.collection("blogs").update(id, data);
     return record;
@@ -45,21 +45,21 @@ export const updateBlog = async (id: string, data: FormData) => {
   }
 };
 
-export const deleteBlogs = async () => {
+export const deleteBlogs = async (pb: PocketBase) => {
   try {
-    const record = await getAllBlogs();
+    const record = await getAllBlogs(pb);
     if (Array.isArray(record)) {
       record.forEach(async (blog) => {
-        await deleteBlog(blog.id);
+        await deleteBlog(blog.id, pb);
       });
     }
-    return await getAllBlogs();
+    return await getAllBlogs(pb);
   } catch (error) {
     return { error: error };
   }
 };
 
-export const getList = async (page: number = 1, perPage: number = 20) => {
+export const getList = async (page: number = 1, perPage: number = 20, pb: PocketBase) => {
   try {
     const resultList = await pb.collection("blogs").getList(page, perPage);
     return resultList;

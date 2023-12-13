@@ -49,9 +49,12 @@ export const getAllUsers = async (pb: PocketBase) => {
   }
 }
 
-export const getList = async (page: number = 1, perPage: number = 20,pb: PocketBase) => {
+export const getList = async (page: number = 1, perPage: number = 20,pb: PocketBase, name?: string | null) => {
   try {
-    const resultList = await pb.collection("users").getList(page, perPage)
+    const resultList = await pb.collection("users").getList(page, perPage, {
+      filter: `${name ? `name ~ '${name}'` : ""}`
+      // filter: "name ~ 'ahmet'"
+    })
     return resultList
   } catch (error) {
     return {"error": error}

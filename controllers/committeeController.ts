@@ -1,6 +1,6 @@
-import pb from "./pocketbase"
+import PocketBase from "pocketbase";
 
-export const createCommittee = async (data: FormData) => {
+export const createCommittee = async (data: FormData, pb: PocketBase) => {
     try {
         const record = await pb.collection("committees").create(data);
         return record;      
@@ -9,7 +9,7 @@ export const createCommittee = async (data: FormData) => {
     }
 };
 
-export const deleteCommittee = async (id: string) => {
+export const deleteCommittee = async (id: string, pb: PocketBase) => {
     try {
         const record = await pb.collection("committees").delete(id);
         return record;      
@@ -18,7 +18,7 @@ export const deleteCommittee = async (id: string) => {
     }
 }
 
-export const getCommittee = async (id: string) => {
+export const getCommittee = async (id: string, pb: PocketBase) => {
     try {
         const record = await pb.collection("committees").getOne(id);
         return record;      
@@ -27,7 +27,7 @@ export const getCommittee = async (id: string) => {
     }
 }
 
-export const getCommittees = async () => {
+export const getCommittees = async (pb: PocketBase) => {
     try {
         const record = await pb.collection("committees").getFullList();
         return record;      
@@ -36,7 +36,7 @@ export const getCommittees = async () => {
     }
 }
 
-export const updateCommittee = async (id: string, data: FormData) => {
+export const updateCommittee = async (id: string, data: FormData, pb: PocketBase) => {
     try {
         const record = await pb.collection("committees").update(id, data);
         return record;      
@@ -45,15 +45,15 @@ export const updateCommittee = async (id: string, data: FormData) => {
     }
 }
 
-export const deleteCommittees = async () => {
+export const deleteCommittees = async (pb: PocketBase) => {
     try {
-        const record = await getCommittees();
+        const record = await getCommittees(pb);
         if(Array.isArray(record)) {
             record.forEach(async (committee) => {
-                await deleteCommittee(committee.id);
+                await deleteCommittee(committee.id, pb);
             })
         }
-        return await getCommittees();      
+        return await getCommittees(pb);      
     } catch (error) {
         return {"error": error}
     }

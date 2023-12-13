@@ -18,8 +18,9 @@ export async function GET(req: Request) {
 
     const page = parseInt((searchParams.get("page") ? searchParams.get("page") : "1") as string)
     const perPage = parseInt((searchParams.get("perPage") ? searchParams.get("perPage") : "20") as string)
-
-    const list = await getList(page, perPage, pb)
+    const name = searchParams.get("name")
+    console.log(name, "dsfasdfasdfasfa")
+    const list = await getList(page, perPage, pb, name)
     return new Response(JSON.stringify(list))
 }
 

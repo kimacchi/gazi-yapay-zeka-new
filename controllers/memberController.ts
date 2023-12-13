@@ -1,16 +1,24 @@
 import { RecordModel } from "pocketbase";
-import pb from "./pocketbase";
+import PocketBase from "pocketbase";
 
-export const createMember = async (data: FormData) => {
+export const createMember = async (data: FormData, pb: PocketBase) => {
     try {
+        const assignedCommittee = data.get("committee")
+        console.log(data)
         const record = await pb.collection("members").create(data);
+        console.log(record)
+        if(assignedCommittee) {
+            const committee = await pb.collection("committees").update(assignedCommittee.toString(), {
+                "members+": record.id
+            })
+        }
         return record;      
     } catch (error) {
         return {"error": error}
     }
 };
 
-export const deleteMember = async (id: string) => {
+export const deleteMember = async (id: string, pb: PocketBase) => {
     try {
         const record = await pb.collection("members").delete(id);
         return record;      
@@ -19,7 +27,7 @@ export const deleteMember = async (id: string) => {
     }
 }
 
-export const getMember = async (id: string) => {
+export const getMember = async (id: string, pb: PocketBase) => {
     try {
         const record = await pb.collection("members").getOne(id);
         return record;      
@@ -28,7 +36,7 @@ export const getMember = async (id: string) => {
     }
 }
 
-export const getMembers = async () => {
+export const getMembers = async (pb: PocketBase) => {
     try {
         const record = await pb.collection("members").getFullList();
         return record;      
@@ -37,7 +45,7 @@ export const getMembers = async () => {
     }
 }
 
-export const updateMember = async (id: string, data: FormData) => {
+export const updateMember = async (id: string, data: FormData, pb: PocketBase) => {
     try {
         const record = await pb.collection("members").update(id, data);
         return record;      
@@ -46,15 +54,15 @@ export const updateMember = async (id: string, data: FormData) => {
     }
 }
 
-export const deleteMembers = async () => {
+export const deleteMembers = async (pb: PocketBase) => {
     try {
-        const record = await getMembers();
+        const record = await getMembers(pb);
         if(Array.isArray(record)) {
             record.forEach(async (member: RecordModel) => {
-                await deleteMember(member.id);
+                await deleteMember(member.id, pb);
             })
         }
-        return await getMembers();      
+        return await getMembers(pb);      
     } catch (error) {
         return {"error": error}
     }
