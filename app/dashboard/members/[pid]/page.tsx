@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { headers } from "next/headers";
 import React, { useEffect } from "react";
 
-const page = ({ params }: { params: { pid: string } }) => {
+const Page = ({ params }: { params: { pid: string } }) => {
   const [member, setMember] = React.useState<Member | null>(null);
   const [commitees, setCommitees] = React.useState<Commitee[]>([]);
 
@@ -166,4 +166,4 @@ const page = ({ params }: { params: { pid: string } }) => {
   );
 };
 
-export default page;
+export default Page;
