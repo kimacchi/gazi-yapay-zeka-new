@@ -1,4 +1,4 @@
-import { createMember } from "@/controllers/memberController";
+import { createMember, getMembers } from "@/controllers/memberController";
 import { cookies } from "next/headers";
 
 import PocketBase from "pocketbase";
@@ -7,7 +7,7 @@ export async function GET(req: Request) {
     const token = cookies().get("pb_auth")?.value
     pb.authStore.loadFromCookie(token || "");
     // TODO: get all members
-    return new Response(JSON.stringify({}))
+    return new Response(JSON.stringify(await getMembers(pb)))
 }
 
 export async function POST(req: Request) {

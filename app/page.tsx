@@ -152,37 +152,73 @@ export default async function Home() {
         <Celebration />
       </div>
       <div className="relative z-20 w-full min-h-screen flex flex-col sm:px-32 px-4 sm:pb-32 pb-12">
-        <section className="md:w-2/5 sm:3/5 w-full min-h-screen flex flex-col sm:gap-4 gap-16 sm:py-32 py-12 md:text-base text-lg">
-          <h1 className="text-4xl font-bold">
-            Gazi Yapay Zeka Sitesi Beta Aşamasında!
-          </h1>
-          <p>
-            Aramıza tekrardan hoş geldin! Sitemizin yönetim sistemini artık
-            kullanabilirsin! Tek yapman gereken{" "}
-            <a href="/login" className="underline text-blue-400">
-              buraya
-            </a>{" "}
-            tıklayarak giriş yapmak.
-          </p>
-          <p>
-            Güncellemeleri takipte kalmayı ve etkinliklerimize siteye giriş
-            yaptıktan sonra kaydolmayı sakın unutma!
-          </p>
-          <div className="flex gap-4">
-            <a
-              href="/login"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-            >
-              Giriş Yap
-            </a>
-            <a
-              href="#etkinlikler"
-              className="bg-green-800 hover:bg-green-900 text-white px-4 py-2 rounded-md"
-            >
-              Etkinliklerimizi incele
-            </a>
-          </div>
-        </section>
+        <div className="flex items-center w-full justify-between">
+          <section className="md:w-2/5 sm:3/5 w-full min-h-screen flex flex-col sm:gap-4 gap-16 sm:py-32 py-12 md:text-base text-lg">
+            <h1 className="text-4xl font-bold">
+              Gazi Yapay Zeka Sitesi Beta Aşamasında!
+            </h1>
+            <p>
+              Aramıza tekrardan hoş geldin! Sitemizin yönetim sistemini artık
+              kullanabilirsin! Tek yapman gereken{" "}
+              <a href="/login" className="underline text-blue-400">
+                buraya
+              </a>{" "}
+              tıklayarak giriş yapmak.
+            </p>
+            <p>
+              Güncellemeleri takipte kalmayı ve etkinliklerimize siteye giriş
+              yaptıktan sonra kaydolmayı sakın unutma!
+            </p>
+            <div className="flex gap-4">
+              <a
+                href="/login"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+              >
+                Giriş Yap
+              </a>
+              <a
+                href="#etkinlikler"
+                className="bg-green-800 hover:bg-green-900 text-white px-4 py-2 rounded-md"
+              >
+                Etkinliklerimizi incele
+              </a>
+            </div>
+          </section>
+          <a
+            href={
+              "https://www.techcareer.net/hackathon/datathon-guess-the-last-one?utm_source=aday&utm_medium=sm&utm_campaign=datathon_gazi"
+            }
+            key={"gazi_datathon"}
+            target="_blank"
+            rel="noreferrer"
+            className="flex flex-col items-start justify-center gap-2 sm:w-1/3 w-4/5 h-min border-orange-700 border-4 rounded-xl p-4 transition-all hover:bg-orange-700 hover:rounded-3xl"
+          >
+            <div className="flex items-center gap-2 w-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                fill="currentColor"
+                className="bi bi-code-slash"
+                viewBox="0 0 16 16"
+              >
+                <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0m6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0" />
+              </svg>
+              <h2 className="text-lg font-medium">
+                {"Datathon: Job PredictaThon"}
+              </h2>
+            </div>
+            <p className="text-xs text-white text-left">
+              {`Kendi seçtiğin algoritmaları ve veri işleme modellerini kullanarak
+              bu zorlu bir mücadeleye katıl ve son başvuruyu tahmin et.`}
+              <br></br>
+              <br></br>
+              {` Hemen
+              başvur, on binlerce lira değerinde HepsiBurada hediye çeki ve Data
+              Science Bootcamp\'e katılım hakkı kazan!`}
+            </p>
+          </a>
+        </div>
         <section
           id="etkinlikler"
           className="w-full flex flex-col items-center gap-4"
@@ -216,11 +252,12 @@ export default async function Home() {
           )}
         </section>
         <section className="mt-32 flex flex-col items-center gap-4">
+          
           <h2 className="text-2xl font-bold mb-12 text-center">
             Sosyal medya hesaplarımız
           </h2>
           {/* <div className="w-full flex flex-wrap justify-center gap-4"> */}
-            <SocialsCard links={links} />
+          <SocialsCard links={links} />
           {/* </div> */}
         </section>
       </div>

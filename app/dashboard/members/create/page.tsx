@@ -7,7 +7,9 @@ import React, { useEffect } from "react";
 
 import PocketBase from "pocketbase";
 
+
 const CreateMemberPage = () => {
+
   // const host = headers().get("host") === "localhost:3000" ? "http://localhost:3000" : `https://${headers().get("host")}`
   const [image, setImage] = React.useState<File | null>(null);
   const [name, setName] = React.useState<string | null>(null);
@@ -66,7 +68,7 @@ const CreateMemberPage = () => {
   };
   return (
     <div className="flex flex-col gap-8 items-center py-12">
-      <h1 className="text-4xl font-bold">Üye Ekle</h1>
+      <h1 className="text-4xl font-bold text-center">İK Üyesi Ekle</h1>
       <form className="sm:w-1/3 w-11/12 flex flex-col gap-4">
         <Input
           isRequired
@@ -143,4 +145,7 @@ const CreateMemberPage = () => {
   );
 };
 
+
+
 export default CreateMemberPage;
+
