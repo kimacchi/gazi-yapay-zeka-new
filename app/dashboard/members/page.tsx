@@ -23,7 +23,7 @@ const page = async () => {
       <h1 className="text-4xl font-bold text-center">İdari Kurul Üyeleri</h1>
       <div className="flex flex-col gap-4 sm:w-1/3 w-11/12">
         <Link
-          href="/dashboard/events/create-event"
+          href="/dashboard/members/create"
           className="text-center disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2  border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
         >
           İK Üyesi Ekle
