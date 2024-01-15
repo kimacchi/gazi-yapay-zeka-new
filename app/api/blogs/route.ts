@@ -15,6 +15,8 @@ export async function POST(req: Request) {
     const token = cookies().get("pb_auth")?.value
     pb.authStore.loadFromCookie(token || "");
     const body = await req.formData()
+
     const record = await createBlog(body, pb)
+
     return new Response(JSON.stringify(record))
 }
