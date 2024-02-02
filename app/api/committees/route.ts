@@ -1,4 +1,4 @@
-import { getCommittees } from "@/controllers/committeeController"
+import { createCommittee, getCommittees } from "@/controllers/committeeController"
 import { cookies } from "next/headers";
 
 import PocketBase from "pocketbase";
@@ -13,5 +13,6 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
     // TODO: create a committee
-    return new Response(JSON.stringify({}))
+    const body = await req.json()
+    return new Response(JSON.stringify(await createCommittee(body, pb)));
 }
