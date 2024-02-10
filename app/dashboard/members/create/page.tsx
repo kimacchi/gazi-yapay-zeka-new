@@ -7,7 +7,9 @@ import React, { useEffect } from "react";
 
 import PocketBase from "pocketbase";
 
-const Page = () => {
+
+const CreateMemberPage = () => {
+
   // const host = headers().get("host") === "localhost:3000" ? "http://localhost:3000" : `https://${headers().get("host")}`
   const [image, setImage] = React.useState<File | null>(null);
   const [name, setName] = React.useState<string | null>(null);
@@ -143,4 +145,7 @@ const Page = () => {
   );
 };
 
-export default Page;
+
+
+export default CreateMemberPage;
+
