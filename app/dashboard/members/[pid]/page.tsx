@@ -5,6 +5,7 @@ import { Input, Select, SelectItem, Skeleton, Textarea } from "@nextui-org/react
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import { headers } from "next/headers";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 const Page = ({ params }: { params: { pid: string } }) => {
@@ -20,6 +21,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
   const [comitee, setComitee] = React.useState<string | null>(null);
 
   useEffect(() => {
+    const router = useRouter();
     const getCommitees = async () => {
       const res = await axios.get<any, AxiosResponse<Commitee[]>>(
         `/api/committees`
@@ -37,6 +39,8 @@ const Page = ({ params }: { params: { pid: string } }) => {
       setLinkedin(res.data.linkedin);
       setDescription(res.data.bio);
       console.log(res.data);
+      router.push("/dashboard/members");
+      router.refresh();
     };
     getCommitees();
     getMember();

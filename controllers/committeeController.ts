@@ -20,7 +20,7 @@ export const deleteCommittee = async (id: string, pb: PocketBase) => {
 
 export const getCommittee = async (id: string, pb: PocketBase) => {
     try {
-        const record = await pb.collection("committees").getOne(id);
+        const record = await pb.collection("committees").getOne(id, {expand: "members"});
         return record;      
     } catch (error) {
         return {"error": error}

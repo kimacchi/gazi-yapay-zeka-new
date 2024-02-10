@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import React from "react";
 import Comittees from "@/components/Comittees";
+import { redirect } from "next/navigation";
 
 const page = async () => {
   const host =
