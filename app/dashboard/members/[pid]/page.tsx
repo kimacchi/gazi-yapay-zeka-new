@@ -20,8 +20,8 @@ const Page = ({ params }: { params: { pid: string } }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [comitee, setComitee] = React.useState<string | null>(null);
 
+  const router = useRouter();
   useEffect(() => {
-    const router = useRouter();
     const getCommitees = async () => {
       const res = await axios.get<any, AxiosResponse<Commitee[]>>(
         `/api/committees`
