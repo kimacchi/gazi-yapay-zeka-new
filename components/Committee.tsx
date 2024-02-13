@@ -4,6 +4,8 @@ import { Commitee } from "@/types/comitee";
 import { Avatar, Chip, Input } from "@nextui-org/react";
 import { Member } from "@/types/member";
 import { Listbox, ListboxItem } from "@nextui-org/react";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const Committee = ({
   data,
@@ -15,7 +17,7 @@ const Committee = ({
   const [name, setName] = React.useState<string>(data.committeeName);
   const [membersWhoAreNotInCommittee, setMembersWhoAreNotInCommittee] =
     React.useState<Member[]>(
-      members!.filter((member) => !data.members!.includes(member.id))
+      members?.filter((member) => !data.members!.includes(member.id))
     );
   const [membersWhoAreInCommittee, setMembersWhoAreInCommittee] =
     React.useState<Member[]>(data.expand?.members || []);
@@ -23,38 +25,78 @@ const Committee = ({
     console.log(membersWhoAreNotInCommittee, data.expand?.members);
   }, []);
 
+  const pb_auth = Cookies.get("pb_auth");
+
   const moveUp = (item: Member) => {
-    const temp = [...membersWhoAreInCommittee];
-    const idx = temp.indexOf(item);
-    // if (idx === 0) return;
-    temp.splice(idx, 1);
-    temp.splice(idx - 1, 0, item);
-    setMembersWhoAreInCommittee(temp);
+    // const temp = [...membersWhoAreInCommittee];
+    // const idx = temp.indexOf(item);
+    // // if (idx === 0) return;
+    // temp.splice(idx, 1);
+    // temp.splice(idx - 1, 0, item);
+    setMembersWhoAreInCommittee((state) => {
+      const idx = state.indexOf(item);
+      if (idx === 0) return state;
+      const temp = [...state];
+
+      temp.splice(idx, 1);
+      temp.splice(idx - 1, 0, item);
+      return temp;
+      // return [...state.filter((member) => member !== item), item]
+    });
   };
   const moveDown = (item: Member) => {
     const temp = [...membersWhoAreInCommittee];
-    const idx = temp.indexOf(item);
+    // const idx = temp.indexOf(item);
     // if (idx === temp.length - 1) return;
-    temp.splice(idx, 1);
-    temp.splice(idx + 1, 0, item);
-    setMembersWhoAreInCommittee(temp);
+    // temp.splice(idx, 1);
+    // temp.splice(idx + 1, 0, item);
+    setMembersWhoAreInCommittee((state) => {
+      const idx = state.indexOf(item);
+      if (idx === state.length - 1) return state;
+      const temp = [...state];
+      temp.splice(idx, 1);
+      temp.splice(idx + 1, 0, item);
+      return temp;
+      // return [...state.filter((member) => member !== item), item]
+    });
   };
   const onDelete = (item: Member) => {
-    const temp = [...membersWhoAreInCommittee];
-    const idx = temp.indexOf(item);
-    temp.splice(idx, 1);
-    setMembersWhoAreInCommittee(temp);
-    setMembersWhoAreNotInCommittee([...membersWhoAreNotInCommittee, item]);
+    // const temp = [...membersWhoAreInCommittee];
+    // const idx = temp.indexOf(item);
+    // temp.splice(idx, 1);
+    setMembersWhoAreInCommittee((state) => {
+      return state.filter((member) => member !== item);
+    });
+    setMembersWhoAreNotInCommittee((state) => {
+      return [...state, item];
+    });
   };
   const onAdd = (item: Member) => {
-    const temp = [...membersWhoAreNotInCommittee];
-    const idx = temp.indexOf(item);
-    temp.splice(idx, 1);
-    setMembersWhoAreNotInCommittee(temp);
-    setMembersWhoAreInCommittee([...membersWhoAreInCommittee, item]);
+    // const temp = [...membersWhoAreNotInCommittee];
+    // const idx = temp.indexOf(item);
+    // temp.splice(idx, 1);
+    setMembersWhoAreNotInCommittee((state) => {
+      return state.filter((member) => member !== item);
+    });
+    setMembersWhoAreInCommittee((state) => {
+      return [...state, item];
+    });
   };
+
+  const onCommitteeChange = async () => {
+    const res = await axios.patch("/api/committees/" + data.id, {
+      members: membersWhoAreInCommittee.map((member) => member.id),
+      committeeName: name,
+    }, {
+      headers: {
+        cookie: `pb_auth=${pb_auth}`,
+        // "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(res.data);
+  }
   return (
-    <div className="flex flex-col items-center py-12 gap-4 sm:w-1/3 w-11/12">
+    <div className="flex flex-col items-center py-12 gap-4 sm:w-2/5 w-11/12">
       <h1 className="text-4xl font-bold text-center">{data.committeeName}</h1>
       <Input
         type="text"
@@ -159,9 +201,12 @@ const Committee = ({
           </Chip>
           <Listbox aria-label="Actions" items={membersWhoAreNotInCommittee}>
             {(item) => (
-              <ListboxItem key={item.id} onClick={() => {
-                onAdd(item)
-              }}>
+              <ListboxItem
+                key={item.id}
+                onClick={() => {
+                  onAdd(item);
+                }}
+              >
                 <div className="w-full flex flex-row gap-2 items-center ">
                   <Avatar
                     alt={item.id}
@@ -176,6 +221,11 @@ const Committee = ({
           </Listbox>
         </div>
       </div>
+      <button 
+        onClick={() => onCommitteeChange()}
+      className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900">
+        Kaydet
+      </button>
     </div>
   );
 };
