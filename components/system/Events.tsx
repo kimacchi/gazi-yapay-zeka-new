@@ -217,7 +217,7 @@ export const Events = ({previous = false}) => {
           totalItems: number;
           totalPages: number;
         }>
-      >(`http://localhost:3000/api/events?page=${page}&per_page=10`, {
+      >(`/api/events?page=${page}&per_page=10`, {
         headers:{
           cookie: `pb_auth=${pb_auth}`
         }

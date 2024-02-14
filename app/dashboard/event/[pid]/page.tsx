@@ -22,7 +22,7 @@ const page = async ({ params }: { params: { pid: string } }) => {
   let pb_auth = Cookies.get("pb_auth");
   if (!pb_auth) pb_auth = cookies().get("pb_auth")?.value;
   const res = await axios.get<any, AxiosResponse<Event>>(
-    "http://localhost:3000/api/events/" + params.pid,
+    "https://www.gaziyapayzeka.com/api/events/" + params.pid,
     {
       headers: {
         cookie: `pb_auth=${pb_auth}`,
@@ -50,7 +50,7 @@ const page = async ({ params }: { params: { pid: string } }) => {
   let phoneNo = "";
   let majoring = "";
 
-  const part_of_event_res = await axios.get<any, AxiosResponse<{partOfEvent: boolean}>>("http://localhost:3000/api/events/part-of-event/" + params.pid + "?user_id=" + pb.authStore.model?.id, {
+  const part_of_event_res = await axios.get<any, AxiosResponse<{partOfEvent: boolean}>>("https://www.gaziyapayzeka.com/api/events/part-of-event/" + params.pid + "?user_id=" + pb.authStore.model?.id, {
     headers: {
       cookie: `pb_auth=${pb_auth}`,
     },
