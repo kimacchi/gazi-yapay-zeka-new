@@ -6,9 +6,12 @@ import Cookies from "js-cookie";
 import React, { useEffect } from "react";
 
 import PocketBase from "pocketbase";
+import { useRouter } from "next/navigation";
 
 
 const CreateMemberPage = () => {
+
+  const router = useRouter();
 
   // const host = headers().get("host") === "localhost:3000" ? "http://localhost:3000" : `https://${headers().get("host")}`
   const [image, setImage] = React.useState<File | null>(null);
@@ -65,6 +68,8 @@ const CreateMemberPage = () => {
         "Content-Type": "multipart/form-data",
       },
     });
+    router.push("/dashboard/members");
+    router.refresh()
   };
   return (
     <div className="flex flex-col gap-8 items-center py-12">
