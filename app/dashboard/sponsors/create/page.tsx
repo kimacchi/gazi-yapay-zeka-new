@@ -2,16 +2,20 @@
 import { Input, Select, SelectItem } from "@nextui-org/react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Page = () => {
   const pb_auth = Cookies.get("pb_auth");
+  const router = useRouter();
 
   const [image, setImage] = React.useState<File | null>(null);
   const [name, setName] = React.useState<string | null>(null);
   const [category, setCategory] = React.useState<
-    "Bronze" | "Silver" | "Gold" | "Platinum" | "Diamond" | "Emerald" | null
+    string | null
   >(null);
+
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const onCreate = async () => {
     const data = new FormData();
@@ -25,6 +29,8 @@ const Page = () => {
         "Content-Type": "multipart/form-data",
       },
     });
+    console.log(res.data)
+
   };
 
   return (
@@ -53,11 +59,12 @@ const Page = () => {
           }}
         />
         <Select
-          label="Komite"
-          placeholder="Üyenin atanacağı komite"
+          label="Kategori"
+          placeholder="Sponsorun kategorisini seçin."
           selectedKeys={category ? [category] : []}
+          // value={category as string}
           onChange={(e) => {
-            setCategory(e.target.value as "Bronze" | "Silver" | "Gold" | "Platinum" | "Diamond" | "Emerald");
+            setCategory(e.target.value);
           }}
         >
           <SelectItem key="Emerald" value="Emerald" >
@@ -79,6 +86,22 @@ const Page = () => {
             <p className="text-amber-800">Bronze</p>
           </SelectItem>
         </Select>
+        <button
+          disabled={loading}
+          className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
+          onClick={async () => {
+            try {
+              setLoading(true);
+              await onCreate();
+              setLoading(false);
+            } catch (error) {
+              alert("There was an error. Sponsor is not created.");
+              console.log(error);
+            }
+          }}
+        >
+          Sponsor Ekle
+        </button>
       </div>
     </div>
   );
