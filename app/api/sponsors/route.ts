@@ -1,13 +1,14 @@
 import { cookies } from "next/headers";
-import { createSponsor } from "@/controllers/sponsorController"
+import { createSponsor, getSponsors } from "@/controllers/sponsorController"
 
 import PocketBase from "pocketbase";
 const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
+
 export async function GET(req: Request) {
     const token = cookies().get("pb_auth")?.value
     pb.authStore.loadFromCookie(token || "");
     // TODO: get all the sponsors
-    return new Response(JSON.stringify({}))
+    return new Response(JSON.stringify(await getSponsors(pb)))
 }
 
 export async function POST(req: Request) {
