@@ -2,6 +2,7 @@ import PocketBase from "pocketbase";
 
 export const createBlog = async (data: FormData, pb: PocketBase) => {
   try {
+    data.append("author", pb.authStore.model?.id || "6w8rzuqzkucc28d"); // default to gaziyapayzeka official account id.
     const record = await pb.collection("blogs").create(data);
     return record;
   } catch (error) {
@@ -29,7 +30,10 @@ export const getBlog = async (id: string, pb: PocketBase) => {
 
 export const getAllBlogs = async (pb: PocketBase) => {
   try {
-    const record = await pb.collection("blogs").getFullList();
+    const record = await pb.collection("blogs").getFullList({
+      sort: "-created",
+      expand: "author"
+    });
     return record;
   } catch (error) {
     return { error: error };
@@ -61,7 +65,10 @@ export const deleteBlogs = async (pb: PocketBase) => {
 
 export const getList = async (page: number = 1, perPage: number = 20, pb: PocketBase) => {
   try {
-    const resultList = await pb.collection("blogs").getList(page, perPage);
+    const resultList = await pb.collection("blogs").getList(page, perPage, {
+      sort: "-created",
+      expand: "author"
+    });
     return resultList;
   } catch (error) {
     return { error: error };

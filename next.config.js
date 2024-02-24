@@ -4,6 +4,14 @@ const nextConfig = {
     appDir: true,
     serverActions: true
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
 }
 
 module.exports = nextConfig
