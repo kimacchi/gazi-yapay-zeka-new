@@ -8,6 +8,7 @@ import Celebration from "@/components/Celebration";
 import PocketBase from "pocketbase";
 import { Event } from "@/types/event";
 import Link from "next/link";
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 
 const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 
@@ -184,41 +185,49 @@ export default async function Home() {
               </a>
             </div>
           </section>
-          <a
-            href={
-              "https://www.techcareer.net/hackathon/datathon-guess-the-last-one?utm_source=aday&utm_medium=sm&utm_campaign=datathon_gazi"
-            }
-            key={"gazi_datathon"}
-            target="_blank"
-            rel="noreferrer"
-            className="flex flex-col items-start justify-center gap-2 sm:w-1/3 w-4/5 h-min border-orange-700 border-4 rounded-xl p-4 transition-all hover:bg-orange-700 hover:rounded-3xl"
-          >
-            <div className="flex items-center gap-2 w-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                fill="currentColor"
-                className="bi bi-code-slash"
-                viewBox="0 0 16 16"
-              >
-                <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0m6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0" />
-              </svg>
-              <h2 className="text-lg font-medium">
-                {"Datathon: Job PredictaThon"}
-              </h2>
-            </div>
-            <p className="text-xs text-white text-left">
-              {`Kendi seçtiğin algoritmaları ve veri işleme modellerini kullanarak
-              bu zorlu bir mücadeleye katıl ve son başvuruyu tahmin et.`}
-              <br></br>
-              <br></br>
-              {` Hemen
-              başvur, on binlerce lira değerinde HepsiBurada hediye çeki ve Data
-              Science Bootcamp\'e katılım hakkı kazan!`}
-            </p>
-          </a>
         </div>
+        <CardContainer className="inter-var">
+          <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border  ">
+            <CardItem
+              translateZ="50"
+              className="text-xl font-bold text-neutral-600 dark:text-white"
+            >
+              Make things float in air
+            </CardItem>
+            <CardItem
+              as="p"
+              translateZ="60"
+              className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
+            >
+              Hover over this card to unleash the power of CSS perspective
+            </CardItem>
+            <CardItem translateZ="100" className="w-full mt-4">
+              <Image
+                src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                height="1000"
+                width="1000"
+                className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                alt="thumbnail"
+              />
+            </CardItem>
+            <div className="flex justify-between items-center mt-20">
+              <CardItem
+                translateZ={20}
+                as="button"
+                className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
+              >
+                Try now →
+              </CardItem>
+              <CardItem
+                translateZ={20}
+                as="button"
+                className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
+              >
+                Sign up
+              </CardItem>
+            </div>
+          </CardBody>
+        </CardContainer>
         <section
           id="etkinlikler"
           className="w-full flex flex-col items-center gap-4"
@@ -252,7 +261,6 @@ export default async function Home() {
           )}
         </section>
         <section className="mt-32 flex flex-col items-center gap-4">
-          
           <h2 className="text-2xl font-bold mb-12 text-center">
             Sosyal medya hesaplarımız
           </h2>

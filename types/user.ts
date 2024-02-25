@@ -24,6 +24,7 @@ export interface UserContext_ {
   name: string;
   admin: boolean;
   picture: any;
+  collectionId: string;
   activeMember: boolean;
   created: Date;
   updated: Date;

@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 
-export const createCommittee = async (data: FormData, pb: PocketBase) => {
+export const createCommittee = async (data: any, pb: PocketBase) => {
     try {
         const record = await pb.collection("committees").create(data);
         return record;      
@@ -20,7 +20,7 @@ export const deleteCommittee = async (id: string, pb: PocketBase) => {
 
 export const getCommittee = async (id: string, pb: PocketBase) => {
     try {
-        const record = await pb.collection("committees").getOne(id);
+        const record = await pb.collection("committees").getOne(id, {expand: "members"});
         return record;      
     } catch (error) {
         return {"error": error}
@@ -29,14 +29,16 @@ export const getCommittee = async (id: string, pb: PocketBase) => {
 
 export const getCommittees = async (pb: PocketBase) => {
     try {
-        const record = await pb.collection("committees").getFullList();
+        const record = await pb.collection("committees").getFullList({
+            sort: "order"
+        });
         return record;      
     } catch (error) {
         return {"error": error}
     }
 }
 
-export const updateCommittee = async (id: string, data: FormData, pb: PocketBase) => {
+export const updateCommittee = async (id: string, data: any, pb: PocketBase) => {
     try {
         const record = await pb.collection("committees").update(id, data);
         return record;      

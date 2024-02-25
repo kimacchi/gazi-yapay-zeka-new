@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 
-export const createSponsor = async (data: FormData, pb: PocketBase) => {
+export const createSponsor = async (data: any, pb: PocketBase) => {
     try {
         const record = await pb.collection("sponsors").create(data);
         return record;      
