@@ -9,6 +9,7 @@ import PocketBase from "pocketbase";
 import { Event } from "@/types/event";
 import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+import { Button } from "@/components/ui/button";
 
 const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 
@@ -148,65 +149,37 @@ export default async function Home() {
   console.log(events);
 
   return (
-    <main className="w-full min-h-screen scroll-smooth">
-      <div className="absolute w-full h-full">
-        <Celebration />
-      </div>
-      <div className="relative z-20 w-full min-h-screen flex flex-col sm:px-32 px-4 sm:pb-32 pb-12">
-        <div className="flex items-center w-full justify-between">
-          <section className="md:w-2/5 sm:3/5 w-full min-h-screen flex flex-col sm:gap-4 gap-16 sm:py-32 py-12 md:text-base text-lg">
-            <h1 className="text-4xl font-bold">
-              Gazi Yapay Zeka Sitesi Beta Aşamasında!
-            </h1>
-            <p>
-              Aramıza tekrardan hoş geldin! Sitemizin yönetim sistemini artık
-              kullanabilirsin! Tek yapman gereken{" "}
-              <a href="/login" className="underline text-blue-400">
-                buraya
-              </a>{" "}
-              tıklayarak giriş yapmak.
-            </p>
-            <p>
-              Güncellemeleri takipte kalmayı ve etkinliklerimize siteye giriş
-              yaptıktan sonra kaydolmayı sakın unutma!
-            </p>
-            <div className="flex gap-4">
-              <a
-                href="/login"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-              >
-                Giriş Yap
-              </a>
-              <a
-                href="#etkinlikler"
-                className="bg-green-800 hover:bg-green-900 text-white px-4 py-2 rounded-md"
-              >
-                Etkinliklerimizi incele
-              </a>
-            </div>
-          </section>
-        </div>
+    <main className="w-full min-h-screen scroll-smooth flex flex-col py-12 items-center">
+      <div className="flex flex-col items-center gap-10">
+        {/* <h1 className="text-6xl text-center font-bold bg-gradient-to-r from-[#745bd0]  to-[#b330e1] inline-block text-transparent bg-clip-text">
+          Gazi Yapay Zeka
+        </h1> */}
+        <h1 className="text-6xl text-center font-bold text-white">
+          Gazi Yapay Zeka
+        </h1>
+        <h2 className="text-gray-400 ">Geleceğin dünyasını kodluyoruz.</h2>
         <CardContainer className="inter-var">
-          <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border  ">
+          <CardBody className="relative group/card  hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-black border-white/[0.2]  w-auto sm:w-[30rem] h-auto rounded-xl p-6 border  ">
             <CardItem
               translateZ="50"
               className="text-xl font-bold text-neutral-600 dark:text-white"
             >
-              Make things float in air
+              Sen de yarının dünyasında bize katıl.
             </CardItem>
             <CardItem
               as="p"
               translateZ="60"
               className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
             >
-              Hover over this card to unleash the power of CSS perspective
+              Bizimle beraber kendini geliştir, alanını genişlet ve geleceğini
+              tanı.
             </CardItem>
             <CardItem translateZ="100" className="w-full mt-4">
               <Image
-                src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                height="1000"
-                width="1000"
-                className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                src="https://images.unsplash.com/photo-1545987796-200677ee1011?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                height="500"
+                width="500"
+                className="h-32 w-full object-cover rounded-xl group-hover/card:shadow-xl"
                 alt="thumbnail"
               />
             </CardItem>
@@ -216,58 +189,18 @@ export default async function Home() {
                 as="button"
                 className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
               >
-                Try now →
+                <Link href={"/login"}>Giriş Yap →</Link>
               </CardItem>
               <CardItem
                 translateZ={20}
                 as="button"
                 className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
               >
-                Sign up
+                <Link href={"/signup"}>Kayıt ol</Link>
               </CardItem>
             </div>
           </CardBody>
         </CardContainer>
-        <section
-          id="etkinlikler"
-          className="w-full flex flex-col items-center gap-4"
-        >
-          <h2 className="text-2xl font-bold mb-12 text-center">
-            Yakındaki etkinliklerimiz
-          </h2>
-          {events.length > 0 ? (
-            <>
-              {events.map((item) => (
-                <Link
-                  href={`/login`}
-                  key={item.id}
-                  className="sm:w-2/5 w-11/12 h-20 p-2 flex flex-col justify-between rounded-md bg-zinc-600/30 hover:bg-zinc-500/30"
-                >
-                  <div className="flex justify-between">
-                    <h2>{item.name}</h2>
-                    <h2>
-                      {item.participants.length}/{item.maxParticipant}
-                    </h2>
-                  </div>
-                  <h2>{new Date(item.eventTime).toLocaleDateString()}</h2>
-                </Link>
-              ))}
-            </>
-          ) : (
-            <p className="sm:w-1/2 text-center w-full">
-              Ne yazık ki yakında bir etkinliğimiz yoktur. Ancak bu her an
-              değişebilir! Güncellemeleri takip edin!
-            </p>
-          )}
-        </section>
-        <section className="mt-32 flex flex-col items-center gap-4">
-          <h2 className="text-2xl font-bold mb-12 text-center">
-            Sosyal medya hesaplarımız
-          </h2>
-          {/* <div className="w-full flex flex-wrap justify-center gap-4"> */}
-          <SocialsCard links={links} />
-          {/* </div> */}
-        </section>
       </div>
     </main>
   );

@@ -10,11 +10,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        background: "#0b171f"
+      },
+
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        "celebration-bg": 'linear-gradient(298deg, rgba(36,20,41,1) 0%, rgba(23,23,23,1) 100%);'
+        "celebration-bg": 'linear-gradient(298deg, #0b171f 0%, #152124 50%, #152633 100%);'
       },
       fontFamily: {
         Roboto: ["Roboto Mono", "monospace", "sans-serif"],
