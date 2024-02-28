@@ -10,6 +10,7 @@ import { Event } from "@/types/event";
 import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Hero from "@/components/main/Hero";
+import OurEvents from "@/components/main/OurEvents";
 
 const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 
@@ -151,6 +152,7 @@ export default async function Home() {
   return (
     <main className="w-full min-h-screen scroll-smooth">
       <Hero />
+      <OurEvents />
     </main>
   );
 }

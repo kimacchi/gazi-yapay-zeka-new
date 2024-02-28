@@ -24,7 +24,7 @@ export default function RootLayout({
           <link rel="icon" href="/favicon.ico" />
         </head>
         <body
-          className={` bg-gradient-to-br from-background to-background-secondary min-h-screen font-Roboto text-neutral-200 scroll-smooth`}
+          className={` bg-gradient-to-br overflow-x-hidden from-background to-background-secondary min-h-screen font-Roboto text-neutral-200 scroll-smooth`}
         >
             <UserProvider>
               {children}
