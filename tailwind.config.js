@@ -10,6 +10,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors:{
+        "light-blue": "#8ecae6",
+        "sea-blue": "#219ebc",
+        "dark-blue": "#023047",
+        "light-orange": "#ffb703",
+        "dark-orange": "#fb8500",
+        "background": "#001219",
+        "background-secondary": "#003233",
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
