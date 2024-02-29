@@ -48,6 +48,19 @@ const UpdateBlog = ({item}: {item: Blog}) => {
     router.push(`/dashboard/blogs/`);
     router.refresh();
   };
+
+  const onDelete = async () => {
+    const pb_auth = Cookies.get("pb_auth");
+    const res = await axios.delete("/api/blogs/" + item.id, {
+      headers: {
+        cookie: `pb_auth=${pb_auth}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    // console.log(res.data)
+    router.push(`/dashboard/blogs/`);
+    router.refresh();
+  }
   return (
     <div className="w-full flex flex-col items-center py-12 gap-4">
       <div className="flex flex-col gap-4 items-center sm:w-1/3 w-11/12">
@@ -130,7 +143,25 @@ const UpdateBlog = ({item}: {item: Blog}) => {
         }}
         className="sm:w-1/3 w-11/12  disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 border-4 font-extrabold p-4 tracking-widest rounded-md border-white transition-all hover:bg-white hover:text-neutral-900"
       >
-        {loading ? <Spinner /> : "Blog Oluştur"}
+        {loading ? <Spinner /> : "Blogu Güncelle"}
+      </button>
+      <button
+        type="submit"
+        disabled={loading}
+        onClick={async (e) => {
+          e.preventDefault();
+          try {
+            setLoading(true);
+            await onCreate();
+            setLoading(false);
+          } catch (error) {
+            console.log(error);
+            setLoading(false);
+          }
+        }}
+        className="sm:w-1/3 w-11/12  disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 border-4 font-extrabold p-4 tracking-widest rounded-md border-rose-800 transition-all hover:bg-rose-800 hover:text-white"
+      >
+        {loading ? <Spinner /> : "Blogu Sil"}
       </button>
     </div>
   );
