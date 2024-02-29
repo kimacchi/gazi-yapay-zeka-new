@@ -6,7 +6,7 @@ import React from "react";
 
 const page = async () => {
   const host =
-    headers().get("host") === "localhost:3000"
+    (headers().get("host") === "localhost:3000" ||headers().get("host") != "www.gaziyapayzeka.com")
       ? "http://localhost:3000"
       : `https://${headers().get("host")}`;
   const pb_auth = cookies().get("pb_auth")?.value;

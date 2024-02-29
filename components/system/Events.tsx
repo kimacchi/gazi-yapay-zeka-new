@@ -223,6 +223,7 @@ export const Events = ({previous = false}) => {
         }
       });
       // console.log(res.data);
+      // console.log(res.data);
       setEvents(res.data.items);
       setTotalPages(totalPages);
     };

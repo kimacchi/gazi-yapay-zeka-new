@@ -18,8 +18,12 @@ const page = async ({
 }) => {
   const page = searchParams?.page || 1;
   const name = searchParams?.name || "";
+  const active = searchParams?.active || "";
+  const board = searchParams?.board || "";
+  const admin = searchParams?.admin || "";
+
   const pb_auth = cookies().get("pb_auth")?.value;
-  const host = headers().get("host") === "localhost:3000" ? "http://localhost:3000" : `https://${headers().get("host")}`
+  const host = (headers().get("host") === "localhost:3000" || headers().get("host") != "www.gaziyapayzeka.com") ? "http://localhost:3000" : `https://${headers().get("host")}`
   console.log(host)
   // TODO: a feature to search users
   const res = await axios.get<
@@ -29,7 +33,7 @@ const page = async ({
       totalItems: number;
       totalPages: number;
     }>
-  >(`${host}/api/users?page=${page}&name=${name}`, {
+  >(`${host}/api/users?page=${page}&name=${name}&active=${active}$board=${board}$admin=${admin}`, {
     headers: {
       cookie: `pb_auth=${pb_auth}`,
     },

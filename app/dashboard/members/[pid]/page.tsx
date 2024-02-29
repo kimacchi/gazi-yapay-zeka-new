@@ -25,6 +25,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
   const [error, setError] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [comitee, setComitee] = React.useState<string | null>(null);
+  const [role, setRole] = React.useState<string | null>(null);
 
   const router = useRouter();
   useEffect(() => {
@@ -44,6 +45,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
       setName(res.data.name);
       setLinkedin(res.data.linkedin);
       setDescription(res.data.bio);
+      setRole(res.data.role);
       console.log(res.data);
     };
     getCommitees();
@@ -59,6 +61,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
     if (description) data.append("bio", description!);
     if (image) data.append("picture", image!);
     if (comitee) data.append("committee", comitee!);
+    if (role) data.append("role", role!);
 
     console.log(data);
     const res = await axios.patch("/api/members/" + params.pid, data, {
@@ -70,6 +73,18 @@ const Page = ({ params }: { params: { pid: string } }) => {
     router.push("/dashboard/members");
     router.refresh();
   };
+
+  const onDelete = async () => {
+    const pb_auth = Cookies.get("pb_auth");
+    const res = await axios.delete("/api/members/" + params.pid, {
+      headers: {
+        cookie: `pb_auth=${pb_auth}`,
+      },
+    });
+    router.push("/dashboard/members");
+    router.refresh();
+  };
+
   return (
     <>
       {member ? (
@@ -86,7 +101,13 @@ const Page = ({ params }: { params: { pid: string } }) => {
               value={name!}
               onValueChange={setName}
             />
-
+            <Input
+              name="Rol"
+              label="Rol"
+              placeholder="Üyenin komitedeki rolünü giriniz."
+              isRequired
+              onValueChange={setRole}
+            />
             <Input
               name="email"
               type="file"
@@ -148,6 +169,22 @@ const Page = ({ params }: { params: { pid: string } }) => {
               }}
             >
               İdari Kurul Üyesini Güncelle
+            </button>
+            <button
+              disabled={loading || error}
+              className="disabled:cursor-not-allowed disabled:border-gray-600 disabled:text-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-neutral-900 text-xl mt-2 w-full border-4 font-extrabold p-4 tracking-widest rounded-md border-rose-800 transition-all hover:bg-rose-800 hover:text-white"
+              onClick={async () => {
+                try {
+                  setLoading(true);
+                  await onDelete();
+                  setLoading(false);
+                } catch (error) {
+                  alert("There was an error. Member is not updated.");
+                  console.log(error);
+                }
+              }}
+            >
+              İdari Kurul Üyesini Sil
             </button>
           </form>
         </div>

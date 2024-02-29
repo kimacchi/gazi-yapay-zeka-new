@@ -21,6 +21,7 @@ const CreateMemberPage = () => {
   const [error, setError] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [comitee, setComitee] = React.useState<string | null>(null);
+  const [role, setRole] = React.useState<string | null>(null);
 
   const [commitees, setCommitees] = React.useState<Commitee[]>([]);
 
@@ -57,6 +58,7 @@ const CreateMemberPage = () => {
       data.append("bio", description!);
     data.append("picture", image!);
     data.append("committee", comitee!);
+    data.append("role", role!);
 
     for (var [key, value] of data.entries()) { 
       console.log(key, value);
@@ -81,6 +83,13 @@ const CreateMemberPage = () => {
           label="Ad Soyad"
           placeholder="Üyenin adını ve soyadını giriniz."
           onValueChange={setName}
+        />
+        <Input
+          name="Rol"
+          label="Rol"
+          placeholder="Üyenin komitedeki rolünü giriniz."
+          isRequired
+          onValueChange={setRole}
         />
 
         <Input

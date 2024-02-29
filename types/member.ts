@@ -8,4 +8,5 @@ export interface Member {
     created: Date;
     updated: Date;
     picture: any;
+    role: string;
 }

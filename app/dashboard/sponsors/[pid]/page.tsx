@@ -21,7 +21,7 @@ const Page = ({ params }: { params: { pid: string } }) => {
     const getData = async () => {
       const pb_auth = Cookies.get("pb_auth");
       const res = await axios.get<any, AxiosResponse<Sponsor>>(
-        `http://localhost:3000/api/sponsors/${params.pid}`,
+        `/api/sponsors/${params.pid}`,
         {
           headers: {
             cookie: `pb_auth=${pb_auth}`,
