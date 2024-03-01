@@ -208,7 +208,11 @@ const CreateEventPage = ({ event }: { event: Event }) => {
           value={eventTime
             ?.toISOString()
             .slice(0, eventTime?.toISOString().length - 8)}
-          onChange={(e) => setEventTime(new Date(e.target.value))}
+          onChange={(e) => setEventTime(() => {
+            let date = new Date(e.target.value)
+            date.setHours(date.getHours() + 3)
+            return date
+          })}
           placeholder="Etkinlik zamanını giriniz."
           labelPlacement="outside"
         />
@@ -220,7 +224,11 @@ const CreateEventPage = ({ event }: { event: Event }) => {
             value={releaseTime
               ?.toISOString()
               .slice(0, releaseTime?.toISOString().length - 8)}
-            onChange={(e) => setReleaseTime(new Date(e.target.value))}
+            onChange={(e) => setReleaseTime(() => {
+              let date = new Date(e.target.value)
+              date.setHours(date.getHours() + 3)
+              return date
+            })}
             placeholder="Kayıt zamanını giriniz."
             labelPlacement="outside"
           />
@@ -236,7 +244,11 @@ const CreateEventPage = ({ event }: { event: Event }) => {
                   ?.toISOString()
                   .slice(0, activeMemberReleaseTime?.toISOString().length - 8)}
                 onChange={(e) =>
-                  setActiveMemberReleaseTime(new Date(e.target.value))
+                  setActiveMemberReleaseTime(() => {
+                    let date = new Date(e.target.value)
+                    date.setHours(date.getHours() + 3)
+                    return date
+                  })
                 }
                 placeholder="Kayıt zamanını giriniz."
                 labelPlacement="outside"
@@ -249,7 +261,11 @@ const CreateEventPage = ({ event }: { event: Event }) => {
             value={closeTime
               ?.toISOString()
               .slice(0, closeTime?.toISOString().length - 8)}
-            onChange={(e) => setCloseTime(new Date(e.target.value))}
+            onChange={(e) => setCloseTime(() => {
+              let date = new Date(e.target.value)
+              date.setHours(date.getHours() + 3)
+              return date
+            })}
             placeholder="Kayıt kapanış zamanını giriniz."
             labelPlacement="outside"
           />

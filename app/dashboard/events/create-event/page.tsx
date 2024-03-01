@@ -177,7 +177,11 @@ _Çeşitli stiller deneyebilirsiniz._`
             value={closeTime
               ?.toISOString()
               .slice(0, closeTime?.toISOString().length - 8)}
-            onChange={(e) => setCloseTime(new Date(e.target.value))}
+            onChange={(e) => setCloseTime(() => {
+              let date = new Date(e.target.value)
+              date.setHours(date.getHours() + 3)
+              return date
+            })}
             placeholder="Kayıt kapanış zamanını giriniz."
             labelPlacement="outside"
           />
