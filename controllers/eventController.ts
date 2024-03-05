@@ -222,7 +222,7 @@ export const getList = async (
   console.log(pb.authStore.isValid, "is it valid ?");
   try {
     if (pb.authStore.model) {
-      type userModel = AuthModel & { activeMember: boolean; admin: boolean };
+      type userModel = AuthModel & { activeMember: boolean; admin: boolean; boardMember: boolean };
       let user = pb.authStore.model as userModel;
       // console.log("outside of if statement", user);
       // const temp = new Date().toLocaleString("en-US", {timeZone: 'Asia/Almaty'});
@@ -249,7 +249,7 @@ export const getList = async (
 
 
       // console.log(user, "this is user")
-      if (user.admin) {
+      if (user.admin || user.boardMember) {
         const events = await pb.collection("events").getList(page, perPage, {
           filter: `(closeTime >= "${stringNow}")`,
           sort: "+eventTime",

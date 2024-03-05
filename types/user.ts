@@ -32,6 +32,7 @@ export interface UserContext_ {
   phoneNo: string;
   schoolNo: string;
   faculty: string;
+  boardMember: boolean;
   grade:
     | "Hazırlık"
     | "1. Sınıf"

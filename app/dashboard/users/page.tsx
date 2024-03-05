@@ -22,6 +22,8 @@ const page = async ({
   const board = searchParams?.board || "";
   const admin = searchParams?.admin || "";
 
+  console.log(page)
+
   const pb_auth = cookies().get("pb_auth")?.value;
   const host = (headers().get("host") === "localhost:3000" || headers().get("host") != "www.gaziyapayzeka.com") ? "http://localhost:3000" : `https://${headers().get("host")}`
   console.log(host)
@@ -39,10 +41,6 @@ const page = async ({
     },
   });
 
-  const searchName = async (data: FormData) => {
-    "use server";
-    const name_ = data.get("name");
-  };
   return (
     <div className="w-full flex flex-col items-center py-20 gap-4">
       <h1 className="text-4xl font-bold">

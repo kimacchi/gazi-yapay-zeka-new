@@ -152,7 +152,7 @@ const UpdateBlog = ({item}: {item: Blog}) => {
           e.preventDefault();
           try {
             setLoading(true);
-            await onCreate();
+            await onDelete();
             setLoading(false);
           } catch (error) {
             console.log(error);

@@ -21,10 +21,13 @@ const page = async ({ params }: { params: { pid: string } }) => {
     "use server";
     let admin_ = formData.get("admin");
     let activeMember_ = formData.get("activeMember");
+    let boardMember_ = formData.get("boardMember");
     if(admin_) var admin = true;
     else var admin = false;
     if(activeMember_) var activeMember = true;
     else var activeMember = false;
+    if(boardMember_) var boardMember = true;
+    else var boardMember = false;
 
     console.log(admin, activeMember)
 
@@ -33,6 +36,7 @@ const page = async ({ params }: { params: { pid: string } }) => {
       {
         admin: admin,
         activeMember: activeMember,
+        boardMember: boardMember,
       },
       {
         headers: {
@@ -48,6 +52,7 @@ const page = async ({ params }: { params: { pid: string } }) => {
         admin={res.data.admin}
         activeMember={res.data.activeMember}
         name={res.data.name}
+        boardMember={res.data.boardMember}
         username={res.data.username}
         sendData={sendData}
       />

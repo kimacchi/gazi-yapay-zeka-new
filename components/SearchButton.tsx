@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const SearchButton = ({ page }: { page: string | string[] | 1 }) => {
-  const [name, setName] = React.useState("");
+  // const [name, setName] = React.useState<string | null>(null);
   const [active, setActive] = React.useState(false);
   const [board, setBoard] = React.useState(false);
   const [admin, setAdmin] = React.useState(false);
@@ -13,12 +13,11 @@ const SearchButton = ({ page }: { page: string | string[] | 1 }) => {
   return (
     <form
       onSubmit={() => {
-        console.log(active)
-        router.push(
-          `/dashboard/users?page=1$board=${board? "true" : "false"}${name ? "$name="+name : ""}&active=${
-            "false"
-          }$admin=${admin ? "true" : "false"}`
+        
+        router.replace(
+          `/dashboard/users/`,
         );
+        router.refresh()
       }}
     >
       <input
@@ -28,7 +27,7 @@ const SearchButton = ({ page }: { page: string | string[] | 1 }) => {
         placeholder="Üye ara"
         className="border-white border p-2"
         onChange={(e) => {
-          setName(e.target.value);
+          // setName(e.target.value);
         }}
       />
       <div>
