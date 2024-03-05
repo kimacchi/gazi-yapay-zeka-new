@@ -76,6 +76,7 @@ _Çeşitli stiller deneyebilirsiniz._`
       },
     });
     router.push("/dashboard/events");
+    router.refresh()
     console.log(res.data);
   };
 
@@ -126,7 +127,11 @@ _Çeşitli stiller deneyebilirsiniz._`
           value={eventTime
             ?.toISOString()
             .slice(0, eventTime?.toISOString().length - 8)}
-          onChange={(e) => setEventTime(new Date(e.target.value))}
+          onChange={(e) => setEventTime(() => {
+            let date = new Date(e.target.value)
+            date.setHours(date.getHours() + 3)
+            return date
+          })}
           placeholder="Etkinlik zamanını giriniz."
           labelPlacement="outside"
         />
@@ -138,7 +143,11 @@ _Çeşitli stiller deneyebilirsiniz._`
             value={releaseTime
               ?.toISOString()
               .slice(0, releaseTime?.toISOString().length - 8)}
-            onChange={(e) => setReleaseTime(new Date(e.target.value))}
+            onChange={(e) => setReleaseTime(() => {
+              let date = new Date(e.target.value)
+              date.setHours(date.getHours() + 3)
+              return date
+            })}
             placeholder="Kayıt zamanını giriniz."
             labelPlacement="outside"
           />
@@ -152,7 +161,11 @@ _Çeşitli stiller deneyebilirsiniz._`
                 value={activeMemberReleaseTime
                   ?.toISOString()
                   .slice(0, activeMemberReleaseTime?.toISOString().length - 8)}
-                onChange={(e) => setActiveMemberReleaseTime(new Date(e.target.value))}
+                onChange={(e) => setActiveMemberReleaseTime(() => {
+                  let date = new Date(e.target.value)
+                  date.setHours(date.getHours() + 3)
+                  return date
+                })}
                 placeholder="Kayıt zamanını giriniz."
                 labelPlacement="outside"
               />
@@ -164,7 +177,11 @@ _Çeşitli stiller deneyebilirsiniz._`
             value={closeTime
               ?.toISOString()
               .slice(0, closeTime?.toISOString().length - 8)}
-            onChange={(e) => setCloseTime(new Date(e.target.value))}
+            onChange={(e) => setCloseTime(() => {
+              let date = new Date(e.target.value)
+              date.setHours(date.getHours() + 3)
+              return date
+            })}
             placeholder="Kayıt kapanış zamanını giriniz."
             labelPlacement="outside"
           />

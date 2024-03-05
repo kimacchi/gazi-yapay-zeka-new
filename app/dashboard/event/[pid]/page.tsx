@@ -33,7 +33,6 @@ const page = async ({ params }: { params: { pid: string } }) => {
   const token = cookies().get("pb_auth")?.value;
   pb.authStore.loadFromCookie(token || "");
 
-  
   let faculty = "";
   let grade:
     | "Hazırlık"
@@ -50,16 +49,25 @@ const page = async ({ params }: { params: { pid: string } }) => {
   let phoneNo = "";
   let majoring = "";
 
-  const part_of_event_res = await axios.get<any, AxiosResponse<{partOfEvent: boolean}>>("https://www.gaziyapayzeka.com/api/events/part-of-event/" + params.pid + "?user_id=" + pb.authStore.model?.id, {
-    headers: {
-      cookie: `pb_auth=${pb_auth}`,
-    },
-  })
-  let partOfEvent = part_of_event_res.data.partOfEvent
+  const part_of_event_res = await axios.get<
+    any,
+    AxiosResponse<{ partOfEvent: boolean }>
+  >(
+    "https://www.gaziyapayzeka.com/api/events/part-of-event/" +
+      params.pid +
+      "?user_id=" +
+      pb.authStore.model?.id,
+    {
+      headers: {
+        cookie: `pb_auth=${pb_auth}`,
+      },
+    }
+  );
+  let partOfEvent = part_of_event_res.data.partOfEvent;
 
   if (pb.authStore.model) {
-    console.log(res.data.participants)
-    
+    console.log(res.data.participants);
+
     faculty = pb.authStore.model.faculty;
     schoolNo = pb.authStore.model.schoolNo;
     phoneNo = pb.authStore.model.phoneNo;
@@ -79,16 +87,18 @@ const page = async ({ params }: { params: { pid: string } }) => {
   console.log(pb.authStore.model);
   // console.log(res.data)
   return (
-    <div className="w-full py-12">
-      <EventForm
-        event={res.data}
-        userMajoring={majoring}
-        partOfEvent_={partOfEvent}
-        userFaculty={faculty}
-        userGrade={grade}
-        userPhoneNo={phoneNo}
-        userSchoolNo={schoolNo}
-      />
+    <div className="w-full py-12 flex flex-col items-center">
+      <div className="sm:w-1/3 w-11/12">
+        <EventForm
+          event={res.data}
+          userMajoring={majoring}
+          partOfEvent_={partOfEvent}
+          userFaculty={faculty}
+          userGrade={grade}
+          userPhoneNo={phoneNo}
+          userSchoolNo={schoolNo}
+        />
+      </div>
     </div>
   );
 };
