@@ -152,8 +152,8 @@ export default async function Home() {
       <div className="absolute w-full h-full">
         <Celebration />
       </div>
-      <div className="relative z-20 w-full min-h-screen flex flex-col sm:px-32 px-4 sm:pb-32 pb-12">
-        <div className="flex items-center w-full justify-between">
+      <div className="relative z-20 w-full min-h-screen flex flex-col sm:px-32 px-4 sm:pb-32 pb-12 ">
+        <div className=" flex items-center w-full justify-between sm:flex-row flex-col">
           <section className="md:w-2/5 sm:3/5 w-full min-h-screen flex flex-col sm:gap-4 gap-16 sm:py-32 py-12 md:text-base text-lg">
             <h1 className="text-4xl font-bold">
               Gazi Yapay Zeka Sitesi Beta Aşamasında!
@@ -185,6 +185,37 @@ export default async function Home() {
               </a>
             </div>
           </section>
+            <a
+              href={"https://forms.gle/NK7uovbsJkm32Xme7"}
+              target="_blank"
+              rel="noreferrer"
+              className="group flex flex-col items-start justify-center gap-2 sm:w-1/3 w-4/5 border-orange-500 border-4 rounded-xl p-4 transition-all hover:bg-orange-500 hover:rounded-3xl"
+            >
+              <div className="flex items-center gap-2 w-full">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  className="lucide lucide-shield-plus"
+                >
+                  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+                  <path d="M9 12h6" />
+                  <path d="M12 9v6" />
+                </svg>
+                <h2 className="text-lg font-medium">
+                  İdari Kurul Üye Alımları
+                </h2>
+              </div>
+              <p className="text-xs text-neutral-400 text-left group-hover:text-white">
+                Siz de bizimle birlikte çalışmak ister misiniz? Hemen başvurun, sizi de aramızda görelim!
+              </p>
+            </a>
         </div>
         <section
           id="etkinlikler"
@@ -218,7 +249,7 @@ export default async function Home() {
             </p>
           )}
         </section>
-        <section className="mt-32 flex flex-col items-center gap-4">
+        <section className="mt-32 flex flex-col items-center gap-4 ml-auto">
           <h2 className="text-2xl font-bold mb-12 text-center">
             Sosyal medya hesaplarımız
           </h2>
