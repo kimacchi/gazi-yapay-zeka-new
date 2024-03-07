@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Test } from "@/components/test";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import SocialsCard from "@/components/SocialsCard";
 import { Metadata } from "next";
 import Celebration from "@/components/Celebration";
@@ -11,6 +11,8 @@ import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Hero from "@/components/main/Hero";
 import OurEvents from "@/components/main/OurEvents";
+import { headers } from "next/headers";
+import { Blog } from "@/types/blog";
 
 const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 
@@ -132,27 +134,35 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const temp = new Date().toLocaleString("en-US", { timeZone: "Asia/Almaty" });
-  const now = new Date(temp);
-  const stringNow = `${now.getFullYear()}-${
-    now.getMonth() + 1
-  }-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(
-    2,
-    "0"
-  )}:${now.getSeconds()}`;
+  // const temp = new Date().toLocaleString("en-US", { timeZone: "Asia/Almaty" });
+  // const now = new Date(temp);
+  // const stringNow = `${now.getFullYear()}-${
+  //   now.getMonth() + 1
+  // }-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(
+  //   2,
+  //   "0"
+  // )}:${now.getSeconds()}`;
 
-  const events_ = await pb.collection("events").getList(1, 5, {
-    filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (eventTime >= "${stringNow}") && (exclusiveForActiveMembers = false) && (exclusiveForBoard = false)`,
-    sort: "+eventTime",
-  });
-  const temp_events = events_.items as unknown;
-  const events = temp_events as Event[];
-  console.log(events);
+  // const events_ = await pb.collection("events").getList(1, 5, {
+  //   filter: `(releaseTime <= "${stringNow}") && (closeTime >= "${stringNow}") && (eventTime >= "${stringNow}") && (exclusiveForActiveMembers = false) && (exclusiveForBoard = false)`,
+  //   sort: "+eventTime",
+  // });
+  // const temp_events = events_.items as unknown;
+  // const events = temp_events as Event[];
+  // console.log(events);
+
+  const host =
+    headers().get("host") === "localhost:3000" ||
+    headers().get("host") !== "www.gaziyapayzeka.com"
+      ? "http://localhost:3000"
+      : `https://${headers().get("host")}`;
+
+  const blogs = await axios.get<any, AxiosResponse<any, Blog[]>>(`${host}/api/blogs`)
 
   return (
     <main className="w-full min-h-screen scroll-smooth">
       <Hero />
-      <OurEvents />
+      <OurEvents blogs={blogs.data} />
     </main>
   );
 }

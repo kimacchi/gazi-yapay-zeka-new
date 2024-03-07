@@ -11,7 +11,7 @@ const page = async () => {
     // const host = "http://localhost:3000";
   const host =
     headers().get("host") === "localhost:3000" ||
-    headers().get("host") !== "gaziyapayzeka.com"
+    headers().get("host") !== "www.gaziyapayzeka.com"
       ? "http://localhost:3000"
       : `https://${headers().get("host")}`;
   const pb_auth = cookies().get("pb_auth")?.value;
