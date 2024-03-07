@@ -9,7 +9,8 @@ import PocketBase from "pocketbase";
 import { Event } from "@/types/event";
 import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
-import { Button } from "@/components/ui/button";
+import Hero from "@/components/main/Hero";
+import OurEvents from "@/components/main/OurEvents";
 
 const pb = new PocketBase("https://gazi-yapay-zeka.pockethost.io");
 
@@ -149,59 +150,9 @@ export default async function Home() {
   console.log(events);
 
   return (
-    <main className="w-full min-h-screen scroll-smooth flex flex-col py-12 items-center">
-      <div className="flex flex-col items-center gap-10">
-        {/* <h1 className="text-6xl text-center font-bold bg-gradient-to-r from-[#745bd0]  to-[#b330e1] inline-block text-transparent bg-clip-text">
-          Gazi Yapay Zeka
-        </h1> */}
-        <h1 className="text-6xl text-center font-bold text-white">
-          Gazi Yapay Zeka
-        </h1>
-        <h2 className="text-gray-400 ">Geleceğin dünyasını kodluyoruz.</h2>
-        <CardContainer className="inter-var">
-          <CardBody className="relative group/card  hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-black border-white/[0.2]  w-auto sm:w-[30rem] h-auto rounded-xl p-6 border  ">
-            <CardItem
-              translateZ="50"
-              className="text-xl font-bold text-neutral-600 dark:text-white"
-            >
-              Sen de yarının dünyasında bize katıl.
-            </CardItem>
-            <CardItem
-              as="p"
-              translateZ="60"
-              className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
-            >
-              Bizimle beraber kendini geliştir, alanını genişlet ve geleceğini
-              tanı.
-            </CardItem>
-            <CardItem translateZ="100" className="w-full mt-4">
-              <Image
-                src="https://images.unsplash.com/photo-1545987796-200677ee1011?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                height="500"
-                width="500"
-                className="h-32 w-full object-cover rounded-xl group-hover/card:shadow-xl"
-                alt="thumbnail"
-              />
-            </CardItem>
-            <div className="flex justify-between items-center mt-20">
-              <CardItem
-                translateZ={20}
-                as="button"
-                className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
-              >
-                <Link href={"/login"}>Giriş Yap →</Link>
-              </CardItem>
-              <CardItem
-                translateZ={20}
-                as="button"
-                className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
-              >
-                <Link href={"/signup"}>Kayıt ol</Link>
-              </CardItem>
-            </div>
-          </CardBody>
-        </CardContainer>
-      </div>
+    <main className="w-full min-h-screen scroll-smooth">
+      <Hero />
+      <OurEvents />
     </main>
   );
 }
