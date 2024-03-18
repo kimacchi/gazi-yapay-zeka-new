@@ -74,7 +74,7 @@ const Hero = () => {
                   as="button"
                   className="px-4 py-2 rounded-xl text-xs font-normal text-white hover:bg-white hover:text-black"
                 >
-                  <Link href="#etkinlikler">
+                  <Link href="#bloglar">
                     Daha fazlasını öğren →
                   </Link>
                 </CardItem>
