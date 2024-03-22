@@ -253,10 +253,10 @@ const EventForm = ({
 
   return (
     <div className="dark w-full flex flex-col items-center sm:px-0 px-4">
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col w-full gap-6">
         <h1 className="text-3xl font-bold text-center">{event.name}</h1>
         <div className="bg-zinc-600/30 p-4 rounded-md">
-          <Markdown className="text-left">{event.description}</Markdown>
+          <Markdown className="text-left break-words">{event.description}</Markdown>
         </div>
         <h2 className="bg-zinc-600/30 p-4 rounded-md">
           <span className="font-semibold">Etkinlik Tarihi: </span>
